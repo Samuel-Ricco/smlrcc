@@ -3,7 +3,7 @@
 <title>smlrcc</title>
 
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=VT323&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&family=VT323&display=swap">
 
 <style>
 /* ============================================================
@@ -26,8 +26,9 @@
     #b957cc 32% 42%, #9a4fc6 42% 54%, #7a44ad 54% 68%,
     #5a348c 68% 82%, #3b2566 82% 100%);
 
-  /* tutto pixelato: Silkscreen per titoli e UI, VT323 per il testo */
-  --pixel:'Silkscreen','Courier New',monospace;
+  /* Pixelify Sans per titoli e UI (in Silkscreen M e W erano illeggibili),
+     VT323 per il testo corrente */
+  --pixel:'Pixelify Sans','Courier New',monospace;
   --term:'VT323','Courier New',monospace;
 }
 
@@ -67,7 +68,8 @@ canvas#scene{position:fixed;inset:0;width:100%;height:100%;display:block;touch-a
 .btn{
   appearance:none;cursor:pointer;font-family:var(--pixel);font-weight:700;font-size:12px;
   padding:14px 20px;background:var(--pink);color:var(--deep);border:2px solid var(--deep);
-  box-shadow:4px 4px 0 rgba(10,4,20,.55);letter-spacing:.02em;text-decoration:none;
+  box-shadow:4px 4px 0 rgba(10,4,20,.55);letter-spacing:.05em;text-decoration:none;
+  text-transform:uppercase;
   display:inline-block;transition:transform .08s steps(2),box-shadow .08s steps(2)
 }
 .btn:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 rgba(10,4,20,.55)}
@@ -75,7 +77,7 @@ canvas#scene{position:fixed;inset:0;width:100%;height:100%;display:block;touch-a
 .btn.ghost{background:transparent;color:var(--fg);border-color:rgba(240,230,255,.45);box-shadow:none}
 .btn.ghost:hover{background:rgba(240,230,255,.1);box-shadow:none;transform:none}
 .row{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
-.eyebrow{font-family:var(--pixel);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--pink)}
+.eyebrow{font-family:var(--pixel);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--pink)}
 
 #hud{position:absolute;inset:0}
 .hud-tl{position:absolute;top:16px;left:16px;display:flex;gap:6px;align-items:stretch}
@@ -83,7 +85,7 @@ canvas#scene{position:fixed;inset:0;width:100%;height:100%;display:block;touch-a
   background:var(--void);color:var(--fg);border:2px solid rgba(240,230,255,.28);
   padding:7px 11px;font-family:var(--pixel);line-height:1.5
 }
-.chip .k{display:block;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:rgba(240,230,255,.5)}
+.chip .k{display:block;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:rgba(240,230,255,.55)}
 .chip .v{font-size:13px;font-weight:700}
 .hud-tr{position:absolute;top:16px;right:16px;display:flex;gap:6px;align-items:center;pointer-events:auto}
 .icon-btn{
@@ -102,8 +104,7 @@ canvas#scene{position:fixed;inset:0;width:100%;height:100%;display:block;touch-a
   box-shadow:4px 4px 0 rgba(10,4,20,.55)
 }
 .power .lab{
-  display:flex;justify-content:space-between;font-family:var(--pixel);font-size:8.5px;
-  letter-spacing:.12em;text-transform:uppercase;color:var(--fg);margin-bottom:7px
+  display:flex;justify-content:space-between;font-family:var(--pixel);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--fg);margin-bottom:7px
 }
 .power .lab span:last-child{color:var(--cyan)}
 .track{display:flex;gap:2px;height:16px;padding:0}
@@ -121,7 +122,7 @@ canvas#scene{position:fixed;inset:0;width:100%;height:100%;display:block;touch-a
 }
 #toast.on{opacity:1}
 #skip{position:absolute;bottom:16px;right:16px;pointer-events:auto;opacity:0;
-  transition:opacity .5s ease;font-family:var(--pixel);font-size:9px;letter-spacing:.08em}
+  transition:opacity .5s ease;font-family:var(--pixel);font-size:11px;letter-spacing:.04em}
 #skip.on{opacity:1}
 #skip a{color:rgba(240,230,255,.6);text-decoration:underline;text-underline-offset:4px;cursor:pointer}
 #skip a:hover{color:var(--fg)}
@@ -185,13 +186,17 @@ nav{
   background:var(--void);border-bottom:2px solid var(--cyan)
 }
 .brand{display:flex;align-items:center;gap:10px;color:var(--cyan);text-decoration:none}
-.brand .mk{width:28px;height:28px;background:var(--cyan);display:grid;place-items:center;
-  color:var(--deep);font-family:var(--pixel);font-weight:700;font-size:11px}
-.brand span{font-family:var(--pixel);font-weight:700;letter-spacing:.06em;font-size:14px;
+/* logo: bandierina da golf in pixel art */
+.brand .mk{
+  width:28px;height:28px;background:var(--cyan);display:block;font-size:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' shape-rendering='crispEdges'%3E%3Crect x='5' y='1' width='2' height='11' fill='%231a0f2e'/%3E%3Crect x='7' y='2' width='5' height='2' fill='%23ff5f9e'/%3E%3Crect x='7' y='4' width='4' height='2' fill='%23ff5f9e'/%3E%3Crect x='2' y='12' width='9' height='2' fill='%231a0f2e'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:center;background-size:20px 20px
+}
+.brand span{font-family:var(--pixel);font-weight:700;letter-spacing:.02em;font-size:16px;
   color:var(--cyan)}
 .links{display:flex;gap:22px}
 .links a{color:rgba(240,230,255,.74);text-decoration:none;font-family:var(--pixel);
-  font-size:10px;letter-spacing:.1em;text-transform:uppercase}
+  font-size:12px;letter-spacing:.07em;text-transform:uppercase}
 .links a:hover{color:var(--cyan)}
 nav .btn{padding:11px 14px;font-size:10px}
 @media(max-width:820px){.links{display:none}}
@@ -203,19 +208,19 @@ nav .btn{padding:11px 14px;font-size:10px}
 #site .btn.ghost:hover{background:rgba(73,242,224,.12)}
 
 .hero{
-  min-height:min(80vh,780px);display:flex;flex-direction:column;justify-content:flex-start;
-  padding:clamp(30px,5vh,62px) clamp(16px,4vw,54px) 150px;position:relative
+  min-height:min(78vh,760px);display:flex;flex-direction:column;justify-content:flex-start;
+  padding:clamp(30px,5vh,62px) clamp(16px,4vw,54px) 90px;position:relative
 }
 .hero-in{max-width:960px}
 .hero h1{
   margin:20px 0 26px;font-family:var(--pixel);font-weight:700;
-  font-size:clamp(30px,6.6vw,84px);line-height:1.12;letter-spacing:-.01em;color:var(--fg)
+  font-size:clamp(32px,6.4vw,80px);line-height:1.12;letter-spacing:-.01em;color:var(--fg)
 }
 .hero h1 em{font-style:normal;color:var(--pink)}
 .hero p{margin:0 0 32px;max-width:44ch;font-size:clamp(19px,2vw,23px);line-height:1.45;
   color:rgba(240,230,255,.84)}
 .pxhint{
-  margin-top:36px;font-family:var(--pixel);font-size:9.5px;letter-spacing:.12em;
+  margin-top:36px;font-family:var(--pixel);font-size:11px;letter-spacing:.08em;
   text-transform:uppercase;color:rgba(240,230,255,.55);display:flex;align-items:center;gap:9px
 }
 .pxhint b{width:9px;height:9px;background:var(--pink);display:block;
@@ -224,7 +229,7 @@ nav .btn{padding:11px 14px;font-size:10px}
 
 .scrolldown{
   position:absolute;bottom:22px;left:50%;transform:translateX(-50%);
-  font-family:var(--pixel);color:rgba(240,230,255,.5);font-size:8.5px;letter-spacing:.2em;
+  font-family:var(--pixel);color:rgba(240,230,255,.5);font-size:10px;letter-spacing:.14em;
   text-transform:uppercase;display:flex;flex-direction:column;align-items:center;gap:8px
 }
 .scrolldown i{display:block;width:2px;height:26px;background:rgba(240,230,255,.4);
@@ -235,7 +240,7 @@ nav .btn{padding:11px 14px;font-size:10px}
 section.panel{padding:clamp(56px,9vw,110px) clamp(16px,4vw,54px);
   border-top:2px solid rgba(240,230,255,.12)}
 .wrap{max-width:1120px;margin:0 auto}
-.h2{font-family:var(--pixel);font-weight:700;font-size:clamp(22px,3.6vw,40px);line-height:1.2;
+.h2{font-family:var(--pixel);font-weight:700;font-size:clamp(24px,3.6vw,42px);line-height:1.2;
   margin:14px 0 20px;color:var(--fg)}
 .lead{font-size:clamp(19px,1.9vw,22px);line-height:1.5;color:rgba(240,230,255,.8);
   max-width:56ch;margin:0}
@@ -249,12 +254,12 @@ section.panel{padding:clamp(56px,9vw,110px) clamp(16px,4vw,54px);
 }
 .tile:hover{transform:translate(-3px,-3px);border-color:var(--pink);
   box-shadow:8px 8px 0 rgba(255,95,158,.22)}
-.tile .glyph{font-family:var(--pixel);font-size:9px;letter-spacing:.12em;color:var(--pink);
+.tile .glyph{font-family:var(--pixel);font-size:11px;letter-spacing:.08em;color:var(--pink);
   margin-bottom:16px;text-transform:uppercase}
 .tile h3{margin:0 0 10px;font-family:var(--pixel);font-size:14px;line-height:1.4;color:var(--fg)}
 .tile p{margin:0 0 18px;font-size:19px;line-height:1.4;color:rgba(240,230,255,.76)}
 .tags{display:flex;flex-wrap:wrap;gap:6px}
-.tags span{font-family:var(--pixel);font-size:8.5px;padding:6px 8px;
+.tags span{font-family:var(--pixel);font-size:10.5px;padding:6px 8px;
   background:rgba(18,10,31,.72);color:rgba(240,230,255,.88)}
 
 .two{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(28px,5vw,64px);align-items:start;margin-top:44px}
@@ -264,14 +269,13 @@ ul.ticks li{display:flex;gap:14px;font-size:19px;line-height:1.4;color:rgba(240,
 ul.ticks li::before{content:"";flex:0 0 10px;height:10px;background:var(--pink);margin-top:6px}
 
 .chips{display:flex;flex-wrap:wrap;gap:8px;align-content:flex-start}
-.chips span{font-family:var(--pixel);font-size:10px;padding:10px 12px;
+.chips span{font-family:var(--pixel);font-size:12px;padding:10px 12px;
   background:rgba(18,10,31,.72);border:2px solid rgba(240,230,255,.2);color:rgba(240,230,255,.92)}
 
 .contact{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:42px}
 @media(max-width:900px){.contact{grid-template-columns:1fr}}
 .contact div{border-top:2px solid rgba(240,230,255,.2);padding-top:16px}
-.contact h4{margin:0 0 10px;font-family:var(--pixel);font-size:9px;letter-spacing:.14em;
-  text-transform:uppercase;color:var(--pink)}
+.contact h4{margin:0 0 10px;font-family:var(--pixel);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--pink)}
 .contact p{margin:0;font-size:19px;line-height:1.55;color:rgba(240,230,255,.88)}
 .contact a{color:var(--fg);text-decoration:underline;text-underline-offset:4px}
 .contact a:hover{color:var(--pink)}
@@ -286,8 +290,7 @@ ul.ticks li::before{content:"";flex:0 0 10px;height:10px;background:var(--pink);
 
 footer{
   border-top:2px solid rgba(240,230,255,.12);color:rgba(240,230,255,.62);
-  padding:30px clamp(16px,4vw,54px);font-family:var(--pixel);font-size:9px;line-height:1.9;
-  letter-spacing:.06em;display:flex;gap:16px;justify-content:space-between;flex-wrap:wrap
+  padding:30px clamp(16px,4vw,54px);font-family:var(--pixel);font-size:11px;line-height:1.9;letter-spacing:.04em;display:flex;gap:16px;justify-content:space-between;flex-wrap:wrap
 }
 footer b{color:rgba(240,230,255,.75);font-weight:700}
 
@@ -320,9 +323,34 @@ section.panel .eyebrow::before{
    Uso "translate" e non "transform", così l'hover delle card resta libero. */
 .rv{opacity:0;translate:0 16px;transition:opacity .28s steps(4,end),translate .28s steps(4,end)}
 .rv.seen{opacity:1;translate:0 0}
+
+/* ============================================================
+   INGRESSO: uscendo dalla buca la home si monta un pezzo alla
+   volta, invece di comparire tutta insieme.
+   ============================================================ */
+@keyframes navIn {from{opacity:0;translate:0 -100%}to{opacity:1;translate:0 0}}
+@keyframes riseIn{from{opacity:0;translate:0 22px} to{opacity:1;translate:0 0}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+#site.on nav                    {animation:navIn  .45s steps(4,end) both}
+#site.on .hero .eyebrow         {animation:riseIn .40s steps(4,end) both .16s}
+#site.on .hero h1               {animation:riseIn .45s steps(5,end) both .30s}
+#site.on .hero p                {animation:riseIn .40s steps(4,end) both .50s}
+#site.on .hero .row .btn:nth-child(1){animation:riseIn .38s steps(4,end) both .66s}
+#site.on .hero .row .btn:nth-child(2){animation:riseIn .38s steps(4,end) both .76s}
+#site.on .pxhint                {animation:riseIn .40s steps(4,end) both .88s}
+#site.on .scrolldown            {animation:fadeIn .50s steps(3,end) both 1.0s}
+/* le decorazioni entrano in dissolvenza ma tengono il loro moto:
+   due animazioni nella stessa dichiarazione, altrimenti la seconda
+   regola sostituirebbe la prima */
+#site.on .kart  {animation:fadeIn .6s steps(3,end) both .60s, bob 1.8s steps(2,end) infinite .60s}
+#site.on .cloud1{animation:fadeIn .6s steps(3,end) both .70s, drift 9s steps(4,end) infinite alternate .70s}
+#site.on .cloud2{animation:fadeIn .6s steps(3,end) both .80s, drift 13s steps(4,end) infinite alternate-reverse .80s}
+
 @media(prefers-reduced-motion:reduce){
   .rv{opacity:1;translate:0 0}
-  .rollball,.golfer g,.kart,.cloud1,.cloud2{animation:none}
+  .rollball,.golfer .body,.cloud1,.cloud2{animation:none}
+  #site.on nav,#site.on .hero .eyebrow,#site.on .hero h1,#site.on .hero p,
+  #site.on .hero .row .btn,#site.on .pxhint,#site.on .scrolldown,#site.on .deco{animation:none}
 }
 
 /* pallina da golf al posto dei quadrati negli elenchi */
@@ -349,20 +377,20 @@ section.panel::before{
 .tile:hover::before,.tile:hover::after{opacity:1}
 .tile .glyph{color:var(--cyan)}
 
-/* striscia di green in fondo all'hero: aggancio visivo al minigame */
+/* il green chiude la pagina: sta nel flusso, sopra al footer */
 .greenstrip{
-  position:absolute;left:0;right:0;bottom:0;height:84px;pointer-events:none;
+  position:relative;height:150px;pointer-events:none;overflow:hidden;
   border-top:3px solid var(--cyan);
   background:
     repeating-linear-gradient(90deg,rgba(10,4,20,.09) 0 11px,transparent 11px 22px),
-    linear-gradient(#33cdb8 0 26px,#28b6a4 26px 56px,#1f9e93 56px 84px)
+    linear-gradient(#33cdb8 0 44px,#28b6a4 44px 96px,#1f9e93 96px 150px)
 }
-.greenstrip svg{position:absolute;bottom:10px;left:clamp(16px,7vw,120px);display:block}
-.scrolldown{bottom:104px}
-@media(max-width:560px){
-  .greenstrip{height:64px}
-  .greenstrip svg{bottom:6px;transform:scale(.8);transform-origin:bottom left}
-  .scrolldown{bottom:84px}
+.greenstrip svg{position:absolute;bottom:8px;display:block}
+.flagpin{left:clamp(16px,8vw,150px)}
+.scrolldown{bottom:22px}
+@media(max-width:700px){
+  .greenstrip{height:118px}
+  .greenstrip svg{transform:scale(.72);transform-origin:bottom left}
 }
 
 /* footer con riga da cabinato */
@@ -388,7 +416,7 @@ section.panel::before{
 .lang{display:flex;gap:0;border:2px solid rgba(240,230,255,.28);background:var(--void)}
 .lang button{
   appearance:none;border:0;background:transparent;color:rgba(240,230,255,.5);cursor:pointer;
-  font-family:var(--pixel);font-size:9px;letter-spacing:.08em;padding:7px 9px;line-height:1;
+  font-family:var(--pixel);font-size:11px;letter-spacing:.04em;padding:7px 9px;line-height:1;
   display:flex;align-items:center;gap:5px
 }
 /* bandierine in pixel art dentro il selettore */
@@ -407,7 +435,7 @@ nav .lang{border-color:var(--cyan)}
 /* tasto di prova per saltare il minigame (temporaneo) */
 #testskip{
   position:absolute;bottom:14px;left:14px;pointer-events:auto;
-  font-family:var(--pixel);font-size:9px;letter-spacing:.08em;padding:9px 11px;
+  font-family:var(--pixel);font-size:11px;letter-spacing:.04em;padding:9px 11px;
   color:var(--pink);background:rgba(18,10,31,.85);border:2px dashed var(--pink);cursor:pointer
 }
 #testskip:hover{background:var(--pink);color:var(--deep)}
@@ -424,35 +452,43 @@ nav .lang{border-color:var(--cyan)}
 @keyframes drift{from{transform:translateX(0)}to{transform:translateX(-22px)}}
 
 /* golf kart appoggiato sul green, a destra */
-.kart{right:clamp(12px,6vw,90px);bottom:84px;animation:bob 1.8s steps(2,end) infinite}
+.kart{right:clamp(12px,6vw,90px);bottom:34px;animation:bob 1.8s steps(2,end) infinite}
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
 @media(max-width:820px){.kart{transform:scale(.7);transform-origin:bottom right;bottom:76px}}
 @media(max-width:560px){.cloud2{display:none}.kart{bottom:60px}}
 
-/* giocatore: i piedi sul green, il corpo sopra la linea d'orizzonte.
-   Selettore più specifico di ".greenstrip svg", altrimenti finisce
-   sopra la bandierina e la copre. */
-.greenstrip .golfer{position:absolute;bottom:22px;left:clamp(190px,24vw,340px);display:block}
+/* due golfisti fermi sul green: solo un respiro, niente swing.
+   Selettori più specifici di ".greenstrip svg" per vincere sul left. */
+.greenstrip .g1{left:clamp(210px,26vw,380px)}
+.greenstrip .g2{left:clamp(300px,38vw,530px)}
+@media(max-width:700px){.greenstrip .g1{left:170px}.greenstrip .g2{left:238px}}
 
-/* swing a quattro fotogrammi: appoggio, caricamento, impatto, chiusura.
-   Ogni posa è un gruppo che si accende nel suo turno, come uno sprite. */
-.golfer g{opacity:0}
-.golfer .f1{animation:gfa 2.6s steps(1,end) infinite}
-.golfer .f2{animation:gfb 2.6s steps(1,end) infinite}
-.golfer .f3{animation:gfc 2.6s steps(1,end) infinite}
-.golfer .f4{animation:gfd 2.6s steps(1,end) infinite}
-@keyframes gfa{0%,43.9%{opacity:1}44%,100%{opacity:0}}
-@keyframes gfb{0%,43.9%{opacity:0}44%,59.9%{opacity:1}60%,100%{opacity:0}}
-@keyframes gfc{0%,59.9%{opacity:0}60%,67.9%{opacity:1}68%,100%{opacity:0}}
-@keyframes gfd{0%,67.9%{opacity:0}68%,100%{opacity:1}}
-@media(max-width:560px){.greenstrip .golfer{left:150px}}
+/* idle: il busto si alza di un pixel e riscende, a scatti e sfasato */
+.golfer .body{animation:idle 2.2s steps(1,end) infinite}
+.golfer.g2 .body{animation-duration:2.9s;animation-delay:-.7s}
+@keyframes idle{0%,49.9%{translate:0 0}50%,100%{translate:0 -1px}}
 
-/* tee davanti alle voci dei contatti */
-.contact h4{display:flex;align-items:center;gap:7px}
-.contact h4::before{
-  content:"";width:10px;height:10px;flex:0 0 10px;
-  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' shape-rendering='crispEdges'%3E%3Crect x='3' y='0' width='4' height='2' fill='%23f4ecff'/%3E%3Crect x='2' y='2' width='6' height='2' fill='%2349f2e0'/%3E%3Crect x='4' y='4' width='2' height='6' fill='%2349f2e0'/%3E%3C/svg%3E") no-repeat center/contain
+/* icone pixel: menu, pulsante scrivimi, voci dei contatti */
+.links a,.contact h4{display:flex;align-items:center;gap:7px}
+.links a::before,.contact h4::before,.ico::before{
+  content:"";width:14px;height:14px;flex:0 0 14px;
+  background-repeat:no-repeat;background-position:center;background-size:contain
 }
+.ico::before{margin-right:8px;vertical-align:-2px;display:inline-block}
+/* lavori: cartella */
+.links a[href="#lavori"]::before{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' shape-rendering='crispEdges'%3E%3Crect x='1' y='3' width='5' height='2' fill='%2349f2e0'/%3E%3Crect x='1' y='5' width='12' height='7' fill='%2349f2e0'/%3E%3Crect x='3' y='7' width='8' height='2' fill='%23120a1f'/%3E%3C/svg%3E")}
+/* stack: blocchi impilati */
+.links a[href="#stack"]::before{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' shape-rendering='crispEdges'%3E%3Crect x='2' y='2' width='10' height='3' fill='%2349f2e0'/%3E%3Crect x='2' y='6' width='10' height='3' fill='%23b98cf7'/%3E%3Crect x='2' y='10' width='10' height='3' fill='%23ff5f9e'/%3E%3C/svg%3E")}
+/* contatti: fumetto */
+.links a[href="#contatti"]::before{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' shape-rendering='crispEdges'%3E%3Crect x='1' y='2' width='12' height='8' fill='%2349f2e0'/%3E%3Crect x='3' y='10' width='4' height='3' fill='%2349f2e0'/%3E%3Crect x='3' y='5' width='8' height='2' fill='%23120a1f'/%3E%3C/svg%3E")}
+/* scrivimi: busta */
+.ico-mail::before{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' shape-rendering='crispEdges'%3E%3Crect x='1' y='3' width='12' height='9' fill='%2349f2e0'/%3E%3Crect x='3' y='5' width='8' height='2' fill='%23120a1f'/%3E%3Crect x='5' y='7' width='4' height='2' fill='%23120a1f'/%3E%3C/svg%3E")}
+/* email: chiocciola */
+.contact div:nth-child(1) h4::before{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' shape-rendering='crispEdges'%3E%3Crect x='3' y='1' width='8' height='2' fill='%23ff5f9e'/%3E%3Crect x='1' y='3' width='2' height='8' fill='%23ff5f9e'/%3E%3Crect x='11' y='3' width='2' height='6' fill='%23ff5f9e'/%3E%3Crect x='3' y='11' width='9' height='2' fill='%23ff5f9e'/%3E%3Crect x='5' y='5' width='4' height='4' fill='%23ff5f9e'/%3E%3C/svg%3E")}
+/* codice: parentesi angolari */
+.contact div:nth-child(2) h4::before{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' shape-rendering='crispEdges'%3E%3Crect x='3' y='5' width='2' height='4' fill='%23ff5f9e'/%3E%3Crect x='1' y='7' width='2' height='2' fill='%23ff5f9e'/%3E%3Crect x='5' y='3' width='2' height='2' fill='%23ff5f9e'/%3E%3Crect x='9' y='5' width='2' height='4' fill='%23ff5f9e'/%3E%3Crect x='11' y='7' width='2' height='2' fill='%23ff5f9e'/%3E%3Crect x='7' y='9' width='2' height='2' fill='%23ff5f9e'/%3E%3C/svg%3E")}
+/* altrove: spillo sulla mappa */
+.contact div:nth-child(3) h4::before{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' shape-rendering='crispEdges'%3E%3Crect x='4' y='1' width='6' height='7' fill='%23ff5f9e'/%3E%3Crect x='6' y='8' width='2' height='5' fill='%23ff5f9e'/%3E%3Crect x='6' y='3' width='2' height='2' fill='%23120a1f'/%3E%3C/svg%3E")}
 
 /* buca + bandierina nel blocco finale */
 .cta{position:relative;overflow:hidden}
@@ -540,7 +576,7 @@ nav .lang{border-color:var(--cyan)}
         <p data-i18n="hero.lead">Interfacce, 3D nel browser, dettagli che si notano solo quando funzionano. Sei entrato mandando la palla in buca: il resto è qui sotto.</p>
         <div class="row">
           <a class="btn" href="#lavori" data-i18n="hero.cta1">Guarda i lavori</a>
-          <a class="btn ghost" href="#contatti" data-i18n="hero.cta2">Scrivimi</a>
+          <a class="btn ghost ico ico-mail" href="#contatti" data-i18n="hero.cta2">Scrivimi</a>
         </div>
         <div class="pxhint"><b></b>
           <span class="d-hover" data-i18n="hero.hintMouse">muovi il cursore &middot; premi per lo splash</span>
@@ -577,62 +613,6 @@ nav .lang{border-color:var(--cyan)}
 
       <div class="scrolldown"><span data-i18n="hero.scroll">Scorri</span><i></i></div>
 
-      <!-- green in pixel art: buca, bandiera, pallina e giocatore animato -->
-      <div class="greenstrip">
-        <!-- bandiera e buca, disegnate 1:1 per non sfocare i pixel -->
-        <svg width="150" height="72" viewBox="0 0 150 72" shape-rendering="crispEdges" aria-hidden="true">
-          <rect x="38"  y="2"  width="5"  height="50" fill="#d8d0f5"/>
-          <rect x="43"  y="5"  width="26" height="7"  fill="#ff5f9e"/>
-          <rect x="43"  y="12" width="21" height="7"  fill="#ff5f9e"/>
-          <rect x="43"  y="19" width="14" height="6"  fill="#e04b87"/>
-          <rect x="22"  y="52" width="38" height="5"  fill="#0f2f2c"/>
-          <rect x="17"  y="57" width="48" height="9"  fill="#120a1f"/>
-          <rect x="22"  y="66" width="38" height="4"  fill="#0f2f2c"/>
-          <rect x="103" y="55" width="12" height="4"  fill="#f4ecff"/>
-          <rect x="99"  y="59" width="20" height="9"  fill="#f4ecff"/>
-          <rect x="103" y="68" width="12" height="3"  fill="#f4ecff"/>
-          <rect x="103" y="61" width="4"  height="3"  fill="#a892c8"/>
-          <rect x="111" y="64" width="4"  height="3"  fill="#a892c8"/>
-        </svg>
-
-        <!-- golfista: corpo fisso, quattro fotogrammi per braccia e mazza -->
-        <svg class="golfer" width="48" height="60" viewBox="0 0 24 30" shape-rendering="crispEdges" aria-hidden="true">
-          <rect x="4"  y="1"  width="4"  height="2" fill="#49f2e0"/>
-          <rect x="6"  y="0"  width="9"  height="3" fill="#49f2e0"/>
-          <rect x="7"  y="3"  width="8"  height="5" fill="#f0e6ff"/>
-          <rect x="8"  y="5"  width="2"  height="2" fill="#1a0f2e"/>
-          <rect x="7"  y="8"  width="9"  height="8" fill="#ff5f9e"/>
-          <rect x="7"  y="16" width="9"  height="4" fill="#8a5cf0"/>
-          <rect x="7"  y="20" width="3"  height="5" fill="#8a5cf0"/>
-          <rect x="13" y="20" width="3"  height="5" fill="#8a5cf0"/>
-          <rect x="5"  y="25" width="6"  height="3" fill="#f0e6ff"/>
-          <rect x="13" y="25" width="6"  height="3" fill="#f0e6ff"/>
-          <g class="f1">
-            <rect x="4"  y="10" width="4"  height="3" fill="#f0e6ff"/>
-            <rect x="2"  y="13" width="3"  height="3" fill="#d8d0f5"/>
-            <rect x="1"  y="16" width="2"  height="4" fill="#d8d0f5"/>
-            <rect x="0"  y="20" width="4"  height="3" fill="#33254f"/>
-          </g>
-          <g class="f2">
-            <rect x="4"  y="7"  width="4"  height="3" fill="#f0e6ff"/>
-            <rect x="2"  y="4"  width="3"  height="4" fill="#d8d0f5"/>
-            <rect x="1"  y="0"  width="3"  height="4" fill="#d8d0f5"/>
-            <rect x="0"  y="0"  width="4"  height="3" fill="#33254f"/>
-          </g>
-          <g class="f3">
-            <rect x="4"  y="11" width="4"  height="3" fill="#f0e6ff"/>
-            <rect x="2"  y="15" width="3"  height="4" fill="#d8d0f5"/>
-            <rect x="0"  y="19" width="3"  height="5" fill="#d8d0f5"/>
-            <rect x="0"  y="24" width="5"  height="4" fill="#33254f"/>
-          </g>
-          <g class="f4">
-            <rect x="14" y="7"  width="4"  height="3" fill="#f0e6ff"/>
-            <rect x="17" y="4"  width="3"  height="4" fill="#d8d0f5"/>
-            <rect x="19" y="0"  width="3"  height="4" fill="#d8d0f5"/>
-            <rect x="20" y="0"  width="4"  height="3" fill="#33254f"/>
-          </g>
-        </svg>
-      </div>
     </header>
 
     <section class="panel" id="lavori">
@@ -716,6 +696,61 @@ nav .lang{border-color:var(--cyan)}
         </div>
       </div>
     </section>
+
+    <!-- il green chiude la pagina: buca, bandiera alta e due golfisti in idle -->
+    <div class="greenstrip">
+      <svg class="flagpin" width="170" height="132" viewBox="0 0 170 132" shape-rendering="crispEdges" aria-hidden="true">
+        <rect x="46"  y="2"   width="6"  height="104" fill="#d8d0f5"/>
+        <rect x="52"  y="6"   width="34" height="9"   fill="#ff5f9e"/>
+        <rect x="52"  y="15"  width="27" height="9"   fill="#ff5f9e"/>
+        <rect x="52"  y="24"  width="18" height="8"   fill="#e04b87"/>
+        <rect x="28"  y="106" width="42" height="5"   fill="#0f2f2c"/>
+        <rect x="22"  y="111" width="54" height="10"  fill="#120a1f"/>
+        <rect x="28"  y="121" width="42" height="4"   fill="#0f2f2c"/>
+        <rect x="118" y="112" width="12" height="4"   fill="#f4ecff"/>
+        <rect x="114" y="116" width="20" height="9"   fill="#f4ecff"/>
+        <rect x="118" y="125" width="12" height="3"   fill="#f4ecff"/>
+        <rect x="118" y="118" width="4"  height="3"   fill="#a892c8"/>
+        <rect x="126" y="121" width="4"  height="3"   fill="#a892c8"/>
+      </svg>
+
+      <!-- golfista 1: mazza appoggiata, respiro lento -->
+      <svg class="golfer g1" width="84" height="120" viewBox="0 0 28 40" shape-rendering="crispEdges" aria-hidden="true">
+        <g class="body">
+          <rect x="6"  y="2"  width="4"  height="2" fill="#49f2e0"/>
+          <rect x="8"  y="0"  width="10" height="4" fill="#49f2e0"/>
+          <rect x="9"  y="4"  width="9"  height="6" fill="#f0e6ff"/>
+          <rect x="10" y="6"  width="2"  height="2" fill="#1a0f2e"/>
+          <rect x="8"  y="10" width="11" height="10" fill="#ff5f9e"/>
+          <rect x="8"  y="20" width="11" height="5"  fill="#8a5cf0"/>
+          <rect x="8"  y="25" width="4"  height="8"  fill="#8a5cf0"/>
+          <rect x="15" y="25" width="4"  height="8"  fill="#8a5cf0"/>
+          <rect x="6"  y="33" width="7"  height="3"  fill="#f0e6ff"/>
+          <rect x="15" y="33" width="7"  height="3"  fill="#f0e6ff"/>
+          <rect x="19" y="12" width="3"  height="8"  fill="#f0e6ff"/>
+          <rect x="22" y="18" width="2"  height="14" fill="#d8d0f5"/>
+          <rect x="21" y="32" width="5"  height="4"  fill="#33254f"/>
+        </g>
+      </svg>
+
+      <!-- golfista 2: mani sui fianchi, respiro sfasato -->
+      <svg class="golfer g2" width="72" height="102" viewBox="0 0 24 34" shape-rendering="crispEdges" aria-hidden="true">
+        <g class="body">
+          <rect x="14" y="2"  width="4"  height="2" fill="#ff5f9e"/>
+          <rect x="6"  y="0"  width="10" height="4" fill="#ff5f9e"/>
+          <rect x="6"  y="4"  width="9"  height="6" fill="#f0e6ff"/>
+          <rect x="11" y="6"  width="2"  height="2" fill="#1a0f2e"/>
+          <rect x="5"  y="10" width="11" height="9" fill="#49f2e0"/>
+          <rect x="2"  y="12" width="3"  height="6" fill="#f0e6ff"/>
+          <rect x="16" y="12" width="3"  height="6" fill="#f0e6ff"/>
+          <rect x="5"  y="19" width="11" height="4" fill="#8a5cf0"/>
+          <rect x="5"  y="23" width="4"  height="6" fill="#8a5cf0"/>
+          <rect x="12" y="23" width="4"  height="6" fill="#8a5cf0"/>
+          <rect x="3"  y="29" width="7"  height="3" fill="#f0e6ff"/>
+          <rect x="12" y="29" width="7"  height="3" fill="#f0e6ff"/>
+        </g>
+      </svg>
+    </div>
 
     <footer>
       <span data-i18n="footer.left"><b>smlrcc.it</b> &mdash; home base, contenuti in arrivo.</span>
