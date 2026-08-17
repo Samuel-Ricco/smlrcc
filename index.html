@@ -89,13 +89,16 @@ canvas#scene{position:fixed;inset:0;width:100%;height:100%;display:block;touch-a
 .chip .k{display:block;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:rgba(240,230,255,.55)}
 .chip .v{font-size:13px;font-weight:700}
 .hud-tr{position:absolute;top:16px;right:16px;display:flex;gap:6px;align-items:center;pointer-events:auto}
+/* icone in pixel art: il glifo di testo è sostituito da uno sprite SVG */
 .icon-btn{
-  width:34px;height:34px;border:2px solid rgba(240,230,255,.28);background:var(--void);
-  color:var(--fg);cursor:pointer;font-size:14px;display:grid;place-items:center;
-  font-family:var(--pixel)
+  width:34px;height:34px;border:2px solid rgba(240,230,255,.28);background-color:var(--void);
+  cursor:pointer;font-size:0;display:block;padding:0;
+  background-repeat:no-repeat;background-position:center;background-size:18px 18px
 }
-.icon-btn:hover{background:rgba(240,230,255,.14)}
-.icon-btn.off{color:rgba(240,230,255,.35)}
+.icon-btn:hover{background-color:rgba(240,230,255,.14)}
+.ico-audio{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' shape-rendering='crispEdges'%3E%3Crect x='1' y='6' width='3' height='4' fill='%23f0e6ff'/%3E%3Crect x='4' y='4' width='2' height='8' fill='%23f0e6ff'/%3E%3Crect x='6' y='2' width='2' height='12' fill='%23f0e6ff'/%3E%3Crect x='10' y='6' width='2' height='4' fill='%2349f2e0'/%3E%3Crect x='13' y='3' width='2' height='10' fill='%2349f2e0'/%3E%3C/svg%3E")}
+.ico-audio.off{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' shape-rendering='crispEdges'%3E%3Crect x='1' y='6' width='3' height='4' fill='%23806f95'/%3E%3Crect x='4' y='4' width='2' height='8' fill='%23806f95'/%3E%3Crect x='6' y='2' width='2' height='12' fill='%23806f95'/%3E%3Crect x='10' y='5' width='2' height='2' fill='%23ff5f9e'/%3E%3Crect x='14' y='5' width='2' height='2' fill='%23ff5f9e'/%3E%3Crect x='12' y='7' width='2' height='2' fill='%23ff5f9e'/%3E%3Crect x='10' y='9' width='2' height='2' fill='%23ff5f9e'/%3E%3Crect x='14' y='9' width='2' height='2' fill='%23ff5f9e'/%3E%3C/svg%3E")}
+.ico-reset{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' shape-rendering='crispEdges'%3E%3Crect x='4' y='3' width='5' height='2' fill='%23f0e6ff'/%3E%3Crect x='2' y='5' width='2' height='6' fill='%23f0e6ff'/%3E%3Crect x='4' y='11' width='8' height='2' fill='%23f0e6ff'/%3E%3Crect x='12' y='6' width='2' height='5' fill='%23f0e6ff'/%3E%3Crect x='9' y='1' width='2' height='2' fill='%2349f2e0'/%3E%3Crect x='11' y='3' width='2' height='2' fill='%2349f2e0'/%3E%3Crect x='9' y='5' width='2' height='2' fill='%2349f2e0'/%3E%3C/svg%3E")}
 
 /* barra potenza: celle discrete su fondo scuro, colore che sale
    dal ciano al magenta. Ogni cella porta il suo --c (assegnato in JS). */
@@ -136,7 +139,6 @@ canvas#scene{position:fixed;inset:0;width:100%;height:100%;display:block;touch-a
   .chip .k{font-size:7px}
   .power{bottom:22px;width:80vw}
   /* su schermi stretti il tasto test finirebbe sopra la barra: va in alto */
-  #testskip{bottom:auto;top:66px;left:12px;font-size:8px;padding:7px 9px}
 }
 
 /* ============================================================
@@ -473,14 +475,6 @@ section.panel::before{
 nav .lang{border-color:var(--cyan)}
 .navright{display:flex;align-items:center;gap:10px}
 
-/* tasto di prova per saltare il minigame (temporaneo) */
-#testskip{
-  position:absolute;bottom:14px;left:14px;pointer-events:auto;
-  font-family:var(--pixel);font-size:11px;letter-spacing:.04em;padding:9px 11px;
-  color:var(--pink);background:rgba(18,10,31,.85);border:2px dashed var(--pink);cursor:pointer
-}
-#testskip:hover{background:var(--pink);color:var(--deep)}
-
 /* ============================================================
    DECORAZIONI PIXEL ART
    ============================================================ */
@@ -572,8 +566,8 @@ nav .lang{border-color:var(--cyan)}
       <div class="lang">
         <button data-lang="it">IT</button><button data-lang="en">EN</button>
       </div>
-      <button class="icon-btn" id="b-mute" data-mute title="Audio">&#9834;</button>
-      <button class="icon-btn" id="b-reset" data-i18n-title="game.reset" title="Rimetti la pallina sul tee">&#8635;</button>
+      <button class="icon-btn ico-audio" id="b-mute" data-mute title="Audio" aria-label="Audio"></button>
+      <button class="icon-btn ico-reset" id="b-reset" data-i18n-title="game.reset" title="Rimetti la pallina sul tee" aria-label="Reset"></button>
     </div>
 
     <div class="power">
@@ -581,10 +575,6 @@ nav .lang{border-color:var(--cyan)}
       <div class="track" id="pow-track"></div>
     </div>
     <div id="skip"><a id="skip-a" data-i18n="game.skip">Entra comunque &rarr;</a></div>
-
-    <!-- ▼▼▼ TEST: scorciatoia per saltare il minigame — rimuovere a sito finito ▼▼▼ -->
-    <button id="testskip" data-i18n="game.testskip">Test: salta il minigame</button>
-    <!-- ▲▲▲ fine blocco TEST ▲▲▲ -->
   </div>
 
   <div id="toast"></div>
@@ -606,7 +596,7 @@ nav .lang{border-color:var(--cyan)}
         <a href="#contatti" data-i18n="nav.contact">Contatti</a>
       </div>
       <div class="navright">
-        <button class="icon-btn" data-mute title="Audio">&#9834;</button>
+        <button class="icon-btn ico-audio" data-mute title="Audio" aria-label="Audio"></button>
         <div class="lang">
           <button data-lang="it">IT</button><button data-lang="en">EN</button>
         </div>
@@ -913,7 +903,7 @@ var I18N = {
     'footer.left':'<b>smlrcc.it</b> &mdash; home base, contenuti in arrivo.',
     'footer.right':'credit 01 &middot; three.js in un solo file',
     'game.shots':'Colpi', 'game.dist':'Distanza', 'game.best':'Record', 'game.power':'Potenza',
-    'game.skip':'Entra comunque &rarr;', 'game.testskip':'Test: salta il minigame',
+    'game.skip':'Entra comunque &rarr;',
     'game.reset':'Rimetti la pallina sul tee',
     'game.audioOn':'Audio acceso','game.audioOff':'Audio spento',
     'toast.tee':'Pallina sul tee', 'toast.lip':'Lip out! Troppo forte',
@@ -953,7 +943,7 @@ var I18N = {
     'footer.left':'<b>smlrcc.it</b> &mdash; home base, content on its way.',
     'footer.right':'credit 01 &middot; three.js in a single file',
     'game.shots':'Shots', 'game.dist':'Distance', 'game.best':'Best', 'game.power':'Power',
-    'game.skip':'Enter anyway &rarr;', 'game.testskip':'Test: skip minigame',
+    'game.skip':'Enter anyway &rarr;',
     'game.reset':'Put the ball back on the tee',
     'game.audioOn':'Audio on','game.audioOff':'Audio off',
     'toast.tee':'Ball on the tee', 'toast.lip':'Lip out! Too hard',
@@ -1500,9 +1490,6 @@ function applyMute(){
 })();
 document.getElementById('b-reset').onclick = function(){ resetBall(true); };
 document.getElementById('skip-a').onclick = function(){ skipToSite(); };
-/* ▼ TEST: scorciatoia per saltare il minigame — rimuovere a sito finito ▼ */
-document.getElementById('testskip').onclick = function(){ skipToSite(); };
-/* ▲ fine blocco TEST ▲ */
 ['b-replay','b-replay-3'].forEach(function(id){
   var b = document.getElementById(id);
   if (b) b.onclick = function(){ backToGame(); };
