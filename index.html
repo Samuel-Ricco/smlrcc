@@ -19,8 +19,12 @@
   --violet:#b98cf7;    /* accento terziario */
   --mint:#7cf0a8;
 
-  /* cielo del minigame: tramonto vaporwave in CSS dietro al canvas */
-  --sunset:linear-gradient(#ff6fae 0%,#c964d8 26%,#8a4fc4 52%,#3b2566 100%);
+  /* cielo del minigame: tramonto vaporwave a bande dietro al canvas.
+     Stop netti invece di sfumatura, per stare nell'estetica pixel. */
+  --sunset:linear-gradient(
+    #ff6fae 0 12%, #f765bd 12% 22%, #d962cf 22% 32%,
+    #b957cc 32% 42%, #9a4fc6 42% 54%, #7a44ad 54% 68%,
+    #5a348c 68% 82%, #3b2566 82% 100%);
 
   /* tutto pixelato: Silkscreen per titoli e UI, VT323 per il testo */
   --pixel:'Silkscreen','Courier New',monospace;
@@ -46,8 +50,10 @@ body{
 
 #blackout{position:absolute;inset:0;z-index:4;background:var(--void);opacity:0;pointer-events:none}
 
+/* il buffer 3D è basso: qui viene ingrandito a blocchi, senza interpolazione */
 canvas#scene{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none;z-index:0;
-  background:var(--sunset)}
+  background:var(--sunset);
+  image-rendering:pixelated;image-rendering:crisp-edges;-ms-interpolation-mode:nearest-neighbor}
 
 /* ============================================================
    HUD DEL MINIGAME — riquadri a spigolo vivo, bordo pieno
@@ -435,7 +441,7 @@ function init(){
 
 /* VAPORWAVE: verde -> turchese, bunker -> magenta, alberi -> viola */
 var PAL = {
-  horizon:0x8a4fc4,                                     /* nebbia = metà del tramonto CSS */
+  horizon:0xb957cc,                                     /* nebbia = banda del cielo all'orizzonte */
   grass:0x28b6a4, grassMid:0x1f9e93, grassDark:0x16807c,
   sand:0xff6fae, sandDark:0xe85697,
   head:0x33254f, headTop:0x483770, face:0x8f7ec9,
@@ -445,8 +451,8 @@ var PAL = {
 };
 
 var BALL_R    = 0.18;      // raggio pallina
-var CLUB_Y    = 0.34;      // altezza centro testa mazza
-var HIT_R     = 0.62;      // raggio di contatto (testa + pallina, su xz)
+var CLUB_Y    = 0.28;      // altezza centro testa mazza (mezza altezza 0.25 + 0.03)
+var HIT_R     = 0.55;      // raggio di contatto (mezza testa 0.39 + pallina 0.18, su xz)
 var GRAVITY   = 22;
 var FRICTION  = 4.2;       // decelerazione di rotolamento
 var POWER_K   = 0.42;      // velocità mouse -> velocità pallina
@@ -476,12 +482,16 @@ try { var b = localStorage.getItem('smlrcc-best'); if (b) state.best = +b; } cat
    2. Renderer / scena / luci
    ============================================================ */
 var canvas   = document.getElementById('scene');
-/* alpha: il cielo è il gradiente CSS sotto al canvas, non un colore piatto */
-var renderer = new THREE.WebGLRenderer({ canvas:canvas, antialias:true, alpha:true });
-renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
+/* PIXEL ART: si renderizza in un buffer basso (~PIX_H px di altezza) e il
+   canvas viene stirato a schermo pieno con image-rendering:pixelated, cioè
+   nearest-neighbor. Niente antialias, altrimenti i bordi arrivano sfumati
+   e ingranditi. Costa meno di un render a risoluzione piena. */
+var PIX_H = 210;
+var renderer = new THREE.WebGLRenderer({ canvas:canvas, antialias:false, alpha:true });
+renderer.setPixelRatio(1);
 renderer.setClearAlpha(0);
 renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.shadowMap.type = THREE.BasicShadowMap;   // ombre a bordo netto, non sfumate
 
 var scene = new THREE.Scene();
 scene.fog = new THREE.Fog(PAL.horizon, 46, 132);
@@ -495,7 +505,7 @@ var amb = new THREE.AmbientLight(0xc9a8ff, 0.22); scene.add(amb);
 var sun = new THREE.DirectionalLight(0xffe4f2, 1.0);
 sun.position.set(-11, 15, -5);
 sun.castShadow = true;
-sun.shadow.mapSize.set(2048, 2048);
+sun.shadow.mapSize.set(1024, 1024);   /* il viewport è basso: 2048 era sprecato */
 var sc = sun.shadow.camera;
 sc.left = -22; sc.right = 22; sc.top = 22; sc.bottom = -22; sc.near = 1; sc.far = 70;
 sun.shadow.bias = -0.0006;
@@ -621,17 +631,17 @@ scene.add(club);
 /* Testa squadrata da mallet: la faccia è piatta, quindi la piastrina
    frontale appoggia senza compenetrare la testa (prima era un disco su
    un icosaedro tondo e ne sbucava fuori). */
-var head = new THREE.Mesh(new THREE.BoxGeometry(0.96, 0.62, 0.72), lam(PAL.head));
+var head = new THREE.Mesh(new THREE.BoxGeometry(0.78, 0.5, 0.58), lam(PAL.head));
 head.castShadow = true;
 club.add(head);
 
-var crown = new THREE.Mesh(new THREE.BoxGeometry(0.72, 0.1, 0.5), lam(PAL.headTop));
-crown.position.set(0, 0.29, 0.02);          // affonda nella testa: nessuna faccia complanare
+var crown = new THREE.Mesh(new THREE.BoxGeometry(0.58, 0.08, 0.4), lam(PAL.headTop));
+crown.position.set(0, 0.23, 0.02);          // affonda nella testa: nessuna faccia complanare
 crown.castShadow = true;
 club.add(crown);
 
-var face = new THREE.Mesh(new THREE.BoxGeometry(0.78, 0.44, 0.06), lam(PAL.face));
-face.position.set(0, -0.02, -0.355);        // sporge di 0.03 dalla faccia frontale
+var face = new THREE.Mesh(new THREE.BoxGeometry(0.62, 0.36, 0.06), lam(PAL.face));
+face.position.set(0, -0.02, -0.305);        // sporge di 0.045 dalla faccia frontale
 club.add(face);
 
 var shaftPivot = new THREE.Object3D();
@@ -1190,8 +1200,13 @@ function resize(){
   var w = Math.max(1, innerWidth), h = Math.max(1, innerHeight);
   if (w === curW && h === curH) return;
   curW = w; curH = h;
-  renderer.setSize(w, h, false);
-  camera.aspect = w / h;
+  /* buffer basso, CSS a schermo pieno: setSize con updateStyle=false
+     non tocca width/height in stile, che restano al 100% */
+  var s  = Math.max(2, Math.round(h / PIX_H));
+  var bw = Math.max(80, Math.round(w / s));
+  var bh = Math.max(60, Math.round(h / s));
+  renderer.setSize(bw, bh, false);
+  camera.aspect = bw / bh;
   camera.updateProjectionMatrix();
 }
 addEventListener('resize', function(){

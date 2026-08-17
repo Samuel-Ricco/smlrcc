@@ -23,6 +23,12 @@ La potenza nasce dalla velocità reale del movimento, non da una barra da carica
   preso di striscio, così centrare bene premia;
 - rotolamento con attrito, rimbalzi, cattura in buca e *lip out* sopra i 6,2 m/s.
 
+**Il filtro pixel art.** La scena non è renderizzata a risoluzione piena: il buffer è
+alto circa 210 px e il canvas viene stirato a schermo intero con
+`image-rendering: pixelated`, cioè nearest-neighbor. Antialias disattivato e ombre a
+bordo netto, altrimenti il filtro arriverebbe sfumato e ingrandito. Costa meno di un
+render pieno. Il cielo è un gradiente CSS a bande dietro al canvas trasparente.
+
 **La transizione.** Quando la palla entra, la camera si tuffa dentro la buca fino a
 riempire lo schermo di nero: quel nero diventa lo sfondo del sito. A quel punto il loop
 3D va in pausa, così la home non paga il costo del rendering.
