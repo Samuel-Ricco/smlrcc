@@ -396,16 +396,26 @@ section.panel::before{
     linear-gradient(#3ad8c0 0 34px,#2ec2ae 34px 76px,#26a89b 76px 118px)
 }
 .teegreen svg{position:absolute;display:block}
-.teegreen .bunker{left:clamp(12px,10vw,180px);bottom:16px}
-.teegreen .teebox{left:clamp(150px,28vw,420px);bottom:22px}
-.teegreen .kart{right:clamp(12px,7vw,110px);bottom:12px;left:auto}
-.scrolldown{bottom:136px}
+.teegreen .teeflag{left:clamp(14px,9vw,170px);bottom:14px}
+.teegreen .teebox{left:clamp(120px,24vw,380px);bottom:20px}
+.teegreen .kart{right:clamp(12px,7vw,110px);bottom:10px;left:auto}
+.scrolldown{bottom:150px}
+/* schermi bassi: senza questo il testo sfonda l'altezza dell'hero e il
+   campo di partenza finisce sotto la piega, perdendo il senso di "scorri" */
+@media(max-height:820px){
+  .hero{padding-top:clamp(16px,3vh,32px);padding-bottom:150px}
+  .hero h1{font-size:clamp(28px,4.6vw,56px);margin:12px 0 16px}
+  .hero p{margin-bottom:20px;font-size:clamp(17px,1.6vw,19px)}
+  .pxhint{margin-top:20px}
+  .sun{transform:scale(.7);transform-origin:top right}
+  .scrolldown{bottom:132px}
+}
 @media(max-width:700px){
-  .teegreen{height:92px}
-  .teegreen .bunker{bottom:10px;transform:scale(.7);transform-origin:bottom left}
-  .teegreen .teebox{left:130px;bottom:14px;transform:scale(.75);transform-origin:bottom left}
-  .teegreen .kart{transform:scale(.7);transform-origin:bottom right;bottom:8px}
-  .scrolldown{bottom:108px}
+  .teegreen{height:96px}
+  .teegreen .teeflag{bottom:8px;transform:scale(.72);transform-origin:bottom left}
+  .teegreen .teebox{left:120px;bottom:12px;transform:scale(.75);transform-origin:bottom left}
+  .teegreen .kart{transform:scale(.62);transform-origin:bottom right;bottom:6px}
+  .scrolldown{bottom:118px}
 }
 
 /* CAMPO 2 — putting green che chiude la pagina: sta nel flusso, bande
@@ -476,10 +486,27 @@ nav .lang{border-color:var(--cyan)}
    ============================================================ */
 .deco{position:absolute;pointer-events:none;image-rendering:pixelated}
 
-/* nuvole nella fascia libera a destra, sotto al titolo */
+/* cielo: sole, nuvole e uccellini nella fascia libera a destra */
+.sun{top:11%;right:6%;opacity:.85}
 .cloud1{top:44%;right:5%;animation:drift 9s steps(4,end) infinite alternate}
 .cloud2{top:58%;right:24%;opacity:.6;animation:drift 13s steps(4,end) infinite alternate-reverse}
-@media(max-width:900px){.cloud1{top:38%;right:3%}.cloud2{top:50%;right:20%}}
+.cloud3{top:33%;right:31%;opacity:.45;animation:drift 17s steps(4,end) infinite alternate}
+.bird{opacity:.8}
+.b1{top:26%;right:19%;animation:fly1 24s linear infinite}
+.b2{top:22%;right:15%;animation:fly2 31s linear infinite}
+@keyframes fly1{from{transform:translateX(0)}to{transform:translateX(-62vw)}}
+@keyframes fly2{from{transform:translateX(4vw)}to{transform:translateX(-54vw)}}
+/* battito d'ali: due pose che si alternano */
+.bird .dn{opacity:0}
+.bird .up{animation:wingA .5s steps(1,end) infinite}
+.bird .dn{animation:wingB .5s steps(1,end) infinite}
+.b2 .up,.b2 .dn{animation-duration:.62s}
+@keyframes wingA{0%,49.9%{opacity:1}50%,100%{opacity:0}}
+@keyframes wingB{0%,49.9%{opacity:0}50%,100%{opacity:1}}
+@media(max-width:900px){
+  .sun{top:8%;right:4%;transform:scale(.72);transform-origin:top right}
+  .cloud1{top:38%;right:3%}.cloud2{top:50%;right:20%}.cloud3{display:none}
+}
 @keyframes drift{from{transform:translateX(0)}to{transform:translateX(-22px)}}
 
 /* golf kart appoggiato sul green, a destra */
@@ -545,7 +572,7 @@ nav .lang{border-color:var(--cyan)}
       <div class="lang">
         <button data-lang="it">IT</button><button data-lang="en">EN</button>
       </div>
-      <button class="icon-btn" id="b-mute" title="Audio">&#9834;</button>
+      <button class="icon-btn" id="b-mute" data-mute title="Audio">&#9834;</button>
       <button class="icon-btn" id="b-reset" data-i18n-title="game.reset" title="Rimetti la pallina sul tee">&#8635;</button>
     </div>
 
@@ -579,6 +606,7 @@ nav .lang{border-color:var(--cyan)}
         <a href="#contatti" data-i18n="nav.contact">Contatti</a>
       </div>
       <div class="navright">
+        <button class="icon-btn" data-mute title="Audio">&#9834;</button>
         <div class="lang">
           <button data-lang="it">IT</button><button data-lang="en">EN</button>
         </div>
@@ -598,6 +626,37 @@ nav .lang{border-color:var(--cyan)}
         <rect x="10" y="1" width="14" height="4" fill="#f0e0fa"/>
         <rect x="5"  y="5" width="26" height="4" fill="#d8a8ee"/>
         <rect x="8"  y="9" width="20" height="3" fill="#c68ddf"/>
+      </svg>
+      <svg class="deco cloud3" width="56" height="24" viewBox="0 0 28 12" shape-rendering="crispEdges" aria-hidden="true">
+        <rect x="8" y="1" width="12" height="4" fill="#e9c9f5"/>
+        <rect x="3" y="5" width="22" height="4" fill="#c68ddf"/>
+      </svg>
+
+      <!-- sole vaporwave: disco a fette nella parte alta del cielo -->
+      <svg class="deco sun" width="132" height="132" viewBox="0 0 44 44" shape-rendering="crispEdges" aria-hidden="true">
+        <rect x="16" y="2"  width="12" height="3"  fill="#ffd36e"/>
+        <rect x="11" y="5"  width="22" height="3"  fill="#ffc06a"/>
+        <rect x="8"  y="8"  width="28" height="3"  fill="#ffae72"/>
+        <rect x="6"  y="11" width="32" height="3"  fill="#ff9b86"/>
+        <rect x="4"  y="14" width="36" height="3"  fill="#ff8a9e"/>
+        <rect x="3"  y="17" width="38" height="3"  fill="#ff7aae"/>
+        <rect x="2"  y="20" width="40" height="3"  fill="#fb6cbb"/>
+        <rect x="2"  y="24" width="40" height="2"  fill="#ef61c4"/>
+        <rect x="3"  y="27" width="38" height="2"  fill="#e057c9"/>
+        <rect x="5"  y="30" width="34" height="2"  fill="#cf4fcd"/>
+        <rect x="8"  y="33" width="28" height="2"  fill="#bd48cf"/>
+        <rect x="12" y="36" width="20" height="2"  fill="#a842cf"/>
+        <rect x="17" y="39" width="10" height="2"  fill="#9440cc"/>
+      </svg>
+
+      <!-- uccellini: due pose alternate -->
+      <svg class="deco bird b1" width="28" height="14" viewBox="0 0 14 7" shape-rendering="crispEdges" aria-hidden="true">
+        <g class="up"><rect x="0" y="0" width="3" height="2" fill="#e9c9f5"/><rect x="3" y="2" width="3" height="2" fill="#e9c9f5"/><rect x="6" y="3" width="2" height="2" fill="#e9c9f5"/><rect x="8" y="2" width="3" height="2" fill="#e9c9f5"/><rect x="11" y="0" width="3" height="2" fill="#e9c9f5"/></g>
+        <g class="dn"><rect x="0" y="4" width="3" height="2" fill="#e9c9f5"/><rect x="3" y="3" width="3" height="2" fill="#e9c9f5"/><rect x="6" y="2" width="2" height="2" fill="#e9c9f5"/><rect x="8" y="3" width="3" height="2" fill="#e9c9f5"/><rect x="11" y="4" width="3" height="2" fill="#e9c9f5"/></g>
+      </svg>
+      <svg class="deco bird b2" width="20" height="10" viewBox="0 0 14 7" shape-rendering="crispEdges" aria-hidden="true">
+        <g class="up"><rect x="0" y="0" width="3" height="2" fill="#d8a8ee"/><rect x="3" y="2" width="3" height="2" fill="#d8a8ee"/><rect x="6" y="3" width="2" height="2" fill="#d8a8ee"/><rect x="8" y="2" width="3" height="2" fill="#d8a8ee"/><rect x="11" y="0" width="3" height="2" fill="#d8a8ee"/></g>
+        <g class="dn"><rect x="0" y="4" width="3" height="2" fill="#d8a8ee"/><rect x="3" y="3" width="3" height="2" fill="#d8a8ee"/><rect x="6" y="2" width="2" height="2" fill="#d8a8ee"/><rect x="8" y="3" width="3" height="2" fill="#d8a8ee"/><rect x="11" y="4" width="3" height="2" fill="#d8a8ee"/></g>
       </svg>
 
       <div class="hero-in">
@@ -621,7 +680,7 @@ nav .lang{border-color:var(--cyan)}
            schermata, così "scorri" ha qualcosa sotto a cui puntare. -->
       <div class="teegreen">
         <!-- golf kart in pixel art, visto di lato -->
-        <svg class="deco kart" width="120" height="84" viewBox="0 0 40 28" shape-rendering="crispEdges" aria-hidden="true">
+        <svg class="deco kart" width="160" height="112" viewBox="0 0 40 28" shape-rendering="crispEdges" aria-hidden="true">
           <!-- sacca e mazze dietro -->
           <rect x="3"  y="4"  width="1"  height="5"  fill="#d8d0f5"/>
           <rect x="5"  y="3"  width="1"  height="6"  fill="#f0e6ff"/>
@@ -646,13 +705,15 @@ nav .lang{border-color:var(--cyan)}
           <rect x="8"  y="23" width="4"  height="2"  fill="#49f2e0"/>
           <rect x="28" y="23" width="4"  height="2"  fill="#49f2e0"/>
         </svg>
-        <svg class="bunker" width="132" height="42" viewBox="0 0 66 21" shape-rendering="crispEdges" aria-hidden="true">
-          <rect x="14" y="0"  width="34" height="4" fill="#ff8fbe"/>
-          <rect x="6"  y="4"  width="52" height="5" fill="#ff6fae"/>
-          <rect x="0"  y="9"  width="66" height="6" fill="#f2609f"/>
-          <rect x="4"  y="15" width="56" height="4" fill="#e04b87"/>
-          <rect x="20" y="6"  width="8"  height="2" fill="#ffb0d2"/>
-          <rect x="40" y="11" width="10" height="2" fill="#ffb0d2"/>
+        <!-- bandierina della partenza: pennant a punta e colore menta,
+             diversa da quella della buca in fondo alla pagina -->
+        <svg class="teeflag" width="76" height="104" viewBox="0 0 38 52" shape-rendering="crispEdges" aria-hidden="true">
+          <rect x="16" y="1"  width="3"  height="46" fill="#f0e6ff"/>
+          <rect x="19" y="3"  width="14" height="3"  fill="#7cf0a8"/>
+          <rect x="19" y="6"  width="11" height="3"  fill="#7cf0a8"/>
+          <rect x="19" y="9"  width="8"  height="3"  fill="#5fd98f"/>
+          <rect x="19" y="12" width="5"  height="3"  fill="#5fd98f"/>
+          <rect x="12" y="47" width="11" height="3"  fill="#1f8f80"/>
         </svg>
 
         <svg class="teebox" width="56" height="52" viewBox="0 0 28 26" shape-rendering="crispEdges" aria-hidden="true">
@@ -855,6 +916,7 @@ var I18N = {
     'game.shots':'Colpi', 'game.dist':'Distanza', 'game.best':'Record', 'game.power':'Potenza',
     'game.skip':'Entra comunque &rarr;', 'game.testskip':'Test: salta il minigame',
     'game.reset':'Rimetti la pallina sul tee',
+    'game.audioOn':'Audio acceso','game.audioOff':'Audio spento',
     'toast.tee':'Pallina sul tee', 'toast.lip':'Lip out! Troppo forte',
     'toast.out':'Fuori dal campo', 'toast.far':'Troppo lontana: torna sul tee',
     'toast.again':'Un altro putt', 'toast.hio':'HOLE IN ONE!', 'toast.par':'IN BUCA — Par!',
@@ -894,6 +956,7 @@ var I18N = {
     'game.shots':'Shots', 'game.dist':'Distance', 'game.best':'Best', 'game.power':'Power',
     'game.skip':'Enter anyway &rarr;', 'game.testskip':'Test: skip minigame',
     'game.reset':'Put the ball back on the tee',
+    'game.audioOn':'Audio on','game.audioOff':'Audio off',
     'toast.tee':'Ball on the tee', 'toast.lip':'Lip out! Too hard',
     'toast.out':'Out of bounds', 'toast.far':'Too far: back to the tee',
     'toast.again':'One more putt', 'toast.hio':'HOLE IN ONE!', 'toast.par':'IN THE HOLE — Par!',
@@ -1333,6 +1396,30 @@ function blip(freq, dur, type, vol, delay){
   o.connect(g); g.connect(actx.destination);
   o.start(t0); o.stop(t0 + dur + 0.02);
 }
+/* Goccia d'acqua per lo splash. Un click ripetuto va gestito: sotto i 70 ms
+   il suono viene saltato, e comunque non più di 5 voci sovrapposte, così
+   pigiare a raffica non satura l'uscita né accumula oscillatori. */
+var splashLast = 0, splashVoices = 0;
+function sfxSplash(){
+  var now = performance.now();
+  if (now - splashLast < 70 || splashVoices >= 5) return;
+  var ac = unlockAudio();
+  if (!ac) return;
+  splashLast = now;
+  splashVoices++;
+  var t0 = ac.currentTime;
+  var o = ac.createOscillator(), g = ac.createGain();
+  o.type = 'sine';
+  o.frequency.setValueAtTime(760 + Math.random() * 220, t0);
+  o.frequency.exponentialRampToValueAtTime(190, t0 + 0.16);
+  g.gain.setValueAtTime(0, t0);
+  g.gain.linearRampToValueAtTime(0.05, t0 + 0.008);
+  g.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.24);
+  o.connect(g); g.connect(ac.destination);
+  o.onended = function(){ splashVoices--; };
+  o.start(t0); o.stop(t0 + 0.26);
+}
+
 function sfxHit(p){ blip(160 + p*22, 0.09, 'square', 0.05); blip(520 + p*30, 0.05, 'triangle', 0.03, 0.005); }
 function sfxLip(){ blip(300, 0.12, 'sine', 0.05); blip(220, 0.16, 'sine', 0.04, 0.08); }
 function sfxSink(){ [523,659,784,1047].forEach(function(f,i){ blip(f, 0.22, 'triangle', 0.055, i*0.075); }); }
@@ -1396,12 +1483,22 @@ function refreshHUD(){
   el.dist.textContent = d.toFixed(1) + 'm';
 }
 
-document.getElementById('b-mute').onclick = function(){
-  state.muted = !state.muted;
-  this.className = 'icon-btn' + (state.muted ? ' off' : '');
-  this.title = state.muted ? 'Audio spento' : 'Audio';
+/* due pulsanti audio (gioco e sito) sullo stesso stato */
+function applyMute(){
+  var b = document.querySelectorAll('[data-mute]');
+  for (var i = 0; i < b.length; i++){
+    b[i].classList.toggle('off', state.muted);
+    b[i].title = t(state.muted ? 'game.audioOff' : 'game.audioOn');
+  }
   if (!state.muted) unlockAudio();
-};
+}
+(function bindMute(){
+  var b = document.querySelectorAll('[data-mute]');
+  for (var i = 0; i < b.length; i++){
+    b[i].addEventListener('click', function(){ state.muted = !state.muted; applyMute(); });
+  }
+  applyMute();
+})();
 document.getElementById('b-reset').onclick = function(){ resetBall(true); };
 document.getElementById('skip-a').onclick = function(){ skipToSite(); };
 /* ▼ TEST: scorciatoia per saltare il minigame — rimuovere a sito finito ▼ */
@@ -1719,6 +1816,7 @@ var WAVE_LIFE = 1.15;
 function pxSplash(e){
   if (!pxOn) return;
   pxLast = null;                      // il prossimo movimento riparte da qui
+  sfxSplash();
   pxHue += 37;
   pxWaves.push({ x:e.clientX, y:e.clientY, t:0, sp:620, band:2.2, amp:1, hue:pxTint() });
   if (pxWaves.length > 4) pxWaves.splice(0, pxWaves.length - 4);
