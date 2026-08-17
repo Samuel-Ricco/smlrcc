@@ -1,4 +1,4 @@
-# sml.rcc
+# smlrcc
 
 Sito personale di Samuel Ricco — [smlrcc.it](https://smlrcc.it)
 
@@ -9,10 +9,10 @@ dipendenze da installare, niente bundler. Si apre con un doppio click.
 
 Per entrare nel sito c'è da fare buca.
 
-**Il gate.** Una scena low-poly in three.js: green, bunker, buca con bandierina. Il
-cursore *è* la mazza: la testa segue il puntatore sul piano del green, e la pallina si
-colpisce passandoci sopra. La potenza nasce dalla velocità reale del movimento, non da
-una barra da caricare.
+**Il gate.** Si apre direttamente sul minigame, senza schermata di istruzioni. Una scena
+low-poly in three.js: green, bunker, buca con bandierina. Il cursore *è* la mazza: la
+testa segue il puntatore sul piano del green, e la pallina si colpisce passandoci sopra.
+La potenza nasce dalla velocità reale del movimento, non da una barra da caricare.
 
 - la velocità dello swing è misurata su una finestra fissa di 70 ms usando i timestamp
   dei pointer event, quindi non dipende dal framerate né dalla frequenza di polling del
@@ -28,12 +28,14 @@ riempire lo schermo di nero: quel nero diventa lo sfondo del sito. A quel punto 
 3D va in pausa, così la home non paga il costo del rendering.
 
 **La home.** Sfondo nero e una griglia di pixel che prende colore dove passa il cursore,
-poi si spegne. La palette è la stessa della scena 3D (verdi, ocra, crema).
+poi si spegne. La palette è la stessa della scena 3D (verdi, ocra, crema) e la
+tipografia è pixel: Silkscreen per titoli e interfaccia, VT323 per il testo.
 
 ## Sviluppo
 
-Basta aprire `index.html` nel browser. Serve una connessione: three.js arriva da CDN
-(con due mirror di fallback).
+Basta aprire `index.html` nel browser. Serve una connessione per due risorse esterne:
+three.js da CDN (con due mirror di fallback) e i due font da Google Fonts — senza rete
+il testo cade su un monospace di sistema.
 
 Se preferisci un server locale:
 
