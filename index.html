@@ -133,6 +133,8 @@ canvas#scene{position:fixed;inset:0;width:100%;height:100%;display:block;touch-a
   .chip .v{font-size:11px}
   .chip .k{font-size:7px}
   .power{bottom:22px;width:80vw}
+  /* su schermi stretti il tasto test finirebbe sopra la barra: va in alto */
+  #testskip{bottom:auto;top:66px;left:12px;font-size:8px;padding:7px 9px}
 }
 
 /* ============================================================
@@ -201,8 +203,8 @@ nav .btn{padding:11px 14px;font-size:10px}
 #site .btn.ghost:hover{background:rgba(73,242,224,.12)}
 
 .hero{
-  min-height:calc(100vh - 60px);display:flex;flex-direction:column;justify-content:center;
-  padding:clamp(48px,9vh,100px) clamp(16px,4vw,54px);position:relative
+  min-height:min(80vh,780px);display:flex;flex-direction:column;justify-content:flex-start;
+  padding:clamp(30px,5vh,62px) clamp(16px,4vw,54px) 150px;position:relative
 }
 .hero-in{max-width:960px}
 .hero h1{
@@ -326,14 +328,13 @@ section.panel::before{
 
 /* striscia di green in fondo all'hero: aggancio visivo al minigame */
 .greenstrip{
-  position:absolute;left:0;right:0;bottom:0;height:84px;pointer-events:none;overflow:hidden;
+  position:absolute;left:0;right:0;bottom:0;height:84px;pointer-events:none;
   border-top:3px solid var(--cyan);
   background:
     repeating-linear-gradient(90deg,rgba(10,4,20,.09) 0 11px,transparent 11px 22px),
     linear-gradient(#33cdb8 0 26px,#28b6a4 26px 56px,#1f9e93 56px 84px)
 }
 .greenstrip svg{position:absolute;bottom:10px;left:clamp(16px,7vw,120px);display:block}
-.greenstrip .ball{left:auto;right:clamp(20px,26vw,340px);bottom:20px}
 .scrolldown{bottom:104px}
 @media(max-width:560px){
   .greenstrip{height:64px}
@@ -349,6 +350,84 @@ section.panel::before{
 /* varianti del suggerimento: col mouse si traccia, col dito si tocca */
 .d-touch{display:none}
 @media(hover:none){.d-hover{display:none}.d-touch{display:inline}}
+
+/* ============================================================
+   PALLINA AL POSTO DEL PUNTO nei testi grandi
+   ============================================================ */
+.gball{
+  display:inline-block;width:.58em;height:.58em;margin-left:.1em;vertical-align:baseline;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' shape-rendering='crispEdges'%3E%3Crect x='3' y='1' width='6' height='2' fill='%23f4ecff'/%3E%3Crect x='1' y='3' width='10' height='6' fill='%23f4ecff'/%3E%3Crect x='3' y='9' width='6' height='2' fill='%23f4ecff'/%3E%3Crect x='3' y='4' width='2' height='2' fill='%23a892c8'/%3E%3Crect x='7' y='6' width='2' height='2' fill='%23a892c8'/%3E%3C/svg%3E") no-repeat center/contain
+}
+
+/* ============================================================
+   SELETTORE LINGUA — in alto a destra in entrambe le parti
+   ============================================================ */
+.lang{display:flex;gap:0;border:2px solid rgba(240,230,255,.28);background:var(--void)}
+.lang button{
+  appearance:none;border:0;background:transparent;color:rgba(240,230,255,.5);cursor:pointer;
+  font-family:var(--pixel);font-size:9px;letter-spacing:.08em;padding:8px 9px;line-height:1
+}
+.lang button:hover{color:var(--fg)}
+.lang button.on{background:var(--cyan);color:var(--deep)}
+nav .lang{border-color:var(--cyan)}
+.navright{display:flex;align-items:center;gap:10px}
+
+/* tasto di prova per saltare il minigame (temporaneo) */
+#testskip{
+  position:absolute;bottom:14px;left:14px;pointer-events:auto;
+  font-family:var(--pixel);font-size:9px;letter-spacing:.08em;padding:9px 11px;
+  color:var(--pink);background:rgba(18,10,31,.85);border:2px dashed var(--pink);cursor:pointer
+}
+#testskip:hover{background:var(--pink);color:var(--deep)}
+
+/* ============================================================
+   DECORAZIONI PIXEL ART
+   ============================================================ */
+.deco{position:absolute;pointer-events:none;image-rendering:pixelated}
+
+/* nuvole nella fascia libera a destra, sotto al titolo */
+.cloud1{top:44%;right:5%;animation:drift 9s steps(4,end) infinite alternate}
+.cloud2{top:58%;right:24%;opacity:.6;animation:drift 13s steps(4,end) infinite alternate-reverse}
+@media(max-width:900px){.cloud1{top:38%;right:3%}.cloud2{top:50%;right:20%}}
+@keyframes drift{from{transform:translateX(0)}to{transform:translateX(-22px)}}
+
+/* golf kart appoggiato sul green, a destra */
+.kart{right:clamp(12px,6vw,90px);bottom:84px;animation:bob 1.8s steps(2,end) infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+@media(max-width:820px){.kart{transform:scale(.7);transform-origin:bottom right;bottom:76px}}
+@media(max-width:560px){.cloud2{display:none}.kart{bottom:60px}}
+
+/* giocatore animato: i piedi sul green, il corpo sopra la linea d'orizzonte.
+   Selettore più specifico di ".greenstrip svg", altrimenti finisce
+   sopra la bandierina e la copre. */
+.greenstrip .golfer{position:absolute;bottom:24px;left:clamp(170px,22vw,320px);display:block}
+.golfer .club{
+  transform-box:fill-box;transform-origin:100% 0;
+  animation:swing 2.8s steps(1,end) infinite
+}
+@keyframes swing{
+  0%,18%  {transform:rotate(0deg)}
+  24%     {transform:rotate(-48deg)}
+  40%     {transform:rotate(-88deg)}
+  52%     {transform:rotate(-30deg)}
+  58%     {transform:rotate(24deg)}
+  66%,100%{transform:rotate(46deg)}
+}
+@media(max-width:560px){.greenstrip .golfer{transform:scale(.8);transform-origin:bottom left;left:130px}}
+
+/* tee davanti alle voci dei contatti */
+.contact h4{display:flex;align-items:center;gap:7px}
+.contact h4::before{
+  content:"";width:10px;height:10px;flex:0 0 10px;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' shape-rendering='crispEdges'%3E%3Crect x='3' y='0' width='4' height='2' fill='%23f4ecff'/%3E%3Crect x='2' y='2' width='6' height='2' fill='%2349f2e0'/%3E%3Crect x='4' y='4' width='2' height='6' fill='%2349f2e0'/%3E%3C/svg%3E") no-repeat center/contain
+}
+
+/* buca + bandierina nel blocco finale */
+.cta{position:relative;overflow:hidden}
+.cta::after{
+  content:"";position:absolute;right:14px;bottom:-6px;width:56px;height:56px;opacity:.35;pointer-events:none;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' shape-rendering='crispEdges'%3E%3Crect x='13' y='2' width='2' height='18' fill='%23d8d0f5'/%3E%3Crect x='15' y='3' width='8' height='3' fill='%23ff5f9e'/%3E%3Crect x='15' y='6' width='6' height='3' fill='%23ff5f9e'/%3E%3Crect x='6' y='20' width='16' height='3' fill='%23120a1f'/%3E%3Crect x='9' y='23' width='10' height='2' fill='%230f2f2c'/%3E%3C/svg%3E") no-repeat center/contain
+}
 </style>
 
 <!-- ============================= MINIGAME ============================= -->
@@ -360,20 +439,27 @@ section.panel::before{
 
   <div id="hud">
     <div class="hud-tl">
-      <div class="chip"><span class="k">Colpi</span><span class="v" id="v-shots">0</span></div>
-      <div class="chip"><span class="k">Distanza</span><span class="v" id="v-dist">—</span></div>
-      <div class="chip"><span class="k">Record</span><span class="v" id="v-best">—</span></div>
+      <div class="chip"><span class="k" data-i18n="game.shots">Colpi</span><span class="v" id="v-shots">0</span></div>
+      <div class="chip"><span class="k" data-i18n="game.dist">Distanza</span><span class="v" id="v-dist">—</span></div>
+      <div class="chip"><span class="k" data-i18n="game.best">Record</span><span class="v" id="v-best">—</span></div>
     </div>
     <div class="hud-tr">
+      <div class="lang">
+        <button data-lang="it">IT</button><button data-lang="en">EN</button>
+      </div>
       <button class="icon-btn" id="b-mute" title="Audio">&#9834;</button>
-      <button class="icon-btn" id="b-reset" title="Rimetti la pallina sul tee">&#8635;</button>
+      <button class="icon-btn" id="b-reset" data-i18n-title="game.reset" title="Rimetti la pallina sul tee">&#8635;</button>
     </div>
 
     <div class="power">
-      <div class="lab"><span>Potenza</span><span id="v-pow">0%</span></div>
+      <div class="lab"><span data-i18n="game.power">Potenza</span><span id="v-pow">0%</span></div>
       <div class="track" id="pow-track"></div>
     </div>
-    <div id="skip"><a id="skip-a">Entra comunque &rarr;</a></div>
+    <div id="skip"><a id="skip-a" data-i18n="game.skip">Entra comunque &rarr;</a></div>
+
+    <!-- ▼▼▼ TEST: scorciatoia per saltare il minigame — rimuovere a sito finito ▼▼▼ -->
+    <button id="testskip" data-i18n="game.testskip">Test: salta il minigame</button>
+    <!-- ▲▲▲ fine blocco TEST ▲▲▲ -->
   </div>
 
   <div id="toast"></div>
@@ -390,30 +476,66 @@ section.panel::before{
     <nav>
       <a class="brand" href="#top"><span class="mk">//</span><span>smlrcc</span></a>
       <div class="links">
-        <a href="#lavori">Lavori</a>
-        <a href="#stack">Stack</a>
-        <a href="#contatti">Contatti</a>
+        <a href="#lavori" data-i18n="nav.work">Lavori</a>
+        <a href="#stack" data-i18n="nav.stack">Stack</a>
+        <a href="#contatti" data-i18n="nav.contact">Contatti</a>
       </div>
-      <button class="btn sand" id="b-replay">Rigioca il putt</button>
+      <div class="navright">
+        <div class="lang">
+          <button data-lang="it">IT</button><button data-lang="en">EN</button>
+        </div>
+        <button class="btn sand" id="b-replay" data-i18n="cta.replay">Rigioca il putt</button>
+      </div>
     </nav>
 
     <header class="hero" id="top">
+      <!-- nuvole in pixel art -->
+      <svg class="deco cloud1" width="104" height="40" viewBox="0 0 52 20" shape-rendering="crispEdges" aria-hidden="true">
+        <rect x="14" y="2"  width="20" height="4" fill="#f0e0fa"/>
+        <rect x="8"  y="6"  width="34" height="4" fill="#e9c9f5"/>
+        <rect x="2"  y="10" width="46" height="4" fill="#d8a8ee"/>
+        <rect x="6"  y="14" width="38" height="3" fill="#c68ddf"/>
+      </svg>
+      <svg class="deco cloud2" width="72" height="28" viewBox="0 0 36 14" shape-rendering="crispEdges" aria-hidden="true">
+        <rect x="10" y="1" width="14" height="4" fill="#f0e0fa"/>
+        <rect x="5"  y="5" width="26" height="4" fill="#d8a8ee"/>
+        <rect x="8"  y="9" width="20" height="3" fill="#c68ddf"/>
+      </svg>
+
       <div class="hero-in">
-        <div class="eyebrow">developer &middot; smlrcc.it</div>
-        <h1>Costruisco cose<br>che si muovono<em>.</em></h1>
-        <p>Interfacce, 3D nel browser, dettagli che si notano solo quando funzionano. Sei entrato mandando la palla in buca: il resto è qui sotto.</p>
+        <div class="eyebrow"><span data-i18n="hero.eyebrow">developer &middot; smlrcc.it</span></div>
+        <h1 data-i18n="hero.title">Costruisco cose<br>che si muovono<i class="gball"></i></h1>
+        <p data-i18n="hero.lead">Interfacce, 3D nel browser, dettagli che si notano solo quando funzionano. Sei entrato mandando la palla in buca: il resto è qui sotto.</p>
         <div class="row">
-          <a class="btn" href="#lavori">Guarda i lavori</a>
-          <a class="btn ghost" href="#contatti">Scrivimi</a>
+          <a class="btn" href="#lavori" data-i18n="hero.cta1">Guarda i lavori</a>
+          <a class="btn ghost" href="#contatti" data-i18n="hero.cta2">Scrivimi</a>
         </div>
         <div class="pxhint"><b></b>
-          <span class="d-hover">muovi il cursore &middot; premi per lo splash</span>
-          <span class="d-touch">tocca lo schermo per lo splash</span>
+          <span class="d-hover" data-i18n="hero.hintMouse">muovi il cursore &middot; premi per lo splash</span>
+          <span class="d-touch" data-i18n="hero.hintTouch">tocca lo schermo per lo splash</span>
         </div>
       </div>
-      <div class="scrolldown"><span>Scorri</span><i></i></div>
 
-      <!-- green in pixel art: buca, bandiera e pallina, come nel minigame -->
+      <!-- golf kart in pixel art -->
+      <svg class="deco kart" width="144" height="104" viewBox="0 0 72 52" shape-rendering="crispEdges" aria-hidden="true">
+        <rect x="6"  y="2"  width="52" height="5"  fill="#49f2e0"/>
+        <rect x="8"  y="7"  width="4"  height="11" fill="#d8d0f5"/>
+        <rect x="52" y="7"  width="4"  height="11" fill="#d8d0f5"/>
+        <rect x="44" y="12" width="14" height="18" fill="#8a5cf0"/>
+        <rect x="46" y="6"  width="3"  height="6"  fill="#d8d0f5"/>
+        <rect x="51" y="6"  width="3"  height="6"  fill="#d8d0f5"/>
+        <rect x="14" y="16" width="22" height="10" fill="#ff5f9e"/>
+        <rect x="4"  y="26" width="58" height="14" fill="#f0e6ff"/>
+        <rect x="8"  y="30" width="20" height="5"  fill="#c9a8ff"/>
+        <rect x="10" y="40" width="12" height="10" fill="#1a0f2e"/>
+        <rect x="44" y="40" width="12" height="10" fill="#1a0f2e"/>
+        <rect x="14" y="43" width="4"  height="4"  fill="#49f2e0"/>
+        <rect x="48" y="43" width="4"  height="4"  fill="#49f2e0"/>
+      </svg>
+
+      <div class="scrolldown"><span data-i18n="hero.scroll">Scorri</span><i></i></div>
+
+      <!-- green in pixel art: buca, bandiera, pallina e giocatore animato -->
       <div class="greenstrip">
         <svg width="120" height="54" viewBox="0 0 120 54" shape-rendering="crispEdges" aria-hidden="true">
           <rect x="30" y="4"  width="4"  height="34" fill="#d8d0f5"/>
@@ -429,31 +551,51 @@ section.panel::before{
           <rect x="83" y="43" width="3"  height="3"  fill="#a892c8"/>
           <rect x="89" y="45" width="3"  height="3"  fill="#a892c8"/>
         </svg>
+
+        <svg class="golfer" width="72" height="88" viewBox="0 0 36 44" shape-rendering="crispEdges" aria-hidden="true">
+          <rect x="12" y="0"  width="12" height="3" fill="#49f2e0"/>
+          <rect x="22" y="1"  width="4"  height="2" fill="#49f2e0"/>
+          <rect x="13" y="3"  width="10" height="8" fill="#f0e6ff"/>
+          <rect x="20" y="6"  width="2"  height="2" fill="#1a0f2e"/>
+          <rect x="11" y="11" width="14" height="12" fill="#ff5f9e"/>
+          <rect x="11" y="23" width="14" height="9"  fill="#8a5cf0"/>
+          <rect x="11" y="32" width="5"  height="8"  fill="#8a5cf0"/>
+          <rect x="20" y="32" width="5"  height="8"  fill="#8a5cf0"/>
+          <rect x="9"  y="40" width="9"  height="4"  fill="#f0e6ff"/>
+          <rect x="19" y="40" width="9"  height="4"  fill="#f0e6ff"/>
+          <g class="club">
+            <rect x="20" y="13" width="7"  height="4" fill="#f0e6ff"/>
+            <rect x="16" y="17" width="6"  height="4" fill="#d8d0f5"/>
+            <rect x="12" y="21" width="6"  height="4" fill="#d8d0f5"/>
+            <rect x="8"  y="25" width="6"  height="4" fill="#d8d0f5"/>
+            <rect x="2"  y="29" width="9"  height="6" fill="#33254f"/>
+          </g>
+        </svg>
       </div>
     </header>
 
     <section class="panel" id="lavori">
       <div class="wrap">
-        <div class="eyebrow" style="color:var(--sand);font-family:var(--mono);letter-spacing:.16em">Lavori</div>
-        <h2 class="h2">Selezione<br>di progetti.</h2>
-        <p class="lead">Tre slot pronti da riempire: titolo, due righe di descrizione e i tag della tecnologia usata.</p>
+        <div class="eyebrow"><span data-i18n="work.eyebrow">Lavori</span></div>
+        <h2 class="h2" data-i18n="work.title">Selezione<br>di progetti<i class="gball"></i></h2>
+        <p class="lead" data-i18n="work.lead">Tre slot pronti da riempire: titolo, due righe di descrizione e i tag della tecnologia usata.</p>
         <div class="cards">
           <div class="tile">
-            <div class="glyph">Hole 01 &middot; segnaposto</div>
-            <h3>Titolo del progetto</h3>
-            <p>Due righe su cosa fa, per chi è stato fatto e qual era il problema da risolvere.</p>
+            <div class="glyph"><span data-i18n="work.slot1">Hole 01 &middot; segnaposto</span></div>
+            <h3 data-i18n="work.cardTitle">Titolo del progetto</h3>
+            <p data-i18n="work.cardText">Due righe su cosa fa, per chi è stato fatto e qual era il problema da risolvere.</p>
             <div class="tags"><span>three.js</span><span>WebGL</span></div>
           </div>
           <div class="tile">
-            <div class="glyph">Hole 02 &middot; segnaposto</div>
-            <h3>Titolo del progetto</h3>
-            <p>Due righe su cosa fa, per chi è stato fatto e qual era il problema da risolvere.</p>
-            <div class="tags"><span>TypeScript</span><span>React</span></div>
+            <div class="glyph"><span data-i18n="work.slot2">Hole 02 &middot; segnaposto</span></div>
+            <h3 data-i18n="work.cardTitle">Titolo del progetto</h3>
+            <p data-i18n="work.cardText">Due righe su cosa fa, per chi è stato fatto e qual era il problema da risolvere.</p>
+            <div class="tags"><span>Java</span><span>SQL</span></div>
           </div>
           <div class="tile">
-            <div class="glyph">Hole 03 &middot; segnaposto</div>
-            <h3>Titolo del progetto</h3>
-            <p>Due righe su cosa fa, per chi è stato fatto e qual era il problema da risolvere.</p>
+            <div class="glyph"><span data-i18n="work.slot3">Hole 03 &middot; segnaposto</span></div>
+            <h3 data-i18n="work.cardTitle">Titolo del progetto</h3>
+            <p data-i18n="work.cardText">Due righe su cosa fa, per chi è stato fatto e qual era il problema da risolvere.</p>
             <div class="tags"><span>Node</span><span>Postgres</span></div>
           </div>
         </div>
@@ -462,16 +604,18 @@ section.panel::before{
 
     <section class="panel" id="stack">
       <div class="wrap">
-        <div class="eyebrow" style="color:var(--sand);font-family:var(--mono);letter-spacing:.16em">Stack</div>
-        <h2 class="h2">Con cosa<br>lavoro.</h2>
+        <div class="eyebrow"><span data-i18n="stack.eyebrow">Stack</span></div>
+        <h2 class="h2" data-i18n="stack.title">Con cosa<br>lavoro<i class="gball"></i></h2>
         <div class="two">
           <ul class="ticks">
-            <li>Front-end: componenti, stato, performance e accessibilità.</li>
-            <li>3D e canvas nel browser, dalla scena alla fisica del gioco.</li>
-            <li>Back-end e API, con attenzione ai dati e ai casi limite.</li>
-            <li>Un file solo quando basta un file solo.</li>
+            <li data-i18n="stack.li1">Esperienza in ambienti bancari.</li>
+            <li data-i18n="stack.li2">Back-end e API, con attenzione ai dati e ai casi limite.</li>
+            <li data-i18n="stack.li3">Front-end: componenti, stato, performance e accessibilità.</li>
+            <li data-i18n="stack.li4">3D e canvas nel browser, dalla scena alla fisica del gioco.</li>
+            <li data-i18n="stack.li5">Un file solo quando basta un file solo.</li>
           </ul>
           <div class="chips">
+            <span>Java</span><span>SQL</span><span>ESQL</span>
             <span>JavaScript</span><span>TypeScript</span><span>three.js</span>
             <span>React</span><span>Node</span><span>Python</span>
             <span>CSS</span><span>Git</span>
@@ -482,43 +626,160 @@ section.panel::before{
 
     <section class="panel" id="contatti">
       <div class="wrap">
-        <div class="eyebrow" style="color:var(--sand);font-family:var(--mono);letter-spacing:.16em">Contatti</div>
-        <h2 class="h2">Parliamone.</h2>
-        <p class="lead">Per un progetto, una consulenza o due domande: la strada più veloce è l'email.</p>
+        <div class="eyebrow"><span data-i18n="contact.eyebrow">Contatti</span></div>
+        <h2 class="h2" data-i18n="contact.title">Parliamone<i class="gball"></i></h2>
+        <p class="lead" data-i18n="contact.lead">Per un progetto, una consulenza o due domande: la strada più veloce è l'email.</p>
         <div class="contact">
           <div>
-            <h4>Email</h4>
+            <h4><span data-i18n="contact.email">Email</span></h4>
             <p><a href="mailto:ciao@smlrcc.it">ciao@smlrcc.it</a></p>
           </div>
           <div>
-            <h4>Codice</h4>
+            <h4><span data-i18n="contact.code">Codice</span></h4>
             <p>github.com/Samuel-Ricco</p>
           </div>
           <div>
-            <h4>Altrove</h4>
+            <h4><span data-i18n="contact.else">Altrove</span></h4>
             <p>linkedin.com/in/&hellip;</p>
           </div>
         </div>
 
         <div class="cta">
           <div>
-            <h3>Ti è piaciuta la buca?</h3>
-            <p>Torna sul green e prova a chiudere in un colpo solo.</p>
+            <h3 data-i18n="cta.title">Ti è piaciuta la buca?</h3>
+            <p data-i18n="cta.text">Torna sul green e prova a chiudere in un colpo solo.</p>
           </div>
-          <button class="btn" id="b-replay-3">Rigioca il putt</button>
+          <button class="btn" id="b-replay-3" data-i18n="cta.replay">Rigioca il putt</button>
         </div>
       </div>
     </section>
 
     <footer>
-      <span><b>smlrcc.it</b> &mdash; home base, contenuti in arrivo.</span>
-      <span class="arcade"><i></i>credit 01 &middot; three.js in un solo file</span>
+      <span data-i18n="footer.left"><b>smlrcc.it</b> &mdash; home base, contenuti in arrivo.</span>
+      <span class="arcade"><i></i><span data-i18n="footer.right">credit 01 &middot; three.js in un solo file</span></span>
     </footer>
   </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.152.2/three.min.js"></script>
 <script>
+/* ============================================================
+   0a. Lingua: IT / EN. Vive fuori da init() così il selettore
+       funziona anche se three.js non arriva.
+   ============================================================ */
+var LANG = 'it';
+var I18N = {
+  it:{
+    'nav.work':'Lavori', 'nav.stack':'Stack', 'nav.contact':'Contatti',
+    'hero.eyebrow':'developer &middot; smlrcc.it',
+    'hero.title':'Costruisco cose<br>che si muovono<i class="gball"></i>',
+    'hero.lead':"Interfacce, 3D nel browser, dettagli che si notano solo quando funzionano. Sei entrato mandando la palla in buca: il resto è qui sotto.",
+    'hero.cta1':'Guarda i lavori', 'hero.cta2':'Scrivimi',
+    'hero.hintMouse':'muovi il cursore &middot; premi per lo splash',
+    'hero.hintTouch':'tocca lo schermo per lo splash',
+    'hero.scroll':'Scorri',
+    'work.eyebrow':'Lavori',
+    'work.title':'Selezione<br>di progetti<i class="gball"></i>',
+    'work.lead':'Tre slot pronti da riempire: titolo, due righe di descrizione e i tag della tecnologia usata.',
+    'work.slot1':'Hole 01 &middot; segnaposto', 'work.slot2':'Hole 02 &middot; segnaposto', 'work.slot3':'Hole 03 &middot; segnaposto',
+    'work.cardTitle':'Titolo del progetto',
+    'work.cardText':'Due righe su cosa fa, per chi è stato fatto e qual era il problema da risolvere.',
+    'stack.eyebrow':'Stack',
+    'stack.title':'Con cosa<br>lavoro<i class="gball"></i>',
+    'stack.li1':'Esperienza in ambienti bancari.',
+    'stack.li2':'Back-end e API, con attenzione ai dati e ai casi limite.',
+    'stack.li3':'Front-end: componenti, stato, performance e accessibilità.',
+    'stack.li4':'3D e canvas nel browser, dalla scena alla fisica del gioco.',
+    'stack.li5':'Un file solo quando basta un file solo.',
+    'contact.eyebrow':'Contatti',
+    'contact.title':'Parliamone<i class="gball"></i>',
+    'contact.lead':"Per un progetto, una consulenza o due domande: la strada più veloce è l'email.",
+    'contact.email':'Email', 'contact.code':'Codice', 'contact.else':'Altrove',
+    'cta.title':'Ti è piaciuta la buca?',
+    'cta.text':'Torna sul green e prova a chiudere in un colpo solo.',
+    'cta.replay':'Rigioca il putt',
+    'footer.left':'<b>smlrcc.it</b> &mdash; home base, contenuti in arrivo.',
+    'footer.right':'credit 01 &middot; three.js in un solo file',
+    'game.shots':'Colpi', 'game.dist':'Distanza', 'game.best':'Record', 'game.power':'Potenza',
+    'game.skip':'Entra comunque &rarr;', 'game.testskip':'Test: salta il minigame',
+    'game.reset':'Rimetti la pallina sul tee',
+    'toast.tee':'Pallina sul tee', 'toast.lip':'Lip out! Troppo forte',
+    'toast.out':'Fuori dal campo', 'toast.far':'Troppo lontana: torna sul tee',
+    'toast.again':'Un altro putt', 'toast.hio':'HOLE IN ONE!', 'toast.par':'IN BUCA — Par!',
+    'toast.shots':'IN BUCA in %n colpi', 'toast.entering':'entro in smlrcc&hellip;'
+  },
+  en:{
+    'nav.work':'Work', 'nav.stack':'Stack', 'nav.contact':'Contact',
+    'hero.eyebrow':'developer &middot; smlrcc.it',
+    'hero.title':'I build things<br>that move<i class="gball"></i>',
+    'hero.lead':'Interfaces, 3D in the browser, details you only notice when they work. You got in by sinking the putt: the rest is below.',
+    'hero.cta1':'See the work', 'hero.cta2':'Get in touch',
+    'hero.hintMouse':'move the cursor &middot; press for a splash',
+    'hero.hintTouch':'tap the screen for a splash',
+    'hero.scroll':'Scroll',
+    'work.eyebrow':'Work',
+    'work.title':'Selected<br>projects<i class="gball"></i>',
+    'work.lead':'Three slots ready to fill: title, two lines of description and the tech tags.',
+    'work.slot1':'Hole 01 &middot; placeholder', 'work.slot2':'Hole 02 &middot; placeholder', 'work.slot3':'Hole 03 &middot; placeholder',
+    'work.cardTitle':'Project title',
+    'work.cardText':'Two lines on what it does, who it was for and the problem it had to solve.',
+    'stack.eyebrow':'Stack',
+    'stack.title':'What I<br>work with<i class="gball"></i>',
+    'stack.li1':'Experience in banking environments.',
+    'stack.li2':'Back-end and APIs, with an eye on data and edge cases.',
+    'stack.li3':'Front-end: components, state, performance and accessibility.',
+    'stack.li4':'3D and canvas in the browser, from the scene to the game physics.',
+    'stack.li5':'A single file when a single file is enough.',
+    'contact.eyebrow':'Contact',
+    'contact.title':"Let's talk<i class=\"gball\"></i>",
+    'contact.lead':'For a project, some advice or a couple of questions: email is the fastest way.',
+    'contact.email':'Email', 'contact.code':'Code', 'contact.else':'Elsewhere',
+    'cta.title':'Enjoyed that hole?',
+    'cta.text':'Head back to the green and try to close it in one.',
+    'cta.replay':'Play the putt again',
+    'footer.left':'<b>smlrcc.it</b> &mdash; home base, content on its way.',
+    'footer.right':'credit 01 &middot; three.js in a single file',
+    'game.shots':'Shots', 'game.dist':'Distance', 'game.best':'Best', 'game.power':'Power',
+    'game.skip':'Enter anyway &rarr;', 'game.testskip':'Test: skip minigame',
+    'game.reset':'Put the ball back on the tee',
+    'toast.tee':'Ball on the tee', 'toast.lip':'Lip out! Too hard',
+    'toast.out':'Out of bounds', 'toast.far':'Too far: back to the tee',
+    'toast.again':'One more putt', 'toast.hio':'HOLE IN ONE!', 'toast.par':'IN THE HOLE — Par!',
+    'toast.shots':'IN THE HOLE in %n shots', 'toast.entering':'entering smlrcc&hellip;'
+  }
+};
+
+function t(k){
+  var d = I18N[LANG] || I18N.it;
+  return (k in d) ? d[k] : (k in I18N.it ? I18N.it[k] : k);
+}
+
+function applyLang(lang){
+  LANG = (lang === 'en') ? 'en' : 'it';
+  document.documentElement.setAttribute('lang', LANG);
+  var n = document.querySelectorAll('[data-i18n]'), i;
+  for (i = 0; i < n.length; i++) n[i].innerHTML = t(n[i].getAttribute('data-i18n'));
+  var a = document.querySelectorAll('[data-i18n-title]');
+  for (i = 0; i < a.length; i++) a[i].title = t(a[i].getAttribute('data-i18n-title'));
+  var b = document.querySelectorAll('[data-lang]');
+  for (i = 0; i < b.length; i++){
+    b[i].classList.toggle('on', b[i].getAttribute('data-lang') === LANG);
+  }
+  try { localStorage.setItem('smlrcc-lang', LANG); } catch(e){}
+}
+
+(function initLang(){
+  var saved = null;
+  try { saved = localStorage.getItem('smlrcc-lang'); } catch(e){}
+  var guess = (navigator.language || '').toLowerCase().indexOf('it') === 0 ? 'it' : 'en';
+  applyLang(saved || guess);
+  var b = document.querySelectorAll('[data-lang]');
+  for (var i = 0; i < b.length; i++){
+    b[i].addEventListener('click', function(){ applyLang(this.getAttribute('data-lang')); });
+  }
+})();
+
+
 /* ============================================================
    0. Caricamento three.js (con fallback CDN)
    ============================================================ */
@@ -957,6 +1218,9 @@ document.getElementById('b-mute').onclick = function(){
 };
 document.getElementById('b-reset').onclick = function(){ resetBall(true); };
 document.getElementById('skip-a').onclick = function(){ skipToSite(); };
+/* ▼ TEST: scorciatoia per saltare il minigame — rimuovere a sito finito ▼ */
+document.getElementById('testskip').onclick = function(){ skipToSite(); };
+/* ▲ fine blocco TEST ▲ */
 ['b-replay','b-replay-3'].forEach(function(id){
   var b = document.getElementById(id);
   if (b) b.onclick = function(){ backToGame(); };
@@ -968,7 +1232,7 @@ function resetBall(manual){
   ball.position.x += (Math.random() - 0.5) * 1.2;
   ball.rotation.set(0, 0, 0);
   state.stopT = 0;
-  if (manual) toast('Pallina sul tee', 900);
+  if (manual) toast(t('toast.tee'), 900);
   refreshHUD();
 }
 
@@ -1014,7 +1278,7 @@ function backToGame(){
   state.sunkT = 0;
   resetBall(false);
   state.phase = 'play';
-  toast('Un altro putt', 900);
+  toast(t('toast.again'), 900);
   if (state.paused){
     state.paused = false;
     last = performance.now();
@@ -1086,10 +1350,10 @@ function sink(){
   state.sunkT = 0;
   bvel.set(0, 0, 0);
   sfxSink();
-  var msg = state.shots === 1 ? 'HOLE IN ONE!' :
-            state.shots <= PAR ? 'IN BUCA — Par!' :
-            'IN BUCA in ' + state.shots + ' colpi';
-  toast(msg + '<br><span style="font-size:13px;font-weight:600;opacity:.8">entro in smlrcc&hellip;</span>', 1500);
+  var msg = state.shots === 1 ? t('toast.hio') :
+            state.shots <= PAR ? t('toast.par') :
+            t('toast.shots').replace('%n', state.shots);
+  toast(msg + '<br><span style="font-size:11px;opacity:.75">' + t('toast.entering') + '</span>', 1500);
 }
 
 function stepBall(dt){
@@ -1132,14 +1396,14 @@ function stepBall(dt){
       var nz = bvel.x * Math.sin(ang) + bvel.z * Math.cos(ang);
       bvel.set(nx * 0.5, 0.5, nz * 0.5);
       sfxLip();
-      toast('Lip out! Troppo forte', 1200);
+      toast(t('toast.lip'), 1200);
     }
   }
   if (state.lipT > 0) state.lipT -= dt;
 
   // fuori campo / troppo lontano
   var r = Math.hypot(p.x, p.z);
-  if (r > 34){ toast('Fuori dal campo', 1200); resetBall(false); return; }
+  if (r > 34){ toast(t('toast.out'), 1200); resetBall(false); return; }
 
   // fermata
   if (!airborne && sp2 < 0.09){
@@ -1147,7 +1411,7 @@ function stepBall(dt){
     state.stopT += dt;
     if (state.stopT > 0.9 && state.phase === 'play'){
       state.stopT = 0;
-      if (r > 16 || dh > 16){ toast('Troppo lontana: torna sul tee', 1300); resetBall(false); }
+      if (r > 16 || dh > 16){ toast(t('toast.far'), 1300); resetBall(false); }
     }
   } else {
     state.stopT = 0;
