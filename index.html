@@ -396,8 +396,8 @@ section.panel::before{
     linear-gradient(#3ad8c0 0 34px,#2ec2ae 34px 76px,#26a89b 76px 118px)
 }
 .teegreen svg{position:absolute;display:block}
-.teegreen .teeflag{left:clamp(14px,9vw,170px);bottom:14px}
-.teegreen .teebox{left:clamp(120px,24vw,380px);bottom:20px}
+.teegreen .teeflag{left:clamp(14px,9vw,170px);bottom:4px}   /* l'asta non va tagliata dal bordo */
+.teegreen .teeball{left:clamp(110px,22vw,340px);bottom:22px}
 .teegreen .kart{right:clamp(12px,7vw,110px);bottom:10px;left:auto}
 .scrolldown{bottom:150px}
 /* schermi bassi: senza questo il testo sfonda l'altezza dell'hero e il
@@ -412,8 +412,8 @@ section.panel::before{
 }
 @media(max-width:700px){
   .teegreen{height:96px}
-  .teegreen .teeflag{bottom:8px;transform:scale(.72);transform-origin:bottom left}
-  .teegreen .teebox{left:120px;bottom:12px;transform:scale(.75);transform-origin:bottom left}
+  .teegreen .teeflag{bottom:6px;transform:scale(.72);transform-origin:bottom left}
+  .teegreen .teeball{left:110px;bottom:16px}
   .teegreen .kart{transform:scale(.62);transform-origin:bottom right;bottom:6px}
   .scrolldown{bottom:118px}
 }
@@ -705,27 +705,26 @@ nav .lang{border-color:var(--cyan)}
           <rect x="8"  y="23" width="4"  height="2"  fill="#49f2e0"/>
           <rect x="28" y="23" width="4"  height="2"  fill="#49f2e0"/>
         </svg>
-        <!-- bandierina della partenza: pennant a punta e colore menta,
-             diversa da quella della buca in fondo alla pagina -->
-        <svg class="teeflag" width="76" height="104" viewBox="0 0 38 52" shape-rendering="crispEdges" aria-hidden="true">
+        <!-- bandierina oro con la sua buca sotto: l'oro stacca sul verde,
+             mentre il rosa resta alla buca che chiude la pagina -->
+        <svg class="teeflag" width="76" height="112" viewBox="0 0 38 56" shape-rendering="crispEdges" aria-hidden="true">
           <rect x="16" y="1"  width="3"  height="46" fill="#f0e6ff"/>
-          <rect x="19" y="3"  width="14" height="3"  fill="#7cf0a8"/>
-          <rect x="19" y="6"  width="11" height="3"  fill="#7cf0a8"/>
-          <rect x="19" y="9"  width="8"  height="3"  fill="#5fd98f"/>
-          <rect x="19" y="12" width="5"  height="3"  fill="#5fd98f"/>
-          <rect x="12" y="47" width="11" height="3"  fill="#1f8f80"/>
+          <rect x="19" y="3"  width="14" height="3"  fill="#ffd36e"/>
+          <rect x="19" y="6"  width="11" height="3"  fill="#ffc44f"/>
+          <rect x="19" y="9"  width="8"  height="3"  fill="#f5b44f"/>
+          <rect x="19" y="12" width="5"  height="3"  fill="#e59f38"/>
+          <rect x="9"  y="46" width="17" height="4"  fill="#1a7d72"/>
+          <rect x="6"  y="50" width="23" height="5"  fill="#120a1f"/>
+          <rect x="10" y="55" width="15" height="1"  fill="#1a7d72"/>
         </svg>
 
-        <svg class="teebox" width="56" height="52" viewBox="0 0 28 26" shape-rendering="crispEdges" aria-hidden="true">
-          <rect x="9"  y="1"  width="8"  height="2" fill="#f4ecff"/>
-          <rect x="7"  y="3"  width="12" height="8" fill="#f4ecff"/>
-          <rect x="9"  y="11" width="8"  height="2" fill="#f4ecff"/>
-          <rect x="9"  y="5"  width="3"  height="3" fill="#a892c8"/>
-          <rect x="14" y="8"  width="3"  height="3" fill="#a892c8"/>
-          <rect x="11" y="13" width="6"  height="2" fill="#d8d0f5"/>
-          <rect x="12" y="15" width="3"  height="6" fill="#d8d0f5"/>
-          <rect x="1"  y="18" width="4"  height="6" fill="#49f2e0"/>
-          <rect x="23" y="18" width="4"  height="6" fill="#49f2e0"/>
+        <!-- pallina piccola, senza segnalini -->
+        <svg class="teeball" width="24" height="24" viewBox="0 0 12 12" shape-rendering="crispEdges" aria-hidden="true">
+          <rect x="3" y="1" width="6"  height="2" fill="#f4ecff"/>
+          <rect x="1" y="3" width="10" height="6" fill="#f4ecff"/>
+          <rect x="3" y="9" width="6"  height="2" fill="#f4ecff"/>
+          <rect x="3" y="4" width="2"  height="2" fill="#a892c8"/>
+          <rect x="7" y="6" width="2"  height="2" fill="#a892c8"/>
         </svg>
       </div>
     </header>
