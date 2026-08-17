@@ -146,6 +146,16 @@ canvas#scene{position:fixed;inset:0;width:100%;height:100%;display:block;touch-a
 }
 #site.on{opacity:1;pointer-events:auto}
 
+/* Cursore = mazza pixel art. Il punto attivo è la testa (8 25), cioè
+   esattamente il punto che accende le celle: come nel minigame, colpisci
+   con la testa. Variante ciano/rosa sugli elementi cliccabili. */
+#site,#site *{
+  cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' shape-rendering='crispEdges'%3E%3Crect x='24' y='2' width='6' height='4' fill='%23141024'/%3E%3Crect x='21' y='6' width='5' height='4' fill='%23141024'/%3E%3Crect x='19' y='10' width='4' height='3' fill='%23d8d0f5'/%3E%3Crect x='16' y='13' width='4' height='3' fill='%23d8d0f5'/%3E%3Crect x='13' y='16' width='4' height='3' fill='%23d8d0f5'/%3E%3Crect x='10' y='19' width='4' height='3' fill='%23d8d0f5'/%3E%3Crect x='3' y='22' width='10' height='7' fill='%2333254f'/%3E%3Crect x='3' y='22' width='3' height='7' fill='%238f7ec9'/%3E%3C/svg%3E") 8 25,default
+}
+#site a,#site button,#site .tile{
+  cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' shape-rendering='crispEdges'%3E%3Crect x='24' y='2' width='6' height='4' fill='%23141024'/%3E%3Crect x='21' y='6' width='5' height='4' fill='%23141024'/%3E%3Crect x='19' y='10' width='4' height='3' fill='%23f0e6ff'/%3E%3Crect x='16' y='13' width='4' height='3' fill='%23f0e6ff'/%3E%3Crect x='13' y='16' width='4' height='3' fill='%23f0e6ff'/%3E%3Crect x='10' y='19' width='4' height='3' fill='%23f0e6ff'/%3E%3Crect x='3' y='22' width='10' height='7' fill='%23ff5f9e'/%3E%3Crect x='3' y='22' width='3' height='7' fill='%2349f2e0'/%3E%3C/svg%3E") 8 25,pointer
+}
+
 /* griglia di pixel: i puntini sono CSS, le celle accese le disegna il canvas */
 #px{
   position:fixed;inset:0;z-index:0;pointer-events:none;display:block;
@@ -153,6 +163,14 @@ canvas#scene{position:fixed;inset:0;width:100%;height:100%;display:block;touch-a
   background-size:22px 22px;background-position:-1px -1px
 }
 .site-in{position:relative;z-index:1}
+
+/* Le celle colorate passano dietro al testo: sul testo piccolo serve un
+   alone scuro, altrimenti su una cella accesa scompare. */
+.site-in .eyebrow,.hero p,.pxhint,.scrolldown,.lead,.links a,
+.tile p,.tile .glyph,.tags span,ul.ticks li,.chips span,
+.contact h4,.contact p,.cta p,footer{
+  text-shadow:0 0 5px var(--void),0 0 10px var(--void)
+}
 
 nav{
   position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;
@@ -164,7 +182,7 @@ nav{
   color:var(--deep);font-family:var(--pixel);font-weight:700;font-size:11px}
 .brand span{font-family:var(--pixel);font-weight:700;letter-spacing:.06em;font-size:14px}
 .links{display:flex;gap:22px}
-.links a{color:rgba(240,230,255,.6);text-decoration:none;font-family:var(--pixel);
+.links a{color:rgba(240,230,255,.74);text-decoration:none;font-family:var(--pixel);
   font-size:10px;letter-spacing:.1em;text-transform:uppercase}
 .links a:hover{color:var(--fg)}
 nav .btn{padding:11px 14px;font-size:10px}
@@ -181,10 +199,10 @@ nav .btn{padding:11px 14px;font-size:10px}
 }
 .hero h1 em{font-style:normal;color:var(--pink)}
 .hero p{margin:0 0 32px;max-width:44ch;font-size:clamp(19px,2vw,23px);line-height:1.45;
-  color:rgba(240,230,255,.72)}
+  color:rgba(240,230,255,.84)}
 .pxhint{
   margin-top:36px;font-family:var(--pixel);font-size:9.5px;letter-spacing:.12em;
-  text-transform:uppercase;color:rgba(240,230,255,.4);display:flex;align-items:center;gap:9px
+  text-transform:uppercase;color:rgba(240,230,255,.55);display:flex;align-items:center;gap:9px
 }
 .pxhint b{width:9px;height:9px;background:var(--pink);display:block;
   animation:blink 1.4s steps(1) infinite}
@@ -192,7 +210,7 @@ nav .btn{padding:11px 14px;font-size:10px}
 
 .scrolldown{
   position:absolute;bottom:22px;left:50%;transform:translateX(-50%);
-  font-family:var(--pixel);color:rgba(240,230,255,.36);font-size:8.5px;letter-spacing:.2em;
+  font-family:var(--pixel);color:rgba(240,230,255,.5);font-size:8.5px;letter-spacing:.2em;
   text-transform:uppercase;display:flex;flex-direction:column;align-items:center;gap:8px
 }
 .scrolldown i{display:block;width:2px;height:26px;background:rgba(240,230,255,.4);
@@ -205,13 +223,13 @@ section.panel{padding:clamp(56px,9vw,110px) clamp(16px,4vw,54px);
 .wrap{max-width:1120px;margin:0 auto}
 .h2{font-family:var(--pixel);font-weight:700;font-size:clamp(22px,3.6vw,40px);line-height:1.2;
   margin:14px 0 20px;color:var(--fg)}
-.lead{font-size:clamp(19px,1.9vw,22px);line-height:1.5;color:rgba(240,230,255,.68);
+.lead{font-size:clamp(19px,1.9vw,22px);line-height:1.5;color:rgba(240,230,255,.8);
   max-width:56ch;margin:0}
 
 .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:44px}
 @media(max-width:900px){.cards{grid-template-columns:1fr}}
 .tile{
-  background:rgba(240,230,255,.03);border:2px solid rgba(240,230,255,.16);padding:24px;
+  background:rgba(18,10,31,.66);border:2px solid rgba(240,230,255,.16);padding:24px;
   box-shadow:5px 5px 0 rgba(240,230,255,.05);
   transition:transform .1s steps(2),border-color .1s steps(2),box-shadow .1s steps(2)
 }
@@ -220,27 +238,27 @@ section.panel{padding:clamp(56px,9vw,110px) clamp(16px,4vw,54px);
 .tile .glyph{font-family:var(--pixel);font-size:9px;letter-spacing:.12em;color:var(--pink);
   margin-bottom:16px;text-transform:uppercase}
 .tile h3{margin:0 0 10px;font-family:var(--pixel);font-size:14px;line-height:1.4;color:var(--fg)}
-.tile p{margin:0 0 18px;font-size:19px;line-height:1.4;color:rgba(240,230,255,.62)}
+.tile p{margin:0 0 18px;font-size:19px;line-height:1.4;color:rgba(240,230,255,.76)}
 .tags{display:flex;flex-wrap:wrap;gap:6px}
 .tags span{font-family:var(--pixel);font-size:8.5px;padding:6px 8px;
-  background:rgba(240,230,255,.08);color:rgba(240,230,255,.75)}
+  background:rgba(18,10,31,.72);color:rgba(240,230,255,.88)}
 
 .two{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(28px,5vw,64px);align-items:start;margin-top:44px}
 @media(max-width:900px){.two{grid-template-columns:1fr}}
 ul.ticks{list-style:none;margin:0;padding:0;display:grid;gap:16px}
-ul.ticks li{display:flex;gap:14px;font-size:19px;line-height:1.4;color:rgba(240,230,255,.7)}
+ul.ticks li{display:flex;gap:14px;font-size:19px;line-height:1.4;color:rgba(240,230,255,.82)}
 ul.ticks li::before{content:"";flex:0 0 10px;height:10px;background:var(--pink);margin-top:6px}
 
 .chips{display:flex;flex-wrap:wrap;gap:8px;align-content:flex-start}
 .chips span{font-family:var(--pixel);font-size:10px;padding:10px 12px;
-  background:rgba(240,230,255,.05);border:2px solid rgba(240,230,255,.16);color:rgba(240,230,255,.85)}
+  background:rgba(18,10,31,.72);border:2px solid rgba(240,230,255,.2);color:rgba(240,230,255,.92)}
 
 .contact{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:42px}
 @media(max-width:900px){.contact{grid-template-columns:1fr}}
 .contact div{border-top:2px solid rgba(240,230,255,.2);padding-top:16px}
 .contact h4{margin:0 0 10px;font-family:var(--pixel);font-size:9px;letter-spacing:.14em;
   text-transform:uppercase;color:var(--pink)}
-.contact p{margin:0;font-size:19px;line-height:1.55;color:rgba(240,230,255,.78)}
+.contact p{margin:0;font-size:19px;line-height:1.55;color:rgba(240,230,255,.88)}
 .contact a{color:var(--fg);text-decoration:underline;text-underline-offset:4px}
 .contact a:hover{color:var(--pink)}
 
@@ -250,10 +268,10 @@ ul.ticks li::before{content:"";flex:0 0 10px;height:10px;background:var(--pink);
   display:flex;gap:24px;align-items:center;justify-content:space-between;flex-wrap:wrap
 }
 .cta h3{margin:0 0 8px;font-family:var(--pixel);font-size:clamp(14px,2.2vw,20px);line-height:1.35;color:var(--fg)}
-.cta p{margin:0;font-size:19px;color:rgba(240,230,255,.66)}
+.cta p{margin:0;font-size:19px;color:rgba(240,230,255,.8)}
 
 footer{
-  border-top:2px solid rgba(240,230,255,.12);color:rgba(240,230,255,.45);
+  border-top:2px solid rgba(240,230,255,.12);color:rgba(240,230,255,.62);
   padding:30px clamp(16px,4vw,54px);font-family:var(--pixel);font-size:9px;line-height:1.9;
   letter-spacing:.06em;display:flex;gap:16px;justify-content:space-between;flex-wrap:wrap
 }
@@ -486,7 +504,7 @@ var canvas   = document.getElementById('scene');
    canvas viene stirato a schermo pieno con image-rendering:pixelated, cioè
    nearest-neighbor. Niente antialias, altrimenti i bordi arrivano sfumati
    e ingranditi. Costa meno di un render a risoluzione piena. */
-var PIX_H = 210;
+var PIX_H = 300;      // più alto = pixel più fini
 var renderer = new THREE.WebGLRenderer({ canvas:canvas, antialias:false, alpha:true });
 renderer.setPixelRatio(1);
 renderer.setClearAlpha(0);
@@ -1104,8 +1122,13 @@ function pxResize(){
   }
 }
 
-/* tinta dentro la palette vaporwave: menta -> ciano -> blu -> viola -> magenta */
-function pxTint(){ return 150 + (pxHue % 200); }
+/* Tinta nella palette vaporwave: menta -> ciano -> blu -> viola -> magenta.
+   Onda triangolare, non a dente di sega: arrivata a fondo scala torna
+   indietro invece di ripartire dall'inizio, così non c'è mai uno scatto. */
+function pxTint(){
+  var t = pxHue % 400;
+  return 150 + (t < 200 ? t : 400 - t);
+}
 
 function pxTouch(x, y){
   var ci = Math.floor(x / PX_CELL), cj = Math.floor(y / PX_CELL);
@@ -1154,8 +1177,8 @@ function pxFrame(now){
     for (var i = 0; i < pxCols; i++){
       var k = row + i, e = pxEnergy[k];
       if (e > 0.006){
-        pxx.globalAlpha = Math.min(1, e) * 0.62;
-        pxx.fillStyle = 'hsl(' + pxHueArr[k].toFixed(0) + ',88%,62%)';
+        pxx.globalAlpha = Math.min(1, e) * 0.44;
+        pxx.fillStyle = 'hsl(' + pxHueArr[k].toFixed(0) + ',88%,58%)';
         pxx.fillRect(i * PX_CELL + 1, py, PX_CELL - 2, PX_CELL - 2);
         pxEnergy[k] = e * f;
       } else if (e !== 0){
