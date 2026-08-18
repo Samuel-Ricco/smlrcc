@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="28" height="14" viewBox="0 0 14 7" shape-rendering="crispEdges">
+  <style>.dn{opacity:0}.up{animation:wa .5s steps(1,end) infinite}.dn{animation:wb .5s steps(1,end) infinite}@keyframes wa{0%,49.9%{opacity:1}50%,100%{opacity:0}}@keyframes wb{0%,49.9%{opacity:0}50%,100%{opacity:1}}</style>
+        <g class="up"><rect x="0" y="0" width="3" height="2" fill="#e9c9f5"/><rect x="3" y="2" width="3" height="2" fill="#e9c9f5"/><rect x="6" y="3" width="2" height="2" fill="#e9c9f5"/><rect x="8" y="2" width="3" height="2" fill="#e9c9f5"/><rect x="11" y="0" width="3" height="2" fill="#e9c9f5"/></g>
+        <g class="dn"><rect x="0" y="4" width="3" height="2" fill="#e9c9f5"/><rect x="3" y="3" width="3" height="2" fill="#e9c9f5"/><rect x="6" y="2" width="2" height="2" fill="#e9c9f5"/><rect x="8" y="3" width="3" height="2" fill="#e9c9f5"/><rect x="11" y="4" width="3" height="2" fill="#e9c9f5"/></g>
+      
+</svg>

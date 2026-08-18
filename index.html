@@ -96,9 +96,9 @@ canvas#scene{position:fixed;inset:0;width:100%;height:100%;display:block;touch-a
   background-repeat:no-repeat;background-position:center;background-size:18px 18px
 }
 .icon-btn:hover{background-color:rgba(240,230,255,.14)}
-.ico-audio{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' shape-rendering='crispEdges'%3E%3Crect x='1' y='6' width='3' height='4' fill='%23f0e6ff'/%3E%3Crect x='4' y='4' width='2' height='8' fill='%23f0e6ff'/%3E%3Crect x='6' y='2' width='2' height='12' fill='%23f0e6ff'/%3E%3Crect x='10' y='6' width='2' height='4' fill='%2349f2e0'/%3E%3Crect x='13' y='3' width='2' height='10' fill='%2349f2e0'/%3E%3C/svg%3E")}
-.ico-audio.off{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' shape-rendering='crispEdges'%3E%3Crect x='1' y='6' width='3' height='4' fill='%23806f95'/%3E%3Crect x='4' y='4' width='2' height='8' fill='%23806f95'/%3E%3Crect x='6' y='2' width='2' height='12' fill='%23806f95'/%3E%3Crect x='10' y='5' width='2' height='2' fill='%23ff5f9e'/%3E%3Crect x='14' y='5' width='2' height='2' fill='%23ff5f9e'/%3E%3Crect x='12' y='7' width='2' height='2' fill='%23ff5f9e'/%3E%3Crect x='10' y='9' width='2' height='2' fill='%23ff5f9e'/%3E%3Crect x='14' y='9' width='2' height='2' fill='%23ff5f9e'/%3E%3C/svg%3E")}
-.ico-reset{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' shape-rendering='crispEdges'%3E%3Crect x='4' y='3' width='5' height='2' fill='%23f0e6ff'/%3E%3Crect x='2' y='5' width='2' height='6' fill='%23f0e6ff'/%3E%3Crect x='4' y='11' width='8' height='2' fill='%23f0e6ff'/%3E%3Crect x='12' y='6' width='2' height='5' fill='%23f0e6ff'/%3E%3Crect x='9' y='1' width='2' height='2' fill='%2349f2e0'/%3E%3Crect x='11' y='3' width='2' height='2' fill='%2349f2e0'/%3E%3Crect x='9' y='5' width='2' height='2' fill='%2349f2e0'/%3E%3C/svg%3E")}
+.ico-audio{background-image:url("src/icon-audio.svg")}
+.ico-audio.off{background-image:url("src/icon-audio-off.svg")}
+.ico-reset{background-image:url("src/icon-reset.svg")}
 
 /* barra potenza: celle discrete su fondo scuro, colore che sale
    dal ciano al magenta. Ogni cella porta il suo --c (assegnato in JS). */
@@ -156,10 +156,10 @@ canvas#scene{position:fixed;inset:0;width:100%;height:100%;display:block;touch-a
    esattamente il punto che accende le celle: come nel minigame, colpisci
    con la testa. Variante ciano/rosa sugli elementi cliccabili. */
 #site,#site *{
-  cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='44' shape-rendering='crispEdges'%3E%3Crect x='32' y='2' width='10' height='6' fill='%23141024'/%3E%3Crect x='28' y='7' width='7' height='6' fill='%23141024'/%3E%3Crect x='25' y='12' width='6' height='5' fill='%23d8d0f5'/%3E%3Crect x='21' y='16' width='6' height='5' fill='%23d8d0f5'/%3E%3Crect x='17' y='20' width='6' height='5' fill='%23d8d0f5'/%3E%3Crect x='13' y='24' width='6' height='5' fill='%23d8d0f5'/%3E%3Crect x='3' y='28' width='15' height='11' fill='%2333254f'/%3E%3Crect x='3' y='28' width='5' height='11' fill='%238f7ec9'/%3E%3C/svg%3E") 10 33,default
+  cursor:url("src/cursor-club.svg") 10 33,default
 }
 #site a,#site button,#site .tile{
-  cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='44' shape-rendering='crispEdges'%3E%3Crect x='32' y='2' width='10' height='6' fill='%23141024'/%3E%3Crect x='28' y='7' width='7' height='6' fill='%23141024'/%3E%3Crect x='25' y='12' width='6' height='5' fill='%23f0e6ff'/%3E%3Crect x='21' y='16' width='6' height='5' fill='%23f0e6ff'/%3E%3Crect x='17' y='20' width='6' height='5' fill='%23f0e6ff'/%3E%3Crect x='13' y='24' width='6' height='5' fill='%23f0e6ff'/%3E%3Crect x='3' y='28' width='15' height='11' fill='%2349f2e0'/%3E%3Crect x='3' y='28' width='5' height='11' fill='%23ff5f9e'/%3E%3C/svg%3E") 10 33,pointer
+  cursor:url("src/cursor-club-hover.svg") 10 33,pointer
 }
 
 /* griglia di pixel: i puntini sono CSS, le celle accese le disegna il canvas */
@@ -192,7 +192,7 @@ nav{
 /* logo: bandierina da golf in pixel art */
 .brand .mk{
   width:28px;height:28px;background:var(--cyan);display:block;font-size:0;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' shape-rendering='crispEdges'%3E%3Crect x='5' y='1' width='2' height='11' fill='%231a0f2e'/%3E%3Crect x='7' y='2' width='5' height='2' fill='%23ff5f9e'/%3E%3Crect x='7' y='4' width='4' height='2' fill='%23ff5f9e'/%3E%3Crect x='2' y='12' width='9' height='2' fill='%231a0f2e'/%3E%3C/svg%3E");
+  background-image:url("src/logo-pin.svg");
   background-repeat:no-repeat;background-position:center;background-size:20px 20px
 }
 .brand span{font-family:var(--pixel);font-weight:700;letter-spacing:.02em;font-size:16px;
@@ -316,14 +316,14 @@ section.panel .eyebrow::before{
   animation:flagwave 1.1s steps(1,end) infinite
 }
 @keyframes flagwave{
-  0%,49.9%{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' shape-rendering='crispEdges'%3E%3Crect x='5' y='1' width='2' height='10' fill='%23d8d0f5'/%3E%3Crect x='7' y='2' width='4' height='2' fill='%23ff5f9e'/%3E%3Crect x='7' y='4' width='3' height='2' fill='%23ff5f9e'/%3E%3Crect x='2' y='10' width='8' height='2' fill='%2349f2e0'/%3E%3C/svg%3E")}
-  50%,100%{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' shape-rendering='crispEdges'%3E%3Crect x='5' y='1' width='2' height='10' fill='%23d8d0f5'/%3E%3Crect x='7' y='2' width='3' height='2' fill='%23ff5f9e'/%3E%3Crect x='7' y='4' width='4' height='2' fill='%23ff5f9e'/%3E%3Crect x='2' y='10' width='8' height='2' fill='%2349f2e0'/%3E%3C/svg%3E")}
+  0%,49.9%{background-image:url("src/pin-wave-a.svg")}
+  50%,100%{background-image:url("src/pin-wave-b.svg")}
 }
 
 /* pallina che rotola lungo il filetto in cima alla sezione */
 .rollball{
   position:absolute;top:-11px;left:0;width:18px;height:18px;pointer-events:none;
-  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' shape-rendering='crispEdges'%3E%3Crect x='3' y='1' width='6' height='2' fill='%23f4ecff'/%3E%3Crect x='1' y='3' width='10' height='6' fill='%23f4ecff'/%3E%3Crect x='3' y='9' width='6' height='2' fill='%23f4ecff'/%3E%3Crect x='3' y='4' width='2' height='2' fill='%23a892c8'/%3E%3Crect x='7' y='6' width='2' height='2' fill='%23a892c8'/%3E%3C/svg%3E") no-repeat center/contain;
+  background:url("src/ball.svg") no-repeat center/contain;
   animation:roll 15s steps(90,end) infinite
 }
 #contatti .rollball{animation-duration:19s;animation-delay:-7s}
@@ -358,7 +358,7 @@ section.panel .eyebrow::before{
 
 @media(prefers-reduced-motion:reduce){
   .rv{opacity:1;translate:0 0}
-  .rollball,.golfer .body,.cloud1,.cloud2{animation:none}
+  .rollball,.cloud1,.cloud2{animation:none}
   #site.on nav,#site.on .hero .eyebrow,#site.on .hero h1,#site.on .hero p,
   #site.on .hero .row .btn,#site.on .pxhint,#site.on .scrolldown,#site.on .deco{animation:none}
 }
@@ -366,7 +366,7 @@ section.panel .eyebrow::before{
 /* pallina da golf al posto dei quadrati negli elenchi */
 ul.ticks li::before{
   content:"";flex:0 0 12px;width:12px;height:12px;background:none;margin-top:5px;
-  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' shape-rendering='crispEdges'%3E%3Crect x='3' y='1' width='6' height='2' fill='%23f4ecff'/%3E%3Crect x='1' y='3' width='10' height='6' fill='%23f4ecff'/%3E%3Crect x='3' y='9' width='6' height='2' fill='%23f4ecff'/%3E%3Crect x='3' y='4' width='2' height='2' fill='%23a892c8'/%3E%3Crect x='7' y='6' width='2' height='2' fill='%23a892c8'/%3E%3C/svg%3E") no-repeat center/contain
+  background:url("src/ball.svg") no-repeat center/contain
 }
 
 /* riga tratteggiata a blocchi sopra ogni sezione */
@@ -397,7 +397,7 @@ section.panel::before{
     repeating-linear-gradient(0deg,rgba(10,4,20,.10) 0 7px,transparent 7px 14px),
     linear-gradient(#3ad8c0 0 34px,#2ec2ae 34px 76px,#26a89b 76px 118px)
 }
-.teegreen svg{position:absolute;display:block}
+.teegreen img{position:absolute;display:block}
 .teegreen .teeflag{left:clamp(14px,9vw,170px);bottom:4px}   /* l'asta non va tagliata dal bordo */
 .teegreen .teeball{left:clamp(110px,22vw,340px);bottom:22px}
 .teegreen .kart{right:clamp(12px,7vw,110px);bottom:10px;left:auto}
@@ -429,11 +429,11 @@ section.panel::before{
     repeating-linear-gradient(90deg,rgba(10,4,20,.09) 0 11px,transparent 11px 22px),
     linear-gradient(#33cdb8 0 44px,#28b6a4 44px 96px,#1f9e93 96px 150px)
 }
-.greenstrip svg{position:absolute;bottom:8px;display:block}
+.greenstrip img{position:absolute;bottom:8px;display:block}
 .flagpin{left:clamp(16px,8vw,150px)}
 @media(max-width:700px){
   .greenstrip{height:118px}
-  .greenstrip svg{transform:scale(.72);transform-origin:bottom left}
+  .greenstrip img{transform:scale(.72);transform-origin:bottom left}
 }
 
 /* footer con riga da cabinato */
@@ -450,7 +450,7 @@ section.panel::before{
    ============================================================ */
 .gball{
   display:inline-block;width:.34em;height:.34em;margin-left:.12em;vertical-align:baseline;
-  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' shape-rendering='crispEdges'%3E%3Crect x='3' y='1' width='6' height='2' fill='%23f4ecff'/%3E%3Crect x='1' y='3' width='10' height='6' fill='%23f4ecff'/%3E%3Crect x='3' y='9' width='6' height='2' fill='%23f4ecff'/%3E%3Crect x='3' y='4' width='2' height='2' fill='%23a892c8'/%3E%3Crect x='7' y='6' width='2' height='2' fill='%23a892c8'/%3E%3C/svg%3E") no-repeat center/contain
+  background:url("src/ball.svg") no-repeat center/contain
 }
 
 /* ============================================================
@@ -465,10 +465,10 @@ section.panel::before{
 /* bandierine in pixel art dentro il selettore */
 .lang button::before{content:"";width:14px;height:10px;flex:0 0 14px;image-rendering:pixelated}
 .lang button[data-lang="it"]::before{
-  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='10' shape-rendering='crispEdges'%3E%3Crect width='14' height='10' fill='%23f0e6ff'/%3E%3Crect width='5' height='10' fill='%232fb87a'/%3E%3Crect x='9' width='5' height='10' fill='%23ff5f9e'/%3E%3C/svg%3E") no-repeat center/contain
+  background:url("src/flag-it.svg") no-repeat center/contain
 }
 .lang button[data-lang="en"]::before{
-  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='10' shape-rendering='crispEdges'%3E%3Crect width='14' height='10' fill='%233b3f9e'/%3E%3Crect x='5' width='4' height='10' fill='%23f0e6ff'/%3E%3Crect y='3' width='14' height='4' fill='%23f0e6ff'/%3E%3Crect x='6' width='2' height='10' fill='%23ff5f9e'/%3E%3Crect y='4' width='14' height='2' fill='%23ff5f9e'/%3E%3C/svg%3E") no-repeat center/contain
+  background:url("src/flag-en.svg") no-repeat center/contain
 }
 .lang button:hover{color:var(--fg)}
 .lang button.on{background:var(--cyan);color:var(--deep)}
@@ -490,13 +490,7 @@ nav .lang{border-color:var(--cyan)}
 .b2{top:22%;right:15%;animation:fly2 31s linear infinite}
 @keyframes fly1{from{transform:translateX(0)}to{transform:translateX(-62vw)}}
 @keyframes fly2{from{transform:translateX(4vw)}to{transform:translateX(-54vw)}}
-/* battito d'ali: due pose che si alternano */
-.bird .dn{opacity:0}
-.bird .up{animation:wingA .5s steps(1,end) infinite}
-.bird .dn{animation:wingB .5s steps(1,end) infinite}
-.b2 .up,.b2 .dn{animation-duration:.62s}
-@keyframes wingA{0%,49.9%{opacity:1}50%,100%{opacity:0}}
-@keyframes wingB{0%,49.9%{opacity:0}50%,100%{opacity:1}}
+/* il battito d'ali sta dentro src/bird-*.svg */
 @media(max-width:900px){
   .sun{top:8%;right:4%;transform:scale(.72);transform-origin:top right}
   .cloud1{top:38%;right:3%}.cloud2{top:50%;right:20%}.cloud3{display:none}
@@ -509,15 +503,12 @@ nav .lang{border-color:var(--cyan)}
 @media(max-width:560px){.cloud2{display:none}}
 
 /* due golfisti fermi sul green: solo un respiro, niente swing.
-   Selettori più specifici di ".greenstrip svg" per vincere sul left. */
+   Selettori più specifici di ".greenstrip img" per vincere sul left. */
 .greenstrip .g1{left:clamp(210px,26vw,380px)}
 .greenstrip .g2{left:clamp(300px,38vw,530px)}
 @media(max-width:700px){.greenstrip .g1{left:170px}.greenstrip .g2{left:238px}}
 
-/* idle: il busto si alza di un pixel e riscende, a scatti e sfasato */
-.golfer .body{animation:idle 2.2s steps(1,end) infinite}
-.golfer.g2 .body{animation-duration:2.9s;animation-delay:-.7s}
-@keyframes idle{0%,49.9%{translate:0 0}50%,100%{translate:0 -1px}}
+/* il respiro dei golfisti sta dentro src/golfer-*.svg */
 
 /* icone pixel: menu, pulsante scrivimi, voci dei contatti */
 .links a,.contact h4{display:flex;align-items:center;gap:7px}
@@ -527,25 +518,25 @@ nav .lang{border-color:var(--cyan)}
 }
 .ico::before{margin-right:8px;vertical-align:-2px;display:inline-block}
 /* lavori: cartella */
-.links a[href="#lavori"]::before{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' shape-rendering='crispEdges'%3E%3Crect x='1' y='3' width='5' height='2' fill='%2349f2e0'/%3E%3Crect x='1' y='5' width='12' height='7' fill='%2349f2e0'/%3E%3Crect x='3' y='7' width='8' height='2' fill='%23120a1f'/%3E%3C/svg%3E")}
+.links a[href="#lavori"]::before{background-image:url("src/icon-work.svg")}
 /* stack: blocchi impilati */
-.links a[href="#stack"]::before{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' shape-rendering='crispEdges'%3E%3Crect x='2' y='2' width='10' height='3' fill='%2349f2e0'/%3E%3Crect x='2' y='6' width='10' height='3' fill='%23b98cf7'/%3E%3Crect x='2' y='10' width='10' height='3' fill='%23ff5f9e'/%3E%3C/svg%3E")}
+.links a[href="#stack"]::before{background-image:url("src/icon-stack.svg")}
 /* contatti: fumetto */
-.links a[href="#contatti"]::before{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' shape-rendering='crispEdges'%3E%3Crect x='1' y='2' width='12' height='8' fill='%2349f2e0'/%3E%3Crect x='3' y='10' width='4' height='3' fill='%2349f2e0'/%3E%3Crect x='3' y='5' width='8' height='2' fill='%23120a1f'/%3E%3C/svg%3E")}
+.links a[href="#contatti"]::before{background-image:url("src/icon-contact.svg")}
 /* scrivimi: busta */
-.ico-mail::before{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' shape-rendering='crispEdges'%3E%3Crect x='1' y='3' width='12' height='9' fill='%2349f2e0'/%3E%3Crect x='3' y='5' width='8' height='2' fill='%23120a1f'/%3E%3Crect x='5' y='7' width='4' height='2' fill='%23120a1f'/%3E%3C/svg%3E")}
+.ico-mail::before{background-image:url("src/icon-mail.svg")}
 /* email: chiocciola */
-.contact div:nth-child(1) h4::before{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' shape-rendering='crispEdges'%3E%3Crect x='3' y='1' width='8' height='2' fill='%23ff5f9e'/%3E%3Crect x='1' y='3' width='2' height='8' fill='%23ff5f9e'/%3E%3Crect x='11' y='3' width='2' height='6' fill='%23ff5f9e'/%3E%3Crect x='3' y='11' width='9' height='2' fill='%23ff5f9e'/%3E%3Crect x='5' y='5' width='4' height='4' fill='%23ff5f9e'/%3E%3C/svg%3E")}
+.contact div:nth-child(1) h4::before{background-image:url("src/icon-at.svg")}
 /* codice: parentesi angolari */
-.contact div:nth-child(2) h4::before{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' shape-rendering='crispEdges'%3E%3Crect x='3' y='5' width='2' height='4' fill='%23ff5f9e'/%3E%3Crect x='1' y='7' width='2' height='2' fill='%23ff5f9e'/%3E%3Crect x='5' y='3' width='2' height='2' fill='%23ff5f9e'/%3E%3Crect x='9' y='5' width='2' height='4' fill='%23ff5f9e'/%3E%3Crect x='11' y='7' width='2' height='2' fill='%23ff5f9e'/%3E%3Crect x='7' y='9' width='2' height='2' fill='%23ff5f9e'/%3E%3C/svg%3E")}
+.contact div:nth-child(2) h4::before{background-image:url("src/icon-code.svg")}
 /* altrove: spillo sulla mappa */
-.contact div:nth-child(3) h4::before{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' shape-rendering='crispEdges'%3E%3Crect x='4' y='1' width='6' height='7' fill='%23ff5f9e'/%3E%3Crect x='6' y='8' width='2' height='5' fill='%23ff5f9e'/%3E%3Crect x='6' y='3' width='2' height='2' fill='%23120a1f'/%3E%3C/svg%3E")}
+.contact div:nth-child(3) h4::before{background-image:url("src/icon-pin.svg")}
 
 /* buca + bandierina nel blocco finale */
 .cta{position:relative;overflow:hidden}
 .cta::after{
   content:"";position:absolute;right:14px;bottom:-6px;width:56px;height:56px;opacity:.35;pointer-events:none;
-  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' shape-rendering='crispEdges'%3E%3Crect x='13' y='2' width='2' height='18' fill='%23d8d0f5'/%3E%3Crect x='15' y='3' width='8' height='3' fill='%23ff5f9e'/%3E%3Crect x='15' y='6' width='6' height='3' fill='%23ff5f9e'/%3E%3Crect x='6' y='20' width='16' height='3' fill='%23120a1f'/%3E%3Crect x='9' y='23' width='10' height='2' fill='%230f2f2c'/%3E%3C/svg%3E") no-repeat center/contain
+  background:url("src/cta-pin.svg") no-repeat center/contain
 }
 </style>
 
@@ -606,48 +597,16 @@ nav .lang{border-color:var(--cyan)}
 
     <header class="hero" id="top">
       <!-- nuvole in pixel art -->
-      <svg class="deco cloud1" width="104" height="40" viewBox="0 0 52 20" shape-rendering="crispEdges" aria-hidden="true">
-        <rect x="14" y="2"  width="20" height="4" fill="#f0e0fa"/>
-        <rect x="8"  y="6"  width="34" height="4" fill="#e9c9f5"/>
-        <rect x="2"  y="10" width="46" height="4" fill="#d8a8ee"/>
-        <rect x="6"  y="14" width="38" height="3" fill="#c68ddf"/>
-      </svg>
-      <svg class="deco cloud2" width="72" height="28" viewBox="0 0 36 14" shape-rendering="crispEdges" aria-hidden="true">
-        <rect x="10" y="1" width="14" height="4" fill="#f0e0fa"/>
-        <rect x="5"  y="5" width="26" height="4" fill="#d8a8ee"/>
-        <rect x="8"  y="9" width="20" height="3" fill="#c68ddf"/>
-      </svg>
-      <svg class="deco cloud3" width="56" height="24" viewBox="0 0 28 12" shape-rendering="crispEdges" aria-hidden="true">
-        <rect x="8" y="1" width="12" height="4" fill="#e9c9f5"/>
-        <rect x="3" y="5" width="22" height="4" fill="#c68ddf"/>
-      </svg>
+      <img class="deco cloud1" src="src/cloud-a.svg" width="104" height="40" alt="" aria-hidden="true">
+      <img class="deco cloud2" src="src/cloud-b.svg" width="72" height="28" alt="" aria-hidden="true">
+      <img class="deco cloud3" src="src/cloud-c.svg" width="56" height="24" alt="" aria-hidden="true">
 
       <!-- sole vaporwave: disco a fette nella parte alta del cielo -->
-      <svg class="deco sun" width="132" height="132" viewBox="0 0 44 44" shape-rendering="crispEdges" aria-hidden="true">
-        <rect x="16" y="2"  width="12" height="3"  fill="#ffd36e"/>
-        <rect x="11" y="5"  width="22" height="3"  fill="#ffc06a"/>
-        <rect x="8"  y="8"  width="28" height="3"  fill="#ffae72"/>
-        <rect x="6"  y="11" width="32" height="3"  fill="#ff9b86"/>
-        <rect x="4"  y="14" width="36" height="3"  fill="#ff8a9e"/>
-        <rect x="3"  y="17" width="38" height="3"  fill="#ff7aae"/>
-        <rect x="2"  y="20" width="40" height="3"  fill="#fb6cbb"/>
-        <rect x="2"  y="24" width="40" height="2"  fill="#ef61c4"/>
-        <rect x="3"  y="27" width="38" height="2"  fill="#e057c9"/>
-        <rect x="5"  y="30" width="34" height="2"  fill="#cf4fcd"/>
-        <rect x="8"  y="33" width="28" height="2"  fill="#bd48cf"/>
-        <rect x="12" y="36" width="20" height="2"  fill="#a842cf"/>
-        <rect x="17" y="39" width="10" height="2"  fill="#9440cc"/>
-      </svg>
+      <img class="deco sun" src="src/sun.svg" width="132" height="132" alt="" aria-hidden="true">
 
       <!-- uccellini: due pose alternate -->
-      <svg class="deco bird b1" width="28" height="14" viewBox="0 0 14 7" shape-rendering="crispEdges" aria-hidden="true">
-        <g class="up"><rect x="0" y="0" width="3" height="2" fill="#e9c9f5"/><rect x="3" y="2" width="3" height="2" fill="#e9c9f5"/><rect x="6" y="3" width="2" height="2" fill="#e9c9f5"/><rect x="8" y="2" width="3" height="2" fill="#e9c9f5"/><rect x="11" y="0" width="3" height="2" fill="#e9c9f5"/></g>
-        <g class="dn"><rect x="0" y="4" width="3" height="2" fill="#e9c9f5"/><rect x="3" y="3" width="3" height="2" fill="#e9c9f5"/><rect x="6" y="2" width="2" height="2" fill="#e9c9f5"/><rect x="8" y="3" width="3" height="2" fill="#e9c9f5"/><rect x="11" y="4" width="3" height="2" fill="#e9c9f5"/></g>
-      </svg>
-      <svg class="deco bird b2" width="20" height="10" viewBox="0 0 14 7" shape-rendering="crispEdges" aria-hidden="true">
-        <g class="up"><rect x="0" y="0" width="3" height="2" fill="#d8a8ee"/><rect x="3" y="2" width="3" height="2" fill="#d8a8ee"/><rect x="6" y="3" width="2" height="2" fill="#d8a8ee"/><rect x="8" y="2" width="3" height="2" fill="#d8a8ee"/><rect x="11" y="0" width="3" height="2" fill="#d8a8ee"/></g>
-        <g class="dn"><rect x="0" y="4" width="3" height="2" fill="#d8a8ee"/><rect x="3" y="3" width="3" height="2" fill="#d8a8ee"/><rect x="6" y="2" width="2" height="2" fill="#d8a8ee"/><rect x="8" y="3" width="3" height="2" fill="#d8a8ee"/><rect x="11" y="4" width="3" height="2" fill="#d8a8ee"/></g>
-      </svg>
+      <img class="deco bird b1" src="src/bird-a.svg" width="28" height="14" alt="" aria-hidden="true">
+      <img class="deco bird b2" src="src/bird-b.svg" width="20" height="10" alt="" aria-hidden="true">
 
       <div class="hero-in">
         <div class="eyebrow"><span data-i18n="hero.eyebrow">developer &middot; smlrcc.it</span></div>
@@ -670,52 +629,13 @@ nav .lang{border-color:var(--cyan)}
            schermata, così "scorri" ha qualcosa sotto a cui puntare. -->
       <div class="teegreen">
         <!-- golf kart in pixel art, visto di lato -->
-        <svg class="deco kart" width="160" height="112" viewBox="0 0 40 28" shape-rendering="crispEdges" aria-hidden="true">
-          <!-- sacca e mazze dietro -->
-          <rect x="3"  y="4"  width="1"  height="5"  fill="#d8d0f5"/>
-          <rect x="5"  y="3"  width="1"  height="6"  fill="#f0e6ff"/>
-          <rect x="2"  y="9"  width="6"  height="9"  fill="#8a5cf0"/>
-          <rect x="2"  y="12" width="6"  height="2"  fill="#6b3fd4"/>
-          <!-- tettuccio e montanti -->
-          <rect x="6"  y="0"  width="30" height="2"  fill="#49f2e0"/>
-          <rect x="7"  y="2"  width="2"  height="15" fill="#d8d0f5"/>
-          <rect x="33" y="2"  width="2"  height="15" fill="#d8d0f5"/>
-          <!-- sedile di profilo -->
-          <rect x="11" y="6"  width="3"  height="8"  fill="#ff5f9e"/>
-          <rect x="11" y="14" width="12" height="3"  fill="#ff5f9e"/>
-          <!-- volante e piantone -->
-          <rect x="29" y="9"  width="2"  height="8"  fill="#d8d0f5"/>
-          <rect x="27" y="8"  width="6"  height="2"  fill="#8a5cf0"/>
-          <!-- scocca -->
-          <rect x="3"  y="17" width="34" height="4"  fill="#f0e6ff"/>
-          <rect x="24" y="13" width="9"  height="4"  fill="#c9a8ff"/>
-          <!-- ruote -->
-          <rect x="6"  y="21" width="8"  height="6"  fill="#1a0f2e"/>
-          <rect x="26" y="21" width="8"  height="6"  fill="#1a0f2e"/>
-          <rect x="8"  y="23" width="4"  height="2"  fill="#49f2e0"/>
-          <rect x="28" y="23" width="4"  height="2"  fill="#49f2e0"/>
-        </svg>
+        <img class="deco kart" src="src/kart.svg" width="160" height="112" alt="" aria-hidden="true">
         <!-- bandierina oro con la sua buca sotto: l'oro stacca sul verde,
              mentre il rosa resta alla buca che chiude la pagina -->
-        <svg class="teeflag" width="76" height="112" viewBox="0 0 38 56" shape-rendering="crispEdges" aria-hidden="true">
-          <rect x="16" y="1"  width="3"  height="46" fill="#f0e6ff"/>
-          <rect x="19" y="3"  width="14" height="3"  fill="#ffd36e"/>
-          <rect x="19" y="6"  width="11" height="3"  fill="#ffc44f"/>
-          <rect x="19" y="9"  width="8"  height="3"  fill="#f5b44f"/>
-          <rect x="19" y="12" width="5"  height="3"  fill="#e59f38"/>
-          <rect x="9"  y="46" width="17" height="4"  fill="#1a7d72"/>
-          <rect x="6"  y="50" width="23" height="5"  fill="#120a1f"/>
-          <rect x="10" y="55" width="15" height="1"  fill="#1a7d72"/>
-        </svg>
+        <img class="teeflag" src="src/tee-pin.svg" width="76" height="112" alt="" aria-hidden="true">
 
         <!-- pallina piccola, senza segnalini -->
-        <svg class="teeball" width="24" height="24" viewBox="0 0 12 12" shape-rendering="crispEdges" aria-hidden="true">
-          <rect x="3" y="1" width="6"  height="2" fill="#f4ecff"/>
-          <rect x="1" y="3" width="10" height="6" fill="#f4ecff"/>
-          <rect x="3" y="9" width="6"  height="2" fill="#f4ecff"/>
-          <rect x="3" y="4" width="2"  height="2" fill="#a892c8"/>
-          <rect x="7" y="6" width="2"  height="2" fill="#a892c8"/>
-        </svg>
+        <img class="teeball" src="src/tee-ball.svg" width="24" height="24" alt="" aria-hidden="true">
       </div>
     </header>
 
@@ -803,57 +723,13 @@ nav .lang{border-color:var(--cyan)}
 
     <!-- il green chiude la pagina: buca, bandiera alta e due golfisti in idle -->
     <div class="greenstrip">
-      <svg class="flagpin" width="170" height="132" viewBox="0 0 170 132" shape-rendering="crispEdges" aria-hidden="true">
-        <rect x="46"  y="2"   width="6"  height="104" fill="#d8d0f5"/>
-        <rect x="52"  y="6"   width="34" height="9"   fill="#ff5f9e"/>
-        <rect x="52"  y="15"  width="27" height="9"   fill="#ff5f9e"/>
-        <rect x="52"  y="24"  width="18" height="8"   fill="#e04b87"/>
-        <rect x="28"  y="106" width="42" height="5"   fill="#0f2f2c"/>
-        <rect x="22"  y="111" width="54" height="10"  fill="#120a1f"/>
-        <rect x="28"  y="121" width="42" height="4"   fill="#0f2f2c"/>
-        <rect x="118" y="112" width="12" height="4"   fill="#f4ecff"/>
-        <rect x="114" y="116" width="20" height="9"   fill="#f4ecff"/>
-        <rect x="118" y="125" width="12" height="3"   fill="#f4ecff"/>
-        <rect x="118" y="118" width="4"  height="3"   fill="#a892c8"/>
-        <rect x="126" y="121" width="4"  height="3"   fill="#a892c8"/>
-      </svg>
+      <img class="flagpin" src="src/hole-pin.svg" width="170" height="132" alt="" aria-hidden="true">
 
       <!-- golfista 1: mazza appoggiata, respiro lento -->
-      <svg class="golfer g1" width="84" height="120" viewBox="0 0 28 40" shape-rendering="crispEdges" aria-hidden="true">
-        <g class="body">
-          <rect x="6"  y="2"  width="4"  height="2" fill="#49f2e0"/>
-          <rect x="8"  y="0"  width="10" height="4" fill="#49f2e0"/>
-          <rect x="9"  y="4"  width="9"  height="6" fill="#f0e6ff"/>
-          <rect x="10" y="6"  width="2"  height="2" fill="#1a0f2e"/>
-          <rect x="8"  y="10" width="11" height="10" fill="#ff5f9e"/>
-          <rect x="8"  y="20" width="11" height="5"  fill="#8a5cf0"/>
-          <rect x="8"  y="25" width="4"  height="8"  fill="#8a5cf0"/>
-          <rect x="15" y="25" width="4"  height="8"  fill="#8a5cf0"/>
-          <rect x="6"  y="33" width="7"  height="3"  fill="#f0e6ff"/>
-          <rect x="15" y="33" width="7"  height="3"  fill="#f0e6ff"/>
-          <rect x="19" y="12" width="3"  height="8"  fill="#f0e6ff"/>
-          <rect x="22" y="18" width="2"  height="14" fill="#d8d0f5"/>
-          <rect x="21" y="32" width="5"  height="4"  fill="#33254f"/>
-        </g>
-      </svg>
+      <img class="golfer g1" src="src/golfer-a.svg" width="84" height="120" alt="" aria-hidden="true">
 
       <!-- golfista 2: mani sui fianchi, respiro sfasato -->
-      <svg class="golfer g2" width="72" height="102" viewBox="0 0 24 34" shape-rendering="crispEdges" aria-hidden="true">
-        <g class="body">
-          <rect x="14" y="2"  width="4"  height="2" fill="#ff5f9e"/>
-          <rect x="6"  y="0"  width="10" height="4" fill="#ff5f9e"/>
-          <rect x="6"  y="4"  width="9"  height="6" fill="#f0e6ff"/>
-          <rect x="11" y="6"  width="2"  height="2" fill="#1a0f2e"/>
-          <rect x="5"  y="10" width="11" height="9" fill="#49f2e0"/>
-          <rect x="2"  y="12" width="3"  height="6" fill="#f0e6ff"/>
-          <rect x="16" y="12" width="3"  height="6" fill="#f0e6ff"/>
-          <rect x="5"  y="19" width="11" height="4" fill="#8a5cf0"/>
-          <rect x="5"  y="23" width="4"  height="6" fill="#8a5cf0"/>
-          <rect x="12" y="23" width="4"  height="6" fill="#8a5cf0"/>
-          <rect x="3"  y="29" width="7"  height="3" fill="#f0e6ff"/>
-          <rect x="12" y="29" width="7"  height="3" fill="#f0e6ff"/>
-        </g>
-      </svg>
+      <img class="golfer g2" src="src/golfer-b.svg" width="72" height="102" alt="" aria-hidden="true">
     </div>
 
     <footer>

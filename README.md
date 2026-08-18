@@ -2,8 +2,9 @@
 
 Sito personale di Samuel Ricco — [smlrcc.it](https://smlrcc.it)
 
-Tutto il sito sta in **un unico file**: [`index.html`](index.html). Niente build, niente
-dipendenze da installare, niente bundler. Si apre con un doppio click.
+Il sito sta in **un unico file** — [`index.html`](index.html) — con gli asset grafici in
+[`src/`](src). Niente build, niente dipendenze da installare, niente bundler: si apre
+con un doppio click, purché la cartella `src/` resti accanto al file.
 
 ## Com'è fatto
 
@@ -61,11 +62,24 @@ GitHub Pages serve il file dalla radice del repo.
    - `www` → record **CNAME** verso `samuel-ricco.github.io`.
 4. Spuntare *Enforce HTTPS* quando il certificato è stato emesso.
 
-## Struttura del file
+## Struttura
+
+```
+index.html      pagina intera: stile, markup, scena 3D, effetto pixel
+src/            asset grafici in pixel art, un SVG per elemento
+CNAME           dominio per GitHub Pages
+```
+
+Dentro `index.html`:
 
 | Blocco | Cosa contiene |
 | --- | --- |
 | `<style>` | palette, HUD del minigame, transizione, layout del sito |
 | `#world` | canvas 3D + interfaccia del gate |
 | `#site` | la home, con il canvas dell'effetto pixel |
-| `<script>` | scena, fisica, transizione, effetto pixel |
+| `<script>` | scena, fisica, transizione, effetto pixel, lingue |
+
+Gli SVG in `src/` sono disegnati su griglia intera con `shape-rendering="crispEdges"`,
+quindi si possono modificare a mano o in un editor pixel senza perdere i bordi netti.
+Quelli animati (`golfer-*.svg`, `bird-*.svg`) portano l'animazione dentro al file: sono
+usati come `<img>`, e il CSS della pagina non arriva dentro un SVG referenziato così.
