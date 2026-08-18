@@ -406,8 +406,8 @@ body.d3 .teegreen,body.d3 .greenstrip{background:none}
 .teegreen .teeflag{left:clamp(14px,9vw,170px);bottom:16px}
 .teegreen .teeball{left:clamp(110px,22vw,340px);bottom:22px}
 .teegreen .kart{right:clamp(12px,7vw,110px);bottom:10px;left:auto}
-.teegreen .t1{left:34%;bottom:34px}
-.teegreen .t2{left:57%;bottom:26px}
+.teegreen .t1{left:33%;bottom:62px}
+.teegreen .t2{left:57%;bottom:52px}
 .scrolldown{bottom:150px}
 /* schermi bassi: senza questo il testo sfonda l'altezza dell'hero e il
    campo di partenza finisce sotto la piega, perdendo il senso di "scorri" */
@@ -518,8 +518,8 @@ body.d3 .flagpin,body.d3 .golfer,body.d3 .tree{visibility:hidden}
    Selettori più specifici di ".greenstrip img" per vincere sul left. */
 .greenstrip .g1{left:clamp(210px,26vw,380px);bottom:18px}
 .greenstrip .g2{left:clamp(300px,38vw,530px);bottom:16px}
-.greenstrip .t1{left:53%;bottom:38px}
-.greenstrip .t2{left:72%;bottom:28px}
+.greenstrip .t1{left:53%;bottom:74px}
+.greenstrip .t2{left:73%;bottom:60px}
 @media(max-width:700px){.greenstrip .g1{left:170px}.greenstrip .g2{left:238px}}
 
 /* il respiro dei golfisti sta dentro src/golfer-*.svg */
@@ -651,8 +651,8 @@ body.d3 .flagpin,body.d3 .golfer,body.d3 .tree{visibility:hidden}
 
         <!-- pallina piccola, senza segnalini -->
         <img class="teeball" src="src/tee-ball.svg" width="24" height="24" alt="" aria-hidden="true">
-        <img class="tree t1" src="src/tree.svg" width="62" height="96" alt="" aria-hidden="true">
-        <img class="tree t2" src="src/tree.svg" width="48" height="74" alt="" aria-hidden="true">
+        <img class="tree t1" src="src/tree.svg" width="86" height="133" alt="" aria-hidden="true">
+        <img class="tree t2" src="src/tree.svg" width="68" height="105" alt="" aria-hidden="true">
       </div>
     </header>
 
@@ -747,8 +747,8 @@ body.d3 .flagpin,body.d3 .golfer,body.d3 .tree{visibility:hidden}
 
       <!-- golfista 2: mani sui fianchi, respiro sfasato -->
       <img class="golfer g2" src="src/golfer-b.svg" width="66" height="94" alt="" aria-hidden="true">
-      <img class="tree t1" src="src/tree.svg" width="68" height="105" alt="" aria-hidden="true">
-      <img class="tree t2" src="src/tree.svg" width="50" height="78" alt="" aria-hidden="true">
+      <img class="tree t1" src="src/tree.svg" width="96" height="148" alt="" aria-hidden="true">
+      <img class="tree t2" src="src/tree.svg" width="74" height="114" alt="" aria-hidden="true">
     </div>
 
     <footer>
@@ -1869,6 +1869,7 @@ function mkKart(){
     t.rotation.z = Math.PI / 2;
     g.add(t);
   }
+  g.userData.foot = 56;          // le ruote, non il tettuccio né la sacca
   g.rotation.set(0.16, -0.62, 0);
   return g;
 }
@@ -1889,6 +1890,7 @@ function mkPin(flag){
   var rim  = cyl(25, 25, 2, 14, 0x1a7d72, 0, -39, 0);   // anello
   hole.userData.flat = rim.userData.flat = true;        // niente ombra propria
   g.add(hole); g.add(rim);
+  g.userData.foot = 26;          // l'appoggio è la buca, non il pennant
   g.rotation.set(0.18, -0.35, 0);
   return g;
 }
@@ -1897,6 +1899,7 @@ function mkHolePin(){ return mkPin(0xff5f9e); }
 function mkBall(){
   var g = new THREE.Group();
   g.add(new THREE.Mesh(new THREE.IcosahedronGeometry(10, 1), lam3(0xf4ecff)));
+  g.userData.foot = 10;
   return g;
 }
 function mkRollBall(){
@@ -1922,6 +1925,7 @@ function mkGolfer(shirt, cap, club){
     g.add(s);
     g.add(box(11, 7, 9, 0x33254f, 31, -50, 4));
   }
+  g.userData.foot = 19;
   g.rotation.set(0.12, -0.5, 0);
   return g;
 }
@@ -1937,6 +1941,8 @@ function mkTree(){
   var c2 = new THREE.Mesh(new THREE.ConeGeometry(20, 42, 7), lam3(0x6b3fd4));
   c2.position.y = 26;
   g.add(c1); g.add(c2);
+  g.userData.foot = 20;
+  g.userData.back = true;        // sta più indietro degli altri
   g.rotation.y = 0.4;
   return g;
 }
@@ -2023,13 +2029,17 @@ function buildSite(){
         obj.userData.box = _sz.clone();
         /* Ombra di contatto: l'ombra proiettata su un piano frontale legge
            come ombra sul muro, non come appoggio. Questa ellisse schiacciata
-           sotto ai piedi è ciò che pianta il modello sul prato. */
+           sotto ai piedi è ciò che pianta il modello sul prato.
+           Va dimensionata sull'impronta reale (le ruote del kart, la buca
+           della bandiera) e non sull'ingombro totale, e va tenuta fuori
+           dalla rotazione del modello: ereditandola si presentava storta. */
         if (SITE_DECOS[i][3]){
           var bl = new THREE.Mesh(
-            new THREE.CircleGeometry(_sz.x * 0.5, 18),
+            new THREE.CircleGeometry(obj.userData.foot || _sz.x * 0.45, 18),
             new THREE.MeshBasicMaterial({ color:0x0c3a37, transparent:true, opacity:0.5 }));
           bl.scale.y = 0.26;
-          bl.position.set(0, -_sz.y * 0.5 + _sz.y * 0.03, -10);
+          bl.position.set(-_ct.x, -_sz.y * 0.5 + 3, -10);
+          bl.quaternion.copy(obj.quaternion).invert();   // sempre di faccia
           bl.userData.flat = true;
           obj.add(bl);
           obj.userData.ground = true;
@@ -2080,7 +2090,8 @@ function updateSite(dt){
     /* z: appena davanti al prato. Più stacco = ombra più lontana dai piedi.
        Chi poggia sull'erba sale un filo, così non sembra affondato. */
     o.position.set(_r.left + _r.width / 2,
-                   -(_r.top + _r.height / 2) + (o.userData.ground ? 10 : 0), -15);
+                   -(_r.top + _r.height / 2) + (o.userData.ground ? 10 : 0),
+                   o.userData.back ? -26 : -15);
     if (o.userData.fit){
       o.scale.set(_r.width, _r.height, 1);
       o.position.z = -40;             // dietro ai modelli, che stanno a -15
