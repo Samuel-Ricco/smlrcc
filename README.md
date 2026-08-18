@@ -3,8 +3,9 @@
 Sito personale di Samuel Ricco — [smlrcc.it](https://smlrcc.it)
 
 Il sito sta in **un unico file** — [`index.html`](index.html) — con gli asset grafici in
-[`src/`](src). Niente build, niente dipendenze da installare, niente bundler: si apre
-con un doppio click, purché la cartella `src/` resti accanto al file.
+[`src/`](src) e la copia di three.js in [`vendor/`](vendor). Niente build, niente
+dipendenze da installare, niente bundler: basta che `src/` e `vendor/` restino accanto
+al file.
 
 ## Com'è fatto
 
@@ -47,11 +48,12 @@ breakpoint restano competenza del CSS, e senza WebGL gli SVG tornano visibili da
 
 ## Sviluppo
 
-Basta aprire `index.html` nel browser. Serve una connessione per due risorse esterne:
-three.js da CDN (con due mirror di fallback) e i due font da Google Fonts — senza rete
-il testo cade su un monospace di sistema.
+three.js sta nel repo (`vendor/three.min.js`, r152), quindi il 3D funziona anche
+offline; se quel file manca, la pagina ripiega da sola su unpkg e jsdelivr. L'unica
+risorsa che resta esterna sono i due font di Google Fonts: senza rete il testo cade su
+un monospace di sistema, tutto il resto funziona.
 
-Se preferisci un server locale:
+Meglio un server locale che il doppio click, così i percorsi relativi risolvono:
 
 ```bash
 python -m http.server 8000
@@ -74,6 +76,7 @@ GitHub Pages serve il file dalla radice del repo.
 ```
 index.html      pagina intera: stile, markup, scena 3D, effetto pixel
 src/            asset grafici in pixel art, un SVG per elemento
+vendor/         three.min.js r152, copia locale della libreria 3D
 CNAME           dominio per GitHub Pages
 ```
 

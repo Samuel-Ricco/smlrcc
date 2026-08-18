@@ -797,7 +797,9 @@ body.d3 .flagpin,body.d3 .golfer,body.d3 .tree{visibility:hidden}
   </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.152.2/three.min.js"></script>
+<!-- three.js r152, copia locale in vendor/: il sito gira anche senza rete.
+     Se il file manca, boot() ripiega sui mirror CDN. -->
+<script src="vendor/three.min.js"></script>
 <script>
 /* ============================================================
    0a. Lingua: IT / EN. Vive fuori da init() così il selettore
@@ -953,7 +955,9 @@ function applyLang(lang){
 
 
 /* ============================================================
-   0. Caricamento three.js (con fallback CDN)
+   0. Caricamento three.js: la copia locale (vendor/three.min.js) e'
+      gia' stata richiesta nel markup; qui si ripiega sui mirror CDN
+      solo se quel file manca o non e' arrivato.
    ============================================================ */
 (function boot(){
   var mirrors = [
@@ -964,10 +968,10 @@ function applyLang(lang){
   function fatal(msg){
     document.getElementById('intro').innerHTML =
       '<div class="card"><div class="eyebrow">Errore</div><h1>three.js non disponibile</h1>' +
-      '<p>Serve una connessione per la libreria 3D.<br><small>' + (msg||'') + '</small></p></div>';
+      '<p>Manca vendor/three.min.js e nemmeno i mirror rispondono.<br><small>' + (msg||'') + '</small></p></div>';
   }
   function next(i){
-    if (i >= mirrors.length) return fatal('CDN non raggiungibile');
+    if (i >= mirrors.length) return fatal('copia locale assente e CDN non raggiungibili');
     var s = document.createElement('script');
     s.src = mirrors[i];
     s.onload = function(){ window.THREE ? ready() : next(i+1); };

@@ -7,9 +7,16 @@ Online su **smlrcc.it** via GitHub Pages (branch `main`, cartella root).
 ```
 index.html   stile, markup, scena 3D del gioco, decorazioni 3D della home, i18n
 src/         32 SVG in pixel art (sprite, icone, cursori, bandiere)
+vendor/      three.min.js r152, committato nel repo
 CNAME        smlrcc.it
 README.md    documentazione per chi apre il repo
 ```
+
+**three.js è locale** (`vendor/three.min.js`, r152, ~620 KB): il tag nel markup punta lì,
+e `boot()` ripiega su unpkg e jsdelivr solo se quel file non arriva. È la build UMD, non
+i moduli ES: la r152 la segna deprecata e la r160 la toglie, quindi un eventuale upgrade
+significa passare a `<script type="importmap">` e `import * as THREE`, non solo cambiare
+numero. L'unica risorsa ancora esterna sono i **font di Google**.
 
 ## Modo di lavorare
 
