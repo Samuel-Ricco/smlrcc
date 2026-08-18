@@ -405,9 +405,11 @@ body.d3 .teegreen,body.d3 .greenstrip{background:none}
 .teegreen img{position:absolute;display:block}
 .teegreen .teeflag{left:clamp(14px,9vw,170px);bottom:16px}
 .teegreen .teeball{left:clamp(110px,22vw,340px);bottom:22px}
-.teegreen .kart{right:clamp(12px,7vw,110px);bottom:10px;left:auto}
-.teegreen .t1{left:33%;bottom:62px}
-.teegreen .t2{left:57%;bottom:52px}
+.teegreen .kart{right:clamp(12px,8vw,150px);bottom:4px;left:auto}
+.teegreen .t1{left:24%;bottom:58px}
+.teegreen .t2{left:40%;bottom:40px}
+.teegreen .t3{left:56%;bottom:62px}
+.teegreen .t4{left:70%;bottom:44px}
 .scrolldown{bottom:150px}
 /* schermi bassi: senza questo il testo sfonda l'altezza dell'hero e il
    campo di partenza finisce sotto la piega, perdendo il senso di "scorri" */
@@ -424,9 +426,8 @@ body.d3 .teegreen,body.d3 .greenstrip{background:none}
   .teegreen .teeflag{bottom:6px;transform:scale(.72);transform-origin:bottom left}
   .teegreen .teeball{left:110px;bottom:16px}
   .teegreen .kart{transform:scale(.62);transform-origin:bottom right;bottom:6px}
-  /* più bassi e spostati ai lati: al centro c'è "scorri", a destra il kart */
-  .teegreen .t1{left:19%;bottom:24px;width:52px;height:80px}
-  .teegreen .t2{left:45%;bottom:20px;width:42px;height:65px}
+  .teegreen .t1{left:40%;bottom:20px;width:52px;height:80px}
+  .teegreen .t2,.teegreen .t3,.teegreen .t4{display:none}
   .scrolldown{bottom:126px}
 }
 
@@ -521,15 +522,17 @@ body.d3 .flagpin,body.d3 .golfer,body.d3 .tree{visibility:hidden}
    Selettori più specifici di ".greenstrip img" per vincere sul left. */
 .greenstrip .g1{left:clamp(210px,26vw,380px);bottom:18px}
 .greenstrip .g2{left:clamp(300px,38vw,530px);bottom:16px}
-.greenstrip .t1{left:53%;bottom:74px}
-.greenstrip .t2{left:73%;bottom:60px}
+.greenstrip .t1{left:46%;bottom:70px}
+.greenstrip .t2{left:60%;bottom:52px}
+.greenstrip .t3{left:74%;bottom:76px}
+.greenstrip .t4{left:87%;bottom:56px}
 @media(max-width:700px){
-  /* golfisti a sinistra, alberi a destra: da stretto si sovrapponevano,
-     e il golfista che salta finiva dentro la chioma */
-  .greenstrip .g1{left:12%}
-  .greenstrip .g2{left:34%}
-  .greenstrip .t1{left:62%;bottom:52px;width:68px;height:105px}
-  .greenstrip .t2{left:83%;bottom:44px;width:52px;height:80px}
+  /* posizioni originali dei golfisti; degli alberi ne resta uno per campo,
+     spostato dove non incrocia nessuno */
+  .greenstrip .g1{left:170px}
+  .greenstrip .g2{left:238px}
+  .greenstrip .t1{left:84%;bottom:26px;width:56px;height:86px}
+  .greenstrip .t2,.greenstrip .t3,.greenstrip .t4{display:none}
 }
 
 /* il respiro dei golfisti sta dentro src/golfer-*.svg */
@@ -663,6 +666,8 @@ body.d3 .flagpin,body.d3 .golfer,body.d3 .tree{visibility:hidden}
         <img class="teeball" src="src/tee-ball.svg" width="24" height="24" alt="" aria-hidden="true">
         <img class="tree t1" src="src/tree.svg" width="86" height="133" alt="" aria-hidden="true">
         <img class="tree t2" src="src/tree.svg" width="68" height="105" alt="" aria-hidden="true">
+        <img class="tree t3" src="src/tree.svg" width="92" height="142" alt="" aria-hidden="true">
+        <img class="tree t4" src="src/tree.svg" width="72" height="111" alt="" aria-hidden="true">
       </div>
     </header>
 
@@ -759,6 +764,8 @@ body.d3 .flagpin,body.d3 .golfer,body.d3 .tree{visibility:hidden}
       <img class="golfer g2" src="src/golfer-b.svg" width="66" height="94" alt="" aria-hidden="true">
       <img class="tree t1" src="src/tree.svg" width="96" height="148" alt="" aria-hidden="true">
       <img class="tree t2" src="src/tree.svg" width="74" height="114" alt="" aria-hidden="true">
+      <img class="tree t3" src="src/tree.svg" width="102" height="158" alt="" aria-hidden="true">
+      <img class="tree t4" src="src/tree.svg" width="80" height="123" alt="" aria-hidden="true">
     </div>
 
     <footer>
@@ -1965,7 +1972,7 @@ function mkGround(){
      è quindi un trapezio: le strisce falciate rastremano verso il fondo e
      il colore si scurisce con la distanza. Sono i due indizi che bastano a
      leggerlo come terreno invece che come muro. */
-  var n = 18, k = 0.55;                       // quanto stringe in fondo
+  var n = 18, k = 0.72;                       // quanto stringe in fondo
   var near = new THREE.Color(0x40e0c6), far = new THREE.Color(0x18847c);
   var pos = [], col = [], c = new THREE.Color();
   for (var i = 0; i < n; i++){
@@ -2001,7 +2008,9 @@ var SITE_DECOS = [
   ['#stack .rollball',   mkRollBall, 0],
   ['#contatti .rollball', mkRollBall, 0],
   ['.teegreen .t1',   mkTree, 0, 1], ['.teegreen .t2',   mkTree, 0, 1],
-  ['.greenstrip .t1', mkTree, 0, 1], ['.greenstrip .t2', mkTree, 0, 1]
+  ['.teegreen .t3',   mkTree, 0, 1], ['.teegreen .t4',   mkTree, 0, 1],
+  ['.greenstrip .t1', mkTree, 0, 1], ['.greenstrip .t2', mkTree, 0, 1],
+  ['.greenstrip .t3', mkTree, 0, 1], ['.greenstrip .t4', mkTree, 0, 1]
 ];
 
 var siteLight = null;
