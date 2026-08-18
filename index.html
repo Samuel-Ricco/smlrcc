@@ -46,7 +46,10 @@ body{
    #world = minigame. Alla buca la camera si tuffa nel foro e
    #blackout chiude sul nero, che è lo sfondo del sito.
    ============================================================ */
-#world{position:fixed;inset:0;z-index:3}
+/* touch-action: senza questo il browser interpreta il trascinamento come
+   scroll e annulla i pointer event, e la mazza smette di seguire il dito.
+   Prima il canvas era dentro #world e se ne occupava lui. */
+#world{position:fixed;inset:0;z-index:3;touch-action:none}
 #world.fade{animation:worldfade .8s ease forwards}
 @keyframes worldfade{to{opacity:0}}
 
@@ -231,15 +234,6 @@ nav .btn{padding:11px 14px;font-size:10px}
 .hero h1 em{white-space:nowrap}
 .hero p{margin:0 0 32px;max-width:44ch;font-size:clamp(19px,2vw,23px);line-height:1.45;
   color:rgba(240,230,255,.84)}
-.claims{display:flex;flex-wrap:wrap;gap:10px;margin:26px 0 0}
-.claims span{
-  font-family:var(--pixel);font-size:11px;letter-spacing:.06em;text-transform:uppercase;
-  padding:10px 14px;color:var(--fg);border:2px solid rgba(240,230,255,.22);
-  background:rgba(18,10,31,.72)
-}
-.claims span:first-child{border-color:var(--cyan);color:var(--cyan)}
-.claims span:last-child{border-color:var(--pink);color:var(--pink)}
-
 .pxhint{
   margin-top:26px;font-family:var(--pixel);font-size:11px;letter-spacing:.08em;
   text-transform:uppercase;color:rgba(240,230,255,.55);display:flex;align-items:center;gap:9px
@@ -333,7 +327,7 @@ section.panel .eyebrow::before{
 
 /* pallina che rotola lungo il filetto in cima alla sezione */
 .rollball{
-  position:absolute;top:-11px;left:0;width:18px;height:18px;pointer-events:none;
+  position:absolute;top:-21px;left:0;width:18px;height:18px;pointer-events:none;
   background:url("src/ball.svg") no-repeat center/contain;
   animation:roll 15s steps(90,end) infinite
 }
@@ -410,7 +404,7 @@ section.panel::before{
 }
 body.d3 .teegreen,body.d3 .greenstrip{background:none}
 .teegreen img{position:absolute;display:block}
-.teegreen .teeflag{left:clamp(14px,9vw,170px);bottom:4px}   /* l'asta non va tagliata dal bordo */
+.teegreen .teeflag{left:clamp(14px,9vw,170px);bottom:16px}
 .teegreen .teeball{left:clamp(110px,22vw,340px);bottom:22px}
 .teegreen .kart{right:clamp(12px,7vw,110px);bottom:10px;left:auto}
 .scrolldown{bottom:150px}
@@ -442,7 +436,7 @@ body.d3 .teegreen,body.d3 .greenstrip{background:none}
     linear-gradient(#33cdb8 0 44px,#28b6a4 44px 96px,#1f9e93 96px 150px)
 }
 .greenstrip img{position:absolute;bottom:8px;display:block}
-.flagpin{left:clamp(16px,8vw,150px)}
+.flagpin{left:clamp(16px,8vw,150px);bottom:24px}
 @media(max-width:700px){
   .greenstrip{height:118px}
   .greenstrip img{transform:scale(.72);transform-origin:bottom left}
@@ -628,10 +622,6 @@ body.d3 .flagpin,body.d3 .golfer{visibility:hidden}
         <div class="eyebrow"><span data-i18n="hero.eyebrow">developer &middot; smlrcc.it</span></div>
         <h1 data-i18n="hero.title">Sviluppare con un occhio<br>all'estetica<em>, buca in 1</em><i class="gball"></i></h1>
         <p data-i18n="hero.lead">Sviluppo full stack: interfacce che si guardano volentieri, 3D nel browser, dettagli animati e layout che tengono su ogni schermo. E l'IA dove fa guadagnare tempo davvero, non dove fa scena.</p>
-        <div class="claims">
-          <span data-i18n="hero.claim1">Front-end bello</span>
-          <span data-i18n="hero.claim2">Back-end ottimizzato</span>
-        </div>
         <div class="row">
           <a class="btn" href="#lavori" data-i18n="hero.cta1">Guarda i lavori</a>
           <a class="btn ghost ico ico-mail" href="#contatti" data-i18n="hero.cta2">Scrivimi</a>
@@ -772,7 +762,6 @@ var I18N = {
     'hero.eyebrow':'developer &middot; smlrcc.it',
     'hero.title':"Sviluppare con un occhio<br>all'estetica<em>, buca in 1</em><i class='gball'></i>",
     'hero.lead':"Sviluppo full stack: interfacce che si guardano volentieri, 3D nel browser, dettagli animati e layout che tengono su ogni schermo. E l'IA dove fa guadagnare tempo davvero, non dove fa scena.",
-    'hero.claim1':'Front-end bello', 'hero.claim2':'Back-end ottimizzato',
     'hero.cta1':'Guarda i lavori', 'hero.cta2':'Scrivimi',
     'hero.hintMouse':'muovi il cursore &middot; premi per lo splash',
     'hero.hintTouch':'tocca lo schermo per lo splash',
@@ -813,7 +802,6 @@ var I18N = {
     'hero.eyebrow':'developer &middot; smlrcc.it',
     'hero.title':'Building with an eye<br>for design<em>, hole in one</em><i class="gball"></i>',
     'hero.lead':'Full-stack development: interfaces worth looking at, 3D in the browser, animated details and layouts that hold on any screen. And AI where it genuinely saves time, not where it just shows off.',
-    'hero.claim1':'Beautiful front-end', 'hero.claim2':'Optimised back-end',
     'hero.cta1':'See the work', 'hero.cta2':'Get in touch',
     'hero.hintMouse':'move the cursor &middot; press for a splash',
     'hero.hintTouch':'tap the screen for a splash',
@@ -1811,7 +1799,7 @@ addEventListener('pointerdown', pxSplash, { passive:true });
    ============================================================ */
 var siteScene = null, siteCam = null, siteAnchors = [], siteReady = false;
 
-function lam3(c){ return new THREE.MeshLambertMaterial({ color:c, flatShading:true }); }
+function lam3(c){ return new THREE.MeshLambertMaterial({ color:c, flatShading:true, side:THREE.DoubleSide }); }
 function box(w, h, d, c, x, y, z){
   var m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), lam3(c));
   m.position.set(x || 0, y || 0, z || 0);
@@ -1888,8 +1876,10 @@ function mkPin(flag){
     color:flag, flatShading:true, side:THREE.DoubleSide }));
   f.position.set(2, 60, 0);
   g.add(f);
-  g.add(cyl(20, 20, 4, 14, 0x120a1f, 0, -36, 0));      // buca
-  g.add(cyl(25, 25, 2, 14, 0x1a7d72, 0, -39, 0));      // anello
+  var hole = cyl(20, 20, 4, 14, 0x120a1f, 0, -36, 0);   // buca
+  var rim  = cyl(25, 25, 2, 14, 0x1a7d72, 0, -39, 0);   // anello
+  hole.userData.flat = rim.userData.flat = true;        // niente ombra propria
+  g.add(hole); g.add(rim);
   g.rotation.set(0.18, -0.35, 0);
   return g;
 }
@@ -1929,15 +1919,33 @@ function mkGolfer(shirt, cap, club){
 function mkGolferA(){ return mkGolfer(0xff5f9e, 0x49f2e0, true); }
 function mkGolferB(){ return mkGolfer(0x49f2e0, 0xff5f9e, false); }
 function mkGround(){
-  var g = new THREE.Group();
-  var n = 14, tone = [0x33cdb8, 0x2ab3a2];
+  /* La camera è ortografica: un piano inclinato resterebbe identico a uno
+     piatto, perché non c'è prospettiva a raccontare la profondità. Il prato
+     è quindi un trapezio: le strisce falciate rastremano verso il fondo e
+     il colore si scurisce con la distanza. Sono i due indizi che bastano a
+     leggerlo come terreno invece che come muro. */
+  var n = 18, k = 0.55;                       // quanto stringe in fondo
+  var near = new THREE.Color(0x40e0c6), far = new THREE.Color(0x18847c);
+  var pos = [], col = [], c = new THREE.Color();
   for (var i = 0; i < n; i++){
-    var s = box(1 / n, 1, 1, tone[i % 2], (i + 0.5) / n - 0.5, 0, 0);
-    g.add(s);
+    var x0 = i / n - 0.5, x1 = (i + 1) / n - 0.5;
+    var shade = (i % 2) ? 0.88 : 1;           // bande della falciatura
+    var quad = [[x0,-0.5,0],[x1,-0.5,0],[x1*k,0.5,0],
+                [x0,-0.5,0],[x1*k,0.5,0],[x0*k,0.5,0]];
+    for (var v = 0; v < quad.length; v++){
+      pos.push(quad[v][0], quad[v][1], quad[v][2]);
+      c.copy(quad[v][1] < 0 ? near : far).multiplyScalar(shade);
+      col.push(c.r, c.g, c.b);
+    }
   }
+  var geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  geo.setAttribute('color',    new THREE.Float32BufferAttribute(col, 3));
+  geo.computeVertexNormals();
+  var g = new THREE.Group();
+  g.add(new THREE.Mesh(geo, new THREE.MeshLambertMaterial({
+    vertexColors:true, side:THREE.DoubleSide })));
   g.userData.fit = g;              // scalato ogni frame sul rettangolo
-  g.rotation.x = -0.2;
-  g.position.z = -60;              // dietro agli oggetti appoggiati sopra
   return g;
 }
 
@@ -1977,7 +1985,10 @@ function buildSite(){
       var obj = SITE_DECOS[i][1]();
       var ground = !!obj.userData.fit;
       obj.traverse(function(o){
-        if (o.isMesh){ o.castShadow = !ground; o.receiveShadow = true; }
+        if (o.isMesh){
+          o.castShadow = !ground && !o.userData.flat;   // buca e anello no
+          o.receiveShadow = true;
+        }
       });
       /* ricentro sul bounding box: senza questo un modello asimmetrico
          (il golfista, con la mazza e le scarpe) esce dal suo rettangolo */
@@ -2034,8 +2045,8 @@ function updateSite(dt){
     /* z: appena davanti al prato. Più stacco = ombra più lontana dai piedi */
     o.position.set(_r.left + _r.width / 2, -(_r.top + _r.height / 2), -15);
     if (o.userData.fit){
-      o.scale.set(_r.width, _r.height, 30);
-      o.position.z = -60;             // faccia anteriore a z = -45
+      o.scale.set(_r.width, _r.height, 1);
+      o.position.z = -40;             // dietro ai modelli, che stanno a -15
       continue;                       // il prato non salta e non gira
     }
     o.scale.setScalar(_r.height / o.userData.h);
