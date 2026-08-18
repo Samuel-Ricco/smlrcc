@@ -225,13 +225,23 @@ nav .btn{padding:11px 14px;font-size:10px}
 .hero-in{max-width:1120px;margin:0 auto;width:100%}
 .hero h1{
   margin:20px 0 26px;font-family:var(--pixel);font-weight:700;
-  font-size:clamp(32px,6.4vw,80px);line-height:1.12;letter-spacing:-.01em;color:var(--fg)
+  font-size:clamp(28px,5.2vw,64px);line-height:1.14;letter-spacing:-.01em;color:var(--fg)
 }
 .hero h1 em{font-style:normal;color:var(--pink)}
+.hero h1 em{white-space:nowrap}
 .hero p{margin:0 0 32px;max-width:44ch;font-size:clamp(19px,2vw,23px);line-height:1.45;
   color:rgba(240,230,255,.84)}
+.claims{display:flex;flex-wrap:wrap;gap:10px;margin:26px 0 0}
+.claims span{
+  font-family:var(--pixel);font-size:11px;letter-spacing:.06em;text-transform:uppercase;
+  padding:10px 14px;color:var(--fg);border:2px solid rgba(240,230,255,.22);
+  background:rgba(18,10,31,.72)
+}
+.claims span:first-child{border-color:var(--cyan);color:var(--cyan)}
+.claims span:last-child{border-color:var(--pink);color:var(--pink)}
+
 .pxhint{
-  margin-top:36px;font-family:var(--pixel);font-size:11px;letter-spacing:.08em;
+  margin-top:26px;font-family:var(--pixel);font-size:11px;letter-spacing:.08em;
   text-transform:uppercase;color:rgba(240,230,255,.55);display:flex;align-items:center;gap:9px
 }
 .pxhint b{width:9px;height:9px;background:var(--pink);display:block;
@@ -354,12 +364,12 @@ section.panel .eyebrow::before{
    due animazioni nella stessa dichiarazione, altrimenti la seconda
    regola sostituirebbe la prima */
 #site.on .kart  {animation:fadeIn .6s steps(3,end) both .60s}
-#site.on .cloud1{animation:fadeIn .6s steps(3,end) both .70s}
-#site.on .cloud2{animation:fadeIn .6s steps(3,end) both .80s}
+#site.on .cloud1{animation:fadeIn .6s steps(3,end) both .70s, drift 9s steps(4,end) infinite alternate .70s}
+#site.on .cloud2{animation:fadeIn .6s steps(3,end) both .80s, drift 13s steps(4,end) infinite alternate-reverse .80s}
 
 @media(prefers-reduced-motion:reduce){
   .rv{opacity:1;translate:0 0}
-  .rollball{animation:none}
+  .rollball,.cloud1,.cloud2,.cloud3,.b1,.b2{animation:none}
   #site.on nav,#site.on .hero .eyebrow,#site.on .hero h1,#site.on .hero p,
   #site.on .hero .row .btn,#site.on .pxhint,#site.on .scrolldown,#site.on .deco{animation:none}
 }
@@ -483,17 +493,17 @@ nav .lang{border-color:var(--cyan)}
 .deco{position:absolute;pointer-events:none;image-rendering:pixelated}
 /* con il 3D attivo gli sprite restano nel layout ma invisibili:
    il loro rettangolo è l'ancora a cui si aggancia il modello */
-body.d3 .deco,body.d3 .teeflag,body.d3 .teeball,
+body.d3 .deco,body.d3 .teeflag,body.d3 .teeball,body.d3 .rollball,
 body.d3 .flagpin,body.d3 .golfer{visibility:hidden}
 
 /* cielo: sole, nuvole e uccellini nella fascia libera a destra */
 .sun{top:11%;right:6%;opacity:.85}
-.cloud1{top:44%;right:5%}
-.cloud2{top:58%;right:24%;opacity:.6}
-.cloud3{top:33%;right:31%;opacity:.45}
+.cloud1{top:44%;right:5%;animation:drift 9s steps(4,end) infinite alternate}
+.cloud2{top:58%;right:24%;opacity:.6;animation:drift 13s steps(4,end) infinite alternate-reverse}
+.cloud3{top:33%;right:31%;opacity:.45;animation:drift 17s steps(4,end) infinite alternate}
 .bird{opacity:.8}
-.b1{top:26%;right:19%}
-.b2{top:22%;right:15%}
+.b1{top:26%;right:19%;animation:fly1 24s linear infinite}
+.b2{top:22%;right:15%;animation:fly2 31s linear infinite}
 /* il battito d'ali sta dentro src/bird-*.svg */
 @media(max-width:900px){
   .sun{top:8%;right:4%;transform:scale(.72);transform-origin:top right}
@@ -501,7 +511,10 @@ body.d3 .flagpin,body.d3 .golfer{visibility:hidden}
 }
 
 /* golf kart appoggiato sul green, a destra */
-/* il kart non ha più moto proprio: reagisce al clic, come le altre */
+@keyframes drift{from{transform:translateX(0)}to{transform:translateX(-22px)}}
+@keyframes fly1{from{transform:translateX(0)}to{transform:translateX(-62vw)}}
+@keyframes fly2{from{transform:translateX(4vw)}to{transform:translateX(-54vw)}}
+/* il kart resta fermo: reagisce solo al clic */
 @media(max-width:560px){.cloud2{display:none}}
 
 /* due golfisti fermi sul green: solo un respiro, niente swing.
@@ -613,8 +626,12 @@ body.d3 .flagpin,body.d3 .golfer{visibility:hidden}
 
       <div class="hero-in">
         <div class="eyebrow"><span data-i18n="hero.eyebrow">developer &middot; smlrcc.it</span></div>
-        <h1 data-i18n="hero.title">Costruisco cose<br>che si muovono<i class="gball"></i></h1>
-        <p data-i18n="hero.lead">Interfacce, 3D nel browser, dettagli che si notano solo quando funzionano. Sei entrato mandando la palla in buca: il resto è qui sotto.</p>
+        <h1 data-i18n="hero.title">Sviluppare con un occhio<br>all'estetica<em>, buca in 1</em><i class="gball"></i></h1>
+        <p data-i18n="hero.lead">Sviluppo full stack: interfacce che si guardano volentieri, 3D nel browser, dettagli animati e layout che tengono su ogni schermo. E l'IA dove fa guadagnare tempo davvero, non dove fa scena.</p>
+        <div class="claims">
+          <span data-i18n="hero.claim1">Front-end bello</span>
+          <span data-i18n="hero.claim2">Back-end ottimizzato</span>
+        </div>
         <div class="row">
           <a class="btn" href="#lavori" data-i18n="hero.cta1">Guarda i lavori</a>
           <a class="btn ghost ico ico-mail" href="#contatti" data-i18n="hero.cta2">Scrivimi</a>
@@ -753,8 +770,9 @@ var I18N = {
   it:{
     'nav.work':'Lavori', 'nav.stack':'Stack', 'nav.contact':'Contatti',
     'hero.eyebrow':'developer &middot; smlrcc.it',
-    'hero.title':'Costruisco cose<br>che si muovono<i class="gball"></i>',
-    'hero.lead':"Interfacce, 3D nel browser, dettagli che si notano solo quando funzionano. Sei entrato mandando la palla in buca: il resto è qui sotto.",
+    'hero.title':"Sviluppare con un occhio<br>all'estetica<em>, buca in 1</em><i class='gball'></i>",
+    'hero.lead':"Sviluppo full stack: interfacce che si guardano volentieri, 3D nel browser, dettagli animati e layout che tengono su ogni schermo. E l'IA dove fa guadagnare tempo davvero, non dove fa scena.",
+    'hero.claim1':'Front-end bello', 'hero.claim2':'Back-end ottimizzato',
     'hero.cta1':'Guarda i lavori', 'hero.cta2':'Scrivimi',
     'hero.hintMouse':'muovi il cursore &middot; premi per lo splash',
     'hero.hintTouch':'tocca lo schermo per lo splash',
@@ -793,8 +811,9 @@ var I18N = {
   en:{
     'nav.work':'Work', 'nav.stack':'Stack', 'nav.contact':'Contact',
     'hero.eyebrow':'developer &middot; smlrcc.it',
-    'hero.title':'I build things<br>that move<i class="gball"></i>',
-    'hero.lead':'Interfaces, 3D in the browser, details you only notice when they work. You got in by sinking the putt: the rest is below.',
+    'hero.title':'Building with an eye<br>for design<em>, hole in one</em><i class="gball"></i>',
+    'hero.lead':'Full-stack development: interfaces worth looking at, 3D in the browser, animated details and layouts that hold on any screen. And AI where it genuinely saves time, not where it just shows off.',
+    'hero.claim1':'Beautiful front-end', 'hero.claim2':'Optimised back-end',
     'hero.cta1':'See the work', 'hero.cta2':'Get in touch',
     'hero.hintMouse':'move the cursor &middot; press for a splash',
     'hero.hintTouch':'tap the screen for a splash',
@@ -1807,6 +1826,7 @@ function cyl(rt, rb, h, seg, c, x, y, z){
 /* --- modelli, disegnati alla stessa scala in pixel degli sprite --- */
 function mkSun(){
   var g = new THREE.Group();
+  g.userData.spin = 0.22;      /* il cielo si muove, la terra no */
   var s = new THREE.Mesh(new THREE.IcosahedronGeometry(42, 1), lam3(0xff9b86));
   g.add(s);
   var r = new THREE.Mesh(new THREE.RingGeometry(54, 66, 18), 
@@ -1837,13 +1857,15 @@ function mkKart(){
   var g = new THREE.Group();
   g.add(box(112, 14, 62, 0xf0e6ff,   0, -20, 0));
   g.add(box(112,  8, 62, 0x49f2e0,   0,  36, 0));
-  g.add(box(6,   52,  6, 0xd8d0f5, -48,  10, 26));
-  g.add(box(6,   52,  6, 0xd8d0f5,  44,  10, 26));
+  g.add(box(6,   52,  6, 0xd8d0f5, -50,  10,  26));
+  g.add(box(6,   52,  6, 0xd8d0f5,  46,  10,  26));
+  g.add(box(6,   52,  6, 0xd8d0f5, -50,  10, -26));
+  g.add(box(6,   52,  6, 0xd8d0f5,  46,  10, -26));
   g.add(box(14,  36, 44, 0xff5f9e, -18,   4, 0));
   g.add(box(44,  10, 44, 0xff5f9e,   6, -10, 0));
-  g.add(box(24,  34, 24, 0x8a5cf0, -62,   2, 0));
-  g.add(cyl(1.6, 1.6, 22, 5, 0xd8d0f5, -58, 26, -6));
-  g.add(cyl(1.6, 1.6, 22, 5, 0xf0e6ff, -66, 26,  4));
+  g.add(box(22,  32, 22, 0x8a5cf0, -64,   2, -4));
+  g.add(cyl(1.6, 1.6, 22, 5, 0xd8d0f5, -60, 26, -10));
+  g.add(cyl(1.6, 1.6, 22, 5, 0xf0e6ff, -68, 26,  0));
   var w = [[-34,-38,28],[34,-38,28],[-34,-38,-28],[34,-38,-28]];
   for (var i = 0; i < w.length; i++){
     var t = cyl(15, 15, 9, 8, 0x1a0f2e, w[i][0], w[i][1], w[i][2]);
@@ -1878,6 +1900,11 @@ function mkBall(){
   g.add(new THREE.Mesh(new THREE.IcosahedronGeometry(10, 1), lam3(0xf4ecff)));
   return g;
 }
+function mkRollBall(){
+  var g = mkBall();
+  g.userData.roll = true;      /* gira in base a quanto ha percorso */
+  return g;
+}
 function mkGolfer(shirt, cap, club){
   var g = new THREE.Group();
   g.add(box(11, 34, 12, 0x8a5cf0, -8, -40, 0));
@@ -1910,7 +1937,7 @@ function mkGround(){
   }
   g.userData.fit = g;              // scalato ogni frame sul rettangolo
   g.rotation.x = -0.2;
-  g.position.z = -70;              // dietro agli oggetti appoggiati sopra
+  g.position.z = -60;              // dietro agli oggetti appoggiati sopra
   return g;
 }
 
@@ -1921,7 +1948,9 @@ var SITE_DECOS = [
   ['.b1',        mkBird,    11], ['.b2',         mkBird,    9],
   ['.kart',      mkKart,     0], ['.teeflag',    mkTeePin,  0],
   ['.teeball',   mkBall,     0], ['.flagpin',    mkHolePin, 0],
-  ['.golfer.g1', mkGolferA,  0], ['.golfer.g2',  mkGolferB, 0]
+  ['.golfer.g1', mkGolferA,  0], ['.golfer.g2',  mkGolferB, 0],
+  ['#stack .rollball',   mkRollBall, 0],
+  ['#contatti .rollball', mkRollBall, 0]
 ];
 
 var siteLight = null;
@@ -1938,7 +1967,7 @@ function buildSite(){
     siteLight = new THREE.DirectionalLight(0xfff0f8, 1.0);
     siteLight.castShadow = true;
     siteLight.shadow.mapSize.set(1024, 1024);
-    siteLight.shadow.bias = -0.004;
+    siteLight.shadow.bias = -0.0015;
     siteScene.add(siteLight);
     siteScene.add(siteLight.target);
 
@@ -2002,14 +2031,24 @@ function updateSite(dt){
     /* fuori schermo: non vale la pena disegnarlo */
     if (_r.bottom < -80 || _r.top > H + 80 || _r.width === 0){ o.visible = false; continue; }
     o.visible = true;
-    o.position.set(_r.left + _r.width / 2, -(_r.top + _r.height / 2), 0);
+    /* z: appena davanti al prato. Più stacco = ombra più lontana dai piedi */
+    o.position.set(_r.left + _r.width / 2, -(_r.top + _r.height / 2), -15);
     if (o.userData.fit){
-      o.scale.set(_r.width, _r.height, 40);
-      o.position.z = -70;
+      o.scale.set(_r.width, _r.height, 30);
+      o.position.z = -60;             // faccia anteriore a z = -45
       continue;                       // il prato non salta e non gira
     }
     o.scale.setScalar(_r.height / o.userData.h);
     o.rotation.y = o.userData.ry;
+
+    /* idle riservata al cielo */
+    if (o.userData.spin) o.rotation.y += state.clock * o.userData.spin;
+    if (o.userData.wings){
+      var w = Math.sin(state.clock * 8 + o.position.x * 0.01) > 0 ? 0.55 : -0.45;
+      o.userData.wings[0].rotation.z = -w;
+      o.userData.wings[1].rotation.z =  w;
+    }
+    if (o.userData.roll) o.rotation.x = -_r.left / (_r.height * 0.5);
 
     /* reazione al clic: un salto e un giro, a scatti come uno sprite */
     if (o.userData.anim != null){
@@ -2027,8 +2066,8 @@ function updateSite(dt){
   /* la luce segue la finestra, così l'ombra cade sempre sul prato */
   if (siteLight){
     var cx = W * 0.5, cy = -H * 0.5, sh = Math.max(W, H) * 0.8;
-    siteLight.position.set(cx - 420, cy + 640, 900);
-    siteLight.target.position.set(cx, cy, -70);
+    siteLight.position.set(cx - 260, cy + 300, 860);   // quasi frontale
+    siteLight.target.position.set(cx, cy, -45);
     siteLight.target.updateMatrixWorld();
     var sc = siteLight.shadow.camera;
     if (sc.right !== sh){
