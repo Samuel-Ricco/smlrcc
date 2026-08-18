@@ -406,6 +406,8 @@ body.d3 .teegreen,body.d3 .greenstrip{background:none}
 .teegreen .teeflag{left:clamp(14px,9vw,170px);bottom:16px}
 .teegreen .teeball{left:clamp(110px,22vw,340px);bottom:22px}
 .teegreen .kart{right:clamp(12px,7vw,110px);bottom:10px;left:auto}
+.teegreen .t1{left:34%;bottom:34px}
+.teegreen .t2{left:57%;bottom:26px}
 .scrolldown{bottom:150px}
 /* schermi bassi: senza questo il testo sfonda l'altezza dell'hero e il
    campo di partenza finisce sotto la piega, perdendo il senso di "scorri" */
@@ -486,7 +488,7 @@ nav .lang{border-color:var(--cyan)}
 /* con il 3D attivo gli sprite restano nel layout ma invisibili:
    il loro rettangolo è l'ancora a cui si aggancia il modello */
 body.d3 .deco,body.d3 .teeflag,body.d3 .teeball,body.d3 .rollball,
-body.d3 .flagpin,body.d3 .golfer{visibility:hidden}
+body.d3 .flagpin,body.d3 .golfer,body.d3 .tree{visibility:hidden}
 
 /* cielo: sole, nuvole e uccellini nella fascia libera a destra */
 .sun{top:11%;right:6%;opacity:.85}
@@ -516,6 +518,8 @@ body.d3 .flagpin,body.d3 .golfer{visibility:hidden}
    Selettori più specifici di ".greenstrip img" per vincere sul left. */
 .greenstrip .g1{left:clamp(210px,26vw,380px);bottom:18px}
 .greenstrip .g2{left:clamp(300px,38vw,530px);bottom:16px}
+.greenstrip .t1{left:53%;bottom:38px}
+.greenstrip .t2{left:72%;bottom:28px}
 @media(max-width:700px){.greenstrip .g1{left:170px}.greenstrip .g2{left:238px}}
 
 /* il respiro dei golfisti sta dentro src/golfer-*.svg */
@@ -647,6 +651,8 @@ body.d3 .flagpin,body.d3 .golfer{visibility:hidden}
 
         <!-- pallina piccola, senza segnalini -->
         <img class="teeball" src="src/tee-ball.svg" width="24" height="24" alt="" aria-hidden="true">
+        <img class="tree t1" src="src/tree.svg" width="62" height="96" alt="" aria-hidden="true">
+        <img class="tree t2" src="src/tree.svg" width="48" height="74" alt="" aria-hidden="true">
       </div>
     </header>
 
@@ -741,6 +747,8 @@ body.d3 .flagpin,body.d3 .golfer{visibility:hidden}
 
       <!-- golfista 2: mani sui fianchi, respiro sfasato -->
       <img class="golfer g2" src="src/golfer-b.svg" width="66" height="94" alt="" aria-hidden="true">
+      <img class="tree t1" src="src/tree.svg" width="68" height="105" alt="" aria-hidden="true">
+      <img class="tree t2" src="src/tree.svg" width="50" height="78" alt="" aria-hidden="true">
     </div>
 
     <footer>
@@ -1917,6 +1925,22 @@ function mkGolfer(shirt, cap, club){
   g.rotation.set(0.12, -0.5, 0);
   return g;
 }
+function mkTree(){
+  /* due coni sovrapposti e un tronco: la stessa costruzione degli alberi
+     che stanno intorno al green del minigame */
+  var g = new THREE.Group();
+  var t = new THREE.Mesh(new THREE.CylinderGeometry(5, 6, 26, 5), lam3(0x33254f));
+  t.position.y = -36;
+  g.add(t);
+  var c1 = new THREE.Mesh(new THREE.ConeGeometry(28, 58, 7), lam3(0x8a5cf0));
+  c1.position.y = -4;
+  var c2 = new THREE.Mesh(new THREE.ConeGeometry(20, 42, 7), lam3(0x6b3fd4));
+  c2.position.y = 26;
+  g.add(c1); g.add(c2);
+  g.rotation.y = 0.4;
+  return g;
+}
+
 function mkGolferA(){ return mkGolfer(0xff5f9e, 0x49f2e0, true); }
 function mkGolferB(){ return mkGolfer(0x49f2e0, 0xff5f9e, false); }
 function mkGround(){
@@ -1959,7 +1983,9 @@ var SITE_DECOS = [
   ['.teeball',   mkBall,     0, 1], ['.flagpin',    mkHolePin, 0, 1],
   ['.golfer.g1', mkGolferA,  0, 1], ['.golfer.g2',  mkGolferB, 0, 1],
   ['#stack .rollball',   mkRollBall, 0],
-  ['#contatti .rollball', mkRollBall, 0]
+  ['#contatti .rollball', mkRollBall, 0],
+  ['.teegreen .t1',   mkTree, 0, 1], ['.teegreen .t2',   mkTree, 0, 1],
+  ['.greenstrip .t1', mkTree, 0, 1], ['.greenstrip .t2', mkTree, 0, 1]
 ];
 
 var siteLight = null;
@@ -1973,10 +1999,10 @@ function buildSite(){
     siteCam.position.set(0, 0, 1200);
     siteScene.add(new THREE.HemisphereLight(0xffc0e8, 0x2b1b4d, 0.62));
     siteScene.add(new THREE.AmbientLight(0xc9a8ff, 0.26));
+    /* niente shadow map sulla home: su un piano frontale l'ombra proiettata
+       legge come ombra sul muro. La resa dell'appoggio la fa l'ellisse
+       schiacciata sotto a ogni modello. */
     siteLight = new THREE.DirectionalLight(0xfff0f8, 1.0);
-    siteLight.castShadow = true;
-    siteLight.shadow.mapSize.set(1024, 1024);
-    siteLight.shadow.bias = -0.0015;
     siteScene.add(siteLight);
     siteScene.add(siteLight.target);
 
@@ -1985,12 +2011,7 @@ function buildSite(){
       if (!el) continue;
       var obj = SITE_DECOS[i][1]();
       var ground = !!obj.userData.fit;
-      obj.traverse(function(o){
-        if (o.isMesh){
-          o.castShadow = !ground && !o.userData.flat;   // buca e anello no
-          o.receiveShadow = true;
-        }
-      });
+
       /* ricentro sul bounding box: senza questo un modello asimmetrico
          (il golfista, con la mazza e le scarpe) esce dal suo rettangolo */
       if (!ground){
@@ -2097,15 +2118,10 @@ function updateSite(dt){
 
   /* la luce segue la finestra, così l'ombra cade sempre sul prato */
   if (siteLight){
-    var cx = W * 0.5, cy = -H * 0.5, sh = Math.max(W, H) * 0.8;
-    siteLight.position.set(cx - 260, cy + 300, 860);   // quasi frontale
+    var cx = W * 0.5, cy = -H * 0.5;
+    siteLight.position.set(cx - 260, cy + 300, 860);
     siteLight.target.position.set(cx, cy, -45);
     siteLight.target.updateMatrixWorld();
-    var sc = siteLight.shadow.camera;
-    if (sc.right !== sh){
-      sc.left = -sh; sc.right = sh; sc.top = sh; sc.bottom = -sh;
-      sc.near = 1; sc.far = 3200; sc.updateProjectionMatrix();
-    }
   }
   renderer.render(siteScene, siteCam);
 }
