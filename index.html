@@ -53,7 +53,7 @@ body{
 #blackout{position:absolute;inset:0;z-index:4;background:var(--void);opacity:0;pointer-events:none}
 
 /* il buffer 3D è basso: qui viene ingrandito a blocchi, senza interpolazione */
-canvas#scene{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none;z-index:0;
+canvas#scene{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none;z-index:1;
   background:var(--sunset);
   image-rendering:pixelated;image-rendering:crisp-edges;-ms-interpolation-mode:nearest-neighbor}
 body.in-site canvas#scene{background:none}
@@ -353,13 +353,13 @@ section.panel .eyebrow::before{
 /* le decorazioni entrano in dissolvenza ma tengono il loro moto:
    due animazioni nella stessa dichiarazione, altrimenti la seconda
    regola sostituirebbe la prima */
-#site.on .kart  {animation:fadeIn .6s steps(3,end) both .60s, bob 1.8s steps(2,end) infinite .60s}
-#site.on .cloud1{animation:fadeIn .6s steps(3,end) both .70s, drift 9s steps(4,end) infinite alternate .70s}
-#site.on .cloud2{animation:fadeIn .6s steps(3,end) both .80s, drift 13s steps(4,end) infinite alternate-reverse .80s}
+#site.on .kart  {animation:fadeIn .6s steps(3,end) both .60s}
+#site.on .cloud1{animation:fadeIn .6s steps(3,end) both .70s}
+#site.on .cloud2{animation:fadeIn .6s steps(3,end) both .80s}
 
 @media(prefers-reduced-motion:reduce){
   .rv{opacity:1;translate:0 0}
-  .rollball,.cloud1,.cloud2{animation:none}
+  .rollball{animation:none}
   #site.on nav,#site.on .hero .eyebrow,#site.on .hero h1,#site.on .hero p,
   #site.on .hero .row .btn,#site.on .pxhint,#site.on .scrolldown,#site.on .deco{animation:none}
 }
@@ -488,30 +488,26 @@ body.d3 .flagpin,body.d3 .golfer{visibility:hidden}
 
 /* cielo: sole, nuvole e uccellini nella fascia libera a destra */
 .sun{top:11%;right:6%;opacity:.85}
-.cloud1{top:44%;right:5%;animation:drift 9s steps(4,end) infinite alternate}
-.cloud2{top:58%;right:24%;opacity:.6;animation:drift 13s steps(4,end) infinite alternate-reverse}
-.cloud3{top:33%;right:31%;opacity:.45;animation:drift 17s steps(4,end) infinite alternate}
+.cloud1{top:44%;right:5%}
+.cloud2{top:58%;right:24%;opacity:.6}
+.cloud3{top:33%;right:31%;opacity:.45}
 .bird{opacity:.8}
-.b1{top:26%;right:19%;animation:fly1 24s linear infinite}
-.b2{top:22%;right:15%;animation:fly2 31s linear infinite}
-@keyframes fly1{from{transform:translateX(0)}to{transform:translateX(-62vw)}}
-@keyframes fly2{from{transform:translateX(4vw)}to{transform:translateX(-54vw)}}
+.b1{top:26%;right:19%}
+.b2{top:22%;right:15%}
 /* il battito d'ali sta dentro src/bird-*.svg */
 @media(max-width:900px){
   .sun{top:8%;right:4%;transform:scale(.72);transform-origin:top right}
   .cloud1{top:38%;right:3%}.cloud2{top:50%;right:20%}.cloud3{display:none}
 }
-@keyframes drift{from{transform:translateX(0)}to{transform:translateX(-22px)}}
 
 /* golf kart appoggiato sul green, a destra */
-.kart{animation:bob 1.8s steps(2,end) infinite}   /* posizione: dentro .teegreen */
-@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+/* il kart non ha più moto proprio: reagisce al clic, come le altre */
 @media(max-width:560px){.cloud2{display:none}}
 
 /* due golfisti fermi sul green: solo un respiro, niente swing.
    Selettori più specifici di ".greenstrip img" per vincere sul left. */
-.greenstrip .g1{left:clamp(210px,26vw,380px)}
-.greenstrip .g2{left:clamp(300px,38vw,530px)}
+.greenstrip .g1{left:clamp(210px,26vw,380px);bottom:18px}
+.greenstrip .g2{left:clamp(300px,38vw,530px);bottom:16px}
 @media(max-width:700px){.greenstrip .g1{left:170px}.greenstrip .g2{left:238px}}
 
 /* il respiro dei golfisti sta dentro src/golfer-*.svg */
@@ -546,7 +542,8 @@ body.d3 .flagpin,body.d3 .golfer{visibility:hidden}
 }
 </style>
 
-<!-- ============================= MINIGAME ============================= -->
+<!-- il reticolo del cursore sta sotto al 3D, il 3D sotto ai contenuti -->
+<canvas id="px"></canvas>
 <canvas id="scene"></canvas>
 
 <div id="world">
@@ -583,7 +580,6 @@ body.d3 .flagpin,body.d3 .golfer{visibility:hidden}
 
 <!-- ============================= SITO ============================= -->
 <div id="site">
-  <canvas id="px"></canvas>
 
   <div class="site-in">
     <nav>
@@ -612,8 +608,8 @@ body.d3 .flagpin,body.d3 .golfer{visibility:hidden}
       <img class="deco sun" src="src/sun.svg" width="132" height="132" alt="" aria-hidden="true">
 
       <!-- uccellini: due pose alternate -->
-      <img class="deco bird b1" src="src/bird-a.svg" width="28" height="14" alt="" aria-hidden="true">
-      <img class="deco bird b2" src="src/bird-b.svg" width="20" height="10" alt="" aria-hidden="true">
+      <img class="deco bird b1" src="src/bird-a.svg" width="44" height="22" alt="" aria-hidden="true">
+      <img class="deco bird b2" src="src/bird-b.svg" width="34" height="17" alt="" aria-hidden="true">
 
       <div class="hero-in">
         <div class="eyebrow"><span data-i18n="hero.eyebrow">developer &middot; smlrcc.it</span></div>
@@ -733,10 +729,10 @@ body.d3 .flagpin,body.d3 .golfer{visibility:hidden}
       <img class="flagpin" src="src/hole-pin.svg" width="170" height="132" alt="" aria-hidden="true">
 
       <!-- golfista 1: mazza appoggiata, respiro lento -->
-      <img class="golfer g1" src="src/golfer-a.svg" width="84" height="120" alt="" aria-hidden="true">
+      <img class="golfer g1" src="src/golfer-a.svg" width="78" height="108" alt="" aria-hidden="true">
 
       <!-- golfista 2: mani sui fianchi, respiro sfasato -->
-      <img class="golfer g2" src="src/golfer-b.svg" width="72" height="102" alt="" aria-hidden="true">
+      <img class="golfer g2" src="src/golfer-b.svg" width="66" height="94" alt="" aria-hidden="true">
     </div>
 
     <footer>
@@ -1817,7 +1813,6 @@ function mkSun(){
           new THREE.MeshBasicMaterial({ color:0xffd36e, side:THREE.DoubleSide }));
   r.rotation.x = -1.15; r.rotation.z = 0.4;
   g.add(r);
-  g.userData.spin = 0.25;
   return g;
 }
 function mkCloud(){
@@ -1858,19 +1853,26 @@ function mkKart(){
   g.rotation.set(0.16, -0.62, 0);
   return g;
 }
-function mkPin(flag, dark){
+function mkPin(flag){
+  /* stessa costruzione della bandiera del minigame: asta cilindrica,
+     pennant triangolare a doppia faccia, buca con anello */
   var g = new THREE.Group();
-  g.add(cyl(2.4, 2.4, 92, 6, 0xf0e6ff, 0, 12, 0));
-  g.add(box(30, 11, 3, flag, 17, 48, 0));
-  g.add(box(22,  9, 3, flag, 13, 37, 0));
-  var hole = cyl(19, 19, 5, 12, dark, 0, -36, 0);
-  g.add(hole);
-  g.add(cyl(23, 23, 3, 12, 0x1a7d72, 0, -39, 0));
-  g.rotation.set(0.2, -0.4, 0);
+  g.add(cyl(2.4, 2.4, 96, 6, 0xd8d0f5, 0, 14, 0));
+  var geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.Float32BufferAttribute(
+    [0,0,0,  38,-6,5,  0,-25,0], 3));
+  geo.computeVertexNormals();
+  var f = new THREE.Mesh(geo, new THREE.MeshLambertMaterial({
+    color:flag, flatShading:true, side:THREE.DoubleSide }));
+  f.position.set(2, 60, 0);
+  g.add(f);
+  g.add(cyl(20, 20, 4, 14, 0x120a1f, 0, -36, 0));      // buca
+  g.add(cyl(25, 25, 2, 14, 0x1a7d72, 0, -39, 0));      // anello
+  g.rotation.set(0.18, -0.35, 0);
   return g;
 }
-function mkTeePin(){  return mkPin(0xffd36e, 0x120a1f); }
-function mkHolePin(){ return mkPin(0xff5f9e, 0x120a1f); }
+function mkTeePin(){  return mkPin(0xffd36e); }
+function mkHolePin(){ return mkPin(0xff5f9e); }
 function mkBall(){
   var g = new THREE.Group();
   g.add(new THREE.Mesh(new THREE.IcosahedronGeometry(10, 1), lam3(0xf4ecff)));
@@ -1914,37 +1916,77 @@ function mkGround(){
 
 var SITE_DECOS = [
   ['.teegreen',  mkGround,   0], ['.greenstrip', mkGround,  0],
-  ['.sun',       mkSun,    132], ['.cloud1',     mkCloud,  40],
+  ['.sun',       mkSun,     84], ['.cloud1',     mkCloud,  40],
   ['.cloud2',    mkCloud,   28], ['.cloud3',     mkCloud,  24],
-  ['.b1',        mkBird,     8], ['.b2',         mkBird,    6],
-  ['.kart',      mkKart,   112], ['.teeflag',    mkTeePin,112],
-  ['.teeball',   mkBall,    24], ['.flagpin',    mkHolePin,132],
-  ['.golfer.g1', mkGolferA,120], ['.golfer.g2',  mkGolferB,102]
+  ['.b1',        mkBird,    11], ['.b2',         mkBird,    9],
+  ['.kart',      mkKart,     0], ['.teeflag',    mkTeePin,  0],
+  ['.teeball',   mkBall,     0], ['.flagpin',    mkHolePin, 0],
+  ['.golfer.g1', mkGolferA,  0], ['.golfer.g2',  mkGolferB, 0]
 ];
+
+var siteLight = null;
+var _bb = new THREE.Box3(), _sz = new THREE.Vector3(), _ct = new THREE.Vector3();
 
 function buildSite(){
   if (siteScene) return;
-  siteScene = new THREE.Scene();
-  siteCam = new THREE.OrthographicCamera(0, 1, 0, -1, 1, 4000);
-  siteCam.position.set(0, 0, 1200);
-  siteScene.add(new THREE.HemisphereLight(0xffc0e8, 0x2b1b4d, 0.75));
-  siteScene.add(new THREE.AmbientLight(0xc9a8ff, 0.3));
-  var d = new THREE.DirectionalLight(0xfff0f8, 0.95);
-  d.position.set(-260, 420, 500);
-  siteScene.add(d);
-  for (var i = 0; i < SITE_DECOS.length; i++){
-    var el = document.querySelector(SITE_DECOS[i][0]);
-    if (!el) continue;
-    var obj = SITE_DECOS[i][1]();
-    obj.userData.h = SITE_DECOS[i][2];
-    obj.userData.el = el;
-    obj.userData.phase = i * 1.7;
-    siteScene.add(obj);
-    siteAnchors.push(obj);
+  try {
+    siteScene = new THREE.Scene();
+    siteCam = new THREE.OrthographicCamera(0, 1, 0, -1, 1, 4000);
+    siteCam.position.set(0, 0, 1200);
+    siteScene.add(new THREE.HemisphereLight(0xffc0e8, 0x2b1b4d, 0.62));
+    siteScene.add(new THREE.AmbientLight(0xc9a8ff, 0.26));
+    siteLight = new THREE.DirectionalLight(0xfff0f8, 1.0);
+    siteLight.castShadow = true;
+    siteLight.shadow.mapSize.set(1024, 1024);
+    siteLight.shadow.bias = -0.004;
+    siteScene.add(siteLight);
+    siteScene.add(siteLight.target);
+
+    for (var i = 0; i < SITE_DECOS.length; i++){
+      var el = document.querySelector(SITE_DECOS[i][0]);
+      if (!el) continue;
+      var obj = SITE_DECOS[i][1]();
+      var ground = !!obj.userData.fit;
+      obj.traverse(function(o){
+        if (o.isMesh){ o.castShadow = !ground; o.receiveShadow = true; }
+      });
+      /* ricentro sul bounding box: senza questo un modello asimmetrico
+         (il golfista, con la mazza e le scarpe) esce dal suo rettangolo */
+      if (!ground){
+        _bb.setFromObject(obj);
+        _bb.getCenter(_ct); _bb.getSize(_sz);
+        for (var c = 0; c < obj.children.length; c++){
+          obj.children[c].position.sub(_ct);
+        }
+        obj.userData.box = _sz.clone();
+      }
+      obj.userData.h = SITE_DECOS[i][2] || (_sz.y || 1);
+      obj.userData.el = el;
+      obj.userData.ry = obj.rotation.y;
+      siteScene.add(obj);
+      siteAnchors.push(obj);
+    }
+    siteReady = true;
+    document.body.classList.add('d3');   // ora gli sprite piatti passano il turno
+  } catch(e){
+    /* se qualcosa non regge, gli SVG piatti restano al loro posto */
+    siteScene = null; siteReady = false;
+    document.body.classList.remove('d3');
   }
-  siteReady = true;
-  document.body.classList.add('d3');   // gli sprite piatti passano il turno
 }
+
+/* un clic su una decorazione la fa saltare e girare su sé stessa */
+function siteClick(e){
+  if (state.phase !== 'site' || !siteReady) return;
+  for (var i = siteAnchors.length - 1; i >= 0; i--){
+    var o = siteAnchors[i];
+    if (o.userData.fit || !o.visible) continue;      // il prato non reagisce
+    var r = o.userData.el.getBoundingClientRect();
+    if (e.clientX >= r.left && e.clientX <= r.right &&
+        e.clientY >= r.top  && e.clientY <= r.bottom){ o.userData.anim = 0; return; }
+  }
+}
+addEventListener('pointerdown', siteClick, { passive:true });
 
 var _r = null;
 function updateSite(dt){
@@ -1964,18 +2006,34 @@ function updateSite(dt){
     if (o.userData.fit){
       o.scale.set(_r.width, _r.height, 40);
       o.position.z = -70;
-    } else if (o.userData.h){
-      o.scale.setScalar(_r.height / o.userData.h);
+      continue;                       // il prato non salta e non gira
     }
-    var t = state.clock + o.userData.phase;
-    if (o.userData.spin) o.rotation.y = t * o.userData.spin;
-    if (o.userData.wings){
-      var a = Math.sin(t * 9) > 0 ? 0.5 : -0.4;      /* battito a due pose */
-      o.userData.wings[0].rotation.z = -a;
-      o.userData.wings[1].rotation.z =  a;
+    o.scale.setScalar(_r.height / o.userData.h);
+    o.rotation.y = o.userData.ry;
+
+    /* reazione al clic: un salto e un giro, a scatti come uno sprite */
+    if (o.userData.anim != null){
+      o.userData.anim += dt;
+      var p = o.userData.anim / 0.6;
+      if (p >= 1){
+        o.userData.anim = null;
+      } else {
+        o.rotation.y = o.userData.ry + Math.floor(p * 8) / 8 * Math.PI * 2;
+        o.position.y += Math.sin(p * Math.PI) * _r.height * 0.3;
+      }
     }
-    if (o.userData.h >= 100 && !o.userData.spin && !o.userData.fit){
-      o.position.y += Math.sin(t * 2.4) > 0 ? 0 : -2;  /* respiro a scatti */
+  }
+
+  /* la luce segue la finestra, così l'ombra cade sempre sul prato */
+  if (siteLight){
+    var cx = W * 0.5, cy = -H * 0.5, sh = Math.max(W, H) * 0.8;
+    siteLight.position.set(cx - 420, cy + 640, 900);
+    siteLight.target.position.set(cx, cy, -70);
+    siteLight.target.updateMatrixWorld();
+    var sc = siteLight.shadow.camera;
+    if (sc.right !== sh){
+      sc.left = -sh; sc.right = sh; sc.top = sh; sc.bottom = -sh;
+      sc.near = 1; sc.far = 3200; sc.updateProjectionMatrix();
     }
   }
   renderer.render(siteScene, siteCam);
