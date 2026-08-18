@@ -424,7 +424,10 @@ body.d3 .teegreen,body.d3 .greenstrip{background:none}
   .teegreen .teeflag{bottom:6px;transform:scale(.72);transform-origin:bottom left}
   .teegreen .teeball{left:110px;bottom:16px}
   .teegreen .kart{transform:scale(.62);transform-origin:bottom right;bottom:6px}
-  .scrolldown{bottom:118px}
+  /* più bassi e spostati ai lati: al centro c'è "scorri", a destra il kart */
+  .teegreen .t1{left:19%;bottom:24px;width:52px;height:80px}
+  .teegreen .t2{left:45%;bottom:20px;width:42px;height:65px}
+  .scrolldown{bottom:126px}
 }
 
 /* CAMPO 2 — putting green che chiude la pagina: sta nel flusso, bande
@@ -520,7 +523,14 @@ body.d3 .flagpin,body.d3 .golfer,body.d3 .tree{visibility:hidden}
 .greenstrip .g2{left:clamp(300px,38vw,530px);bottom:16px}
 .greenstrip .t1{left:53%;bottom:74px}
 .greenstrip .t2{left:73%;bottom:60px}
-@media(max-width:700px){.greenstrip .g1{left:170px}.greenstrip .g2{left:238px}}
+@media(max-width:700px){
+  /* golfisti a sinistra, alberi a destra: da stretto si sovrapponevano,
+     e il golfista che salta finiva dentro la chioma */
+  .greenstrip .g1{left:12%}
+  .greenstrip .g2{left:34%}
+  .greenstrip .t1{left:62%;bottom:52px;width:68px;height:105px}
+  .greenstrip .t2{left:83%;bottom:44px;width:52px;height:80px}
+}
 
 /* il respiro dei golfisti sta dentro src/golfer-*.svg */
 
@@ -2038,10 +2048,13 @@ function buildSite(){
             new THREE.CircleGeometry(obj.userData.foot || _sz.x * 0.45, 18),
             new THREE.MeshBasicMaterial({ color:0x0c3a37, transparent:true, opacity:0.5 }));
           bl.scale.y = 0.26;
-          bl.position.set(-_ct.x, -_sz.y * 0.5 + 3, -10);
-          bl.quaternion.copy(obj.quaternion).invert();   // sempre di faccia
+          /* z a zero e appena sotto la base: a -10 finiva dietro ai piedi
+             del golfista, che sporgono in avanti, e non si vedeva */
+          bl.position.set(-_ct.x, -_sz.y * 0.5 - 1, 0);
           bl.userData.flat = true;
+          bl.userData.baseY = bl.position.y;
           obj.add(bl);
+          obj.userData.blob = bl;
           obj.userData.ground = true;
         }
       }
@@ -2120,11 +2133,25 @@ function updateSite(dt){
       var p = o.userData.anim / 0.6;
       if (p >= 1){
         o.userData.anim = null;
+        if (o.userData.blob){
+          o.userData.blob.position.y = o.userData.blob.userData.baseY;
+          o.userData.blob.scale.set(1, 0.26, 1);
+        }
       } else {
         o.rotation.y = o.userData.ry + Math.floor(p * 8) / 8 * Math.PI * 2;
-        o.position.y += Math.sin(p * Math.PI) * _r.height * 0.3;
+        var hop = Math.sin(p * Math.PI) * _r.height * 0.3;
+        o.position.y += hop;
+        /* l'ombra non salta con l'oggetto: resta a terra e si stringe */
+        if (o.userData.blob){
+          var sc = o.scale.x || 1;
+          var k = 1 - 0.4 * Math.sin(p * Math.PI);
+          o.userData.blob.position.y = o.userData.blob.userData.baseY - hop / sc;
+          o.userData.blob.scale.set(k, 0.26 * k, 1);
+        }
       }
     }
+    /* l'ombra guarda sempre la camera, anche mentre il modello gira */
+    if (o.userData.blob) o.userData.blob.quaternion.copy(o.quaternion).invert();
   }
 
   /* la luce segue la finestra, così l'ombra cade sempre sul prato */
