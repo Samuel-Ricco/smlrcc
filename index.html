@@ -56,6 +56,7 @@ body{
 canvas#scene{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none;z-index:0;
   background:var(--sunset);
   image-rendering:pixelated;image-rendering:crisp-edges;-ms-interpolation-mode:nearest-neighbor}
+body.in-site canvas#scene{background:none}
 
 /* ============================================================
    HUD DEL MINIGAME — riquadri a spigolo vivo, bordo pieno
@@ -148,7 +149,7 @@ canvas#scene{position:fixed;inset:0;width:100%;height:100%;display:block;touch-a
   position:fixed;inset:0;z-index:2;overflow-y:auto;overflow-x:hidden;
   opacity:0;pointer-events:none;transition:opacity 1s ease .15s;
   scroll-behavior:smooth;-webkit-overflow-scrolling:touch;
-  background:var(--void);color:var(--fg)
+  background:transparent;color:var(--fg)
 }
 #site.on{opacity:1;pointer-events:auto}
 
@@ -397,6 +398,7 @@ section.panel::before{
     repeating-linear-gradient(0deg,rgba(10,4,20,.10) 0 7px,transparent 7px 14px),
     linear-gradient(#3ad8c0 0 34px,#2ec2ae 34px 76px,#26a89b 76px 118px)
 }
+body.d3 .teegreen,body.d3 .greenstrip{background:none}
 .teegreen img{position:absolute;display:block}
 .teegreen .teeflag{left:clamp(14px,9vw,170px);bottom:4px}   /* l'asta non va tagliata dal bordo */
 .teegreen .teeball{left:clamp(110px,22vw,340px);bottom:22px}
@@ -479,6 +481,10 @@ nav .lang{border-color:var(--cyan)}
    DECORAZIONI PIXEL ART
    ============================================================ */
 .deco{position:absolute;pointer-events:none;image-rendering:pixelated}
+/* con il 3D attivo gli sprite restano nel layout ma invisibili:
+   il loro rettangolo è l'ancora a cui si aggancia il modello */
+body.d3 .deco,body.d3 .teeflag,body.d3 .teeball,
+body.d3 .flagpin,body.d3 .golfer{visibility:hidden}
 
 /* cielo: sole, nuvole e uccellini nella fascia libera a destra */
 .sun{top:11%;right:6%;opacity:.85}
@@ -541,8 +547,9 @@ nav .lang{border-color:var(--cyan)}
 </style>
 
 <!-- ============================= MINIGAME ============================= -->
-<div id="world">
 <canvas id="scene"></canvas>
+
+<div id="world">
 
 <div id="game">
   <div class="vig"></div>
@@ -973,7 +980,8 @@ var canvas   = document.getElementById('scene');
    canvas viene stirato a schermo pieno con image-rendering:pixelated, cioè
    nearest-neighbor. Niente antialias, altrimenti i bordi arrivano sfumati
    e ingranditi. Costa meno di un render a risoluzione piena. */
-var PIX_H = 300;      // più alto = pixel più fini
+var PIX_H_GAME = 300, PIX_H_SITE = 520;   // più alto = pixel più fini
+var PIX_H = PIX_H_GAME;
 var renderer = new THREE.WebGLRenderer({ canvas:canvas, antialias:false, alpha:true });
 renderer.setPixelRatio(1);
 renderer.setClearAlpha(0);
@@ -1400,14 +1408,26 @@ function skipToSite(){
   state.entering = true;
   el.world.classList.add('fade');
   showSite(false);
+  /* il canvas sta fuori da #world e non svanisce con lui: se restasse sul
+     campo da golf lo si vedrebbe attraverso il sito, che ora è trasparente.
+     Passa subito alle decorazioni, e il gioco gli svanisce sopra. */
+  enterSiteScene();
   closeT = setTimeout(closeWorld, 800);
 }
 
-/* fine transizione: la scena 3D non serve più, fermiamo il loop */
+/* fine transizione: sparisce l'interfaccia del gioco e la scena passa
+   alle decorazioni della home, sullo stesso renderer */
+function enterSiteScene(){
+  if (state.phase === 'site') return;
+  document.body.classList.add('in-site');
+  PIX_H = PIX_H_SITE; curW = 0;    // buffer più fine per le decorazioni
+  buildSite();
+  state.phase = 'site';
+}
+
 function closeWorld(){
   el.world.style.display = 'none';
-  state.phase = 'site';
-  state.paused = true;
+  enterSiteScene();
 }
 
 function backToGame(){
@@ -1416,6 +1436,8 @@ function backToGame(){
   el.site.classList.remove('on');
   el.world.classList.remove('fade');
   el.world.style.display = '';
+  document.body.classList.remove('in-site');
+  PIX_H = PIX_H_GAME; curW = 0;    // il campo torna alla sua pixelatura
   el.blackout.style.opacity = 0;
   el.skip.classList.remove('on');
   state.entering = false;
@@ -1591,7 +1613,7 @@ function updateCamera(dt){
     dLook.set(0, 0.1 - 1.4*e, 0);
     rate = 3.4;
   } else {
-    return;   // fase 'site': scena ferma, il loop è in pausa
+    return;   // fase 'site': la camera del campo non serve
   }
   var k = 1 - Math.exp(-rate * dt);
   camera.position.lerp(dPos, k);
@@ -1765,6 +1787,202 @@ addEventListener('pointerdown', pxSplash, { passive:true });
 
 
 /* ============================================================
+   11c. Decorazioni 3D della home.
+        Stessa pixelatura del minigame: stesso renderer, stesso
+        buffer basso. Camera ortografica tarata in pixel CSS, così
+        ogni modello si aggancia al rettangolo dello sprite piatto
+        che sostituisce e segue scroll, resize e breakpoint senza
+        che io debba duplicare il layout.
+   ============================================================ */
+var siteScene = null, siteCam = null, siteAnchors = [], siteReady = false;
+
+function lam3(c){ return new THREE.MeshLambertMaterial({ color:c, flatShading:true }); }
+function box(w, h, d, c, x, y, z){
+  var m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), lam3(c));
+  m.position.set(x || 0, y || 0, z || 0);
+  return m;
+}
+function cyl(rt, rb, h, seg, c, x, y, z){
+  var m = new THREE.Mesh(new THREE.CylinderGeometry(rt, rb, h, seg), lam3(c));
+  m.position.set(x || 0, y || 0, z || 0);
+  return m;
+}
+
+/* --- modelli, disegnati alla stessa scala in pixel degli sprite --- */
+function mkSun(){
+  var g = new THREE.Group();
+  var s = new THREE.Mesh(new THREE.IcosahedronGeometry(42, 1), lam3(0xff9b86));
+  g.add(s);
+  var r = new THREE.Mesh(new THREE.RingGeometry(54, 66, 18), 
+          new THREE.MeshBasicMaterial({ color:0xffd36e, side:THREE.DoubleSide }));
+  r.rotation.x = -1.15; r.rotation.z = 0.4;
+  g.add(r);
+  g.userData.spin = 0.25;
+  return g;
+}
+function mkCloud(){
+  var g = new THREE.Group();
+  g.add(box(46, 14, 22, 0xe9c9f5, -12,  4, 0));
+  g.add(box(30, 12, 20, 0xf0e0fa,  14,  8, 4));
+  g.add(box(64, 12, 24, 0xd8a8ee,   0, -6, -2));
+  g.rotation.set(0.18, -0.5, 0);
+  return g;
+}
+function mkBird(){
+  var g = new THREE.Group();
+  g.add(box(7, 4, 4, 0xe9c9f5, 0, 0, 0));
+  var l = box(10, 2, 5, 0xe9c9f5, -8, 1, 0);
+  var r = box(10, 2, 5, 0xe9c9f5,  8, 1, 0);
+  g.add(l); g.add(r);
+  g.userData.wings = [l, r];
+  g.rotation.y = -0.5;
+  return g;
+}
+function mkKart(){
+  var g = new THREE.Group();
+  g.add(box(112, 14, 62, 0xf0e6ff,   0, -20, 0));
+  g.add(box(112,  8, 62, 0x49f2e0,   0,  36, 0));
+  g.add(box(6,   52,  6, 0xd8d0f5, -48,  10, 26));
+  g.add(box(6,   52,  6, 0xd8d0f5,  44,  10, 26));
+  g.add(box(14,  36, 44, 0xff5f9e, -18,   4, 0));
+  g.add(box(44,  10, 44, 0xff5f9e,   6, -10, 0));
+  g.add(box(24,  34, 24, 0x8a5cf0, -62,   2, 0));
+  g.add(cyl(1.6, 1.6, 22, 5, 0xd8d0f5, -58, 26, -6));
+  g.add(cyl(1.6, 1.6, 22, 5, 0xf0e6ff, -66, 26,  4));
+  var w = [[-34,-38,28],[34,-38,28],[-34,-38,-28],[34,-38,-28]];
+  for (var i = 0; i < w.length; i++){
+    var t = cyl(15, 15, 9, 8, 0x1a0f2e, w[i][0], w[i][1], w[i][2]);
+    t.rotation.z = Math.PI / 2;
+    g.add(t);
+  }
+  g.rotation.set(0.16, -0.62, 0);
+  return g;
+}
+function mkPin(flag, dark){
+  var g = new THREE.Group();
+  g.add(cyl(2.4, 2.4, 92, 6, 0xf0e6ff, 0, 12, 0));
+  g.add(box(30, 11, 3, flag, 17, 48, 0));
+  g.add(box(22,  9, 3, flag, 13, 37, 0));
+  var hole = cyl(19, 19, 5, 12, dark, 0, -36, 0);
+  g.add(hole);
+  g.add(cyl(23, 23, 3, 12, 0x1a7d72, 0, -39, 0));
+  g.rotation.set(0.2, -0.4, 0);
+  return g;
+}
+function mkTeePin(){  return mkPin(0xffd36e, 0x120a1f); }
+function mkHolePin(){ return mkPin(0xff5f9e, 0x120a1f); }
+function mkBall(){
+  var g = new THREE.Group();
+  g.add(new THREE.Mesh(new THREE.IcosahedronGeometry(10, 1), lam3(0xf4ecff)));
+  return g;
+}
+function mkGolfer(shirt, cap, club){
+  var g = new THREE.Group();
+  g.add(box(11, 34, 12, 0x8a5cf0, -8, -40, 0));
+  g.add(box(11, 34, 12, 0x8a5cf0,  8, -40, 0));
+  g.add(box(15,  7, 18, 0xf0e6ff, -8, -60, 3));
+  g.add(box(15,  7, 18, 0xf0e6ff,  8, -60, 3));
+  g.add(box(32, 38, 20, shirt,     0,  -4, 0));
+  g.add(box(9,  30,  9, 0xf0e6ff,-20,  -6, 2));
+  g.add(box(9,  30,  9, 0xf0e6ff, 20,  -6, 2));
+  g.add(box(22, 20, 20, 0xf0e6ff,  0,  26, 0));
+  g.add(box(26,  7, 22, cap,       0,  38, 0));
+  g.add(box(8,   6,  8, cap,      -1,  36, 13));
+  if (club){
+    var s = cyl(1.8, 1.8, 46, 5, 0xd8d0f5, 26, -26, 4);
+    s.rotation.z = 0.22;
+    g.add(s);
+    g.add(box(11, 7, 9, 0x33254f, 31, -50, 4));
+  }
+  g.rotation.set(0.12, -0.5, 0);
+  return g;
+}
+function mkGolferA(){ return mkGolfer(0xff5f9e, 0x49f2e0, true); }
+function mkGolferB(){ return mkGolfer(0x49f2e0, 0xff5f9e, false); }
+function mkGround(){
+  var g = new THREE.Group();
+  var n = 14, tone = [0x33cdb8, 0x2ab3a2];
+  for (var i = 0; i < n; i++){
+    var s = box(1 / n, 1, 1, tone[i % 2], (i + 0.5) / n - 0.5, 0, 0);
+    g.add(s);
+  }
+  g.userData.fit = g;              // scalato ogni frame sul rettangolo
+  g.rotation.x = -0.2;
+  g.position.z = -70;              // dietro agli oggetti appoggiati sopra
+  return g;
+}
+
+var SITE_DECOS = [
+  ['.teegreen',  mkGround,   0], ['.greenstrip', mkGround,  0],
+  ['.sun',       mkSun,    132], ['.cloud1',     mkCloud,  40],
+  ['.cloud2',    mkCloud,   28], ['.cloud3',     mkCloud,  24],
+  ['.b1',        mkBird,     8], ['.b2',         mkBird,    6],
+  ['.kart',      mkKart,   112], ['.teeflag',    mkTeePin,112],
+  ['.teeball',   mkBall,    24], ['.flagpin',    mkHolePin,132],
+  ['.golfer.g1', mkGolferA,120], ['.golfer.g2',  mkGolferB,102]
+];
+
+function buildSite(){
+  if (siteScene) return;
+  siteScene = new THREE.Scene();
+  siteCam = new THREE.OrthographicCamera(0, 1, 0, -1, 1, 4000);
+  siteCam.position.set(0, 0, 1200);
+  siteScene.add(new THREE.HemisphereLight(0xffc0e8, 0x2b1b4d, 0.75));
+  siteScene.add(new THREE.AmbientLight(0xc9a8ff, 0.3));
+  var d = new THREE.DirectionalLight(0xfff0f8, 0.95);
+  d.position.set(-260, 420, 500);
+  siteScene.add(d);
+  for (var i = 0; i < SITE_DECOS.length; i++){
+    var el = document.querySelector(SITE_DECOS[i][0]);
+    if (!el) continue;
+    var obj = SITE_DECOS[i][1]();
+    obj.userData.h = SITE_DECOS[i][2];
+    obj.userData.el = el;
+    obj.userData.phase = i * 1.7;
+    siteScene.add(obj);
+    siteAnchors.push(obj);
+  }
+  siteReady = true;
+  document.body.classList.add('d3');   // gli sprite piatti passano il turno
+}
+
+var _r = null;
+function updateSite(dt){
+  if (!siteReady) return;
+  var W = Math.max(1, innerWidth), H = Math.max(1, innerHeight);
+  if (siteCam.right !== W || siteCam.bottom !== -H){
+    siteCam.left = 0; siteCam.right = W; siteCam.top = 0; siteCam.bottom = -H;
+    siteCam.updateProjectionMatrix();
+  }
+  for (var i = 0; i < siteAnchors.length; i++){
+    var o = siteAnchors[i];
+    _r = o.userData.el.getBoundingClientRect();
+    /* fuori schermo: non vale la pena disegnarlo */
+    if (_r.bottom < -80 || _r.top > H + 80 || _r.width === 0){ o.visible = false; continue; }
+    o.visible = true;
+    o.position.set(_r.left + _r.width / 2, -(_r.top + _r.height / 2), 0);
+    if (o.userData.fit){
+      o.scale.set(_r.width, _r.height, 40);
+      o.position.z = -70;
+    } else if (o.userData.h){
+      o.scale.setScalar(_r.height / o.userData.h);
+    }
+    var t = state.clock + o.userData.phase;
+    if (o.userData.spin) o.rotation.y = t * o.userData.spin;
+    if (o.userData.wings){
+      var a = Math.sin(t * 9) > 0 ? 0.5 : -0.4;      /* battito a due pose */
+      o.userData.wings[0].rotation.z = -a;
+      o.userData.wings[1].rotation.z =  a;
+    }
+    if (o.userData.h >= 100 && !o.userData.spin && !o.userData.fit){
+      o.position.y += Math.sin(t * 2.4) > 0 ? 0 : -2;  /* respiro a scatti */
+    }
+  }
+  renderer.render(siteScene, siteCam);
+}
+
+
+/* ============================================================
    12. Loop
    ============================================================ */
 function shortAngle(a, b){
@@ -1802,6 +2020,14 @@ function frame(now){
   var dt = Math.min((now - last) / 1000, 0.033);
   last = now;
   state.clock += dt;
+
+  /* sulla home il campo da golf lascia il posto alle decorazioni:
+     stesso renderer, stesso buffer basso, quindi stessa pixelatura */
+  if (state.phase === 'site'){
+    updateSite(dt);
+    requestAnimationFrame(frame);
+    return;
+  }
 
   prevPos.copy(club.position);
 

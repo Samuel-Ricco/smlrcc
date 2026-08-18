@@ -35,8 +35,15 @@ riempire lo schermo di nero: quel nero diventa lo sfondo del sito. A quel punto 
 3D va in pausa, così la home non paga il costo del rendering.
 
 **La home.** Sfondo nero e una griglia di pixel che prende colore dove passa il cursore,
-poi si spegne. La palette è la stessa della scena 3D (verdi, ocra, crema) e la
-tipografia è pixel: Silkscreen per titoli e interfaccia, VT323 per il testo.
+poi si spegne. La tipografia è pixel: Pixelify Sans per titoli e interfaccia, VT323 per
+il testo.
+
+**Le decorazioni della home sono 3D.** Sole, nuvole, uccellini, kart, bandiere e golfisti
+non sono immagini ma modelli three.js, disegnati dallo stesso renderer del minigame e
+quindi con la stessa pixelatura. Vivono in una scena a parte con camera ortografica
+tarata in pixel CSS: ogni modello si aggancia al rettangolo dello sprite SVG che
+sostituisce, che resta nel DOM invisibile a fare da ancora. Così scroll, resize e
+breakpoint restano competenza del CSS, e senza WebGL gli SVG tornano visibili da soli.
 
 ## Sviluppo
 
