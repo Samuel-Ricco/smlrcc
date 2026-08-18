@@ -172,10 +172,16 @@ body.in-site canvas#scene{background:none}
   background-image:radial-gradient(rgba(240,230,255,.075) 1px,transparent 1px);
   background-size:22px 22px;background-position:-1px -1px
 }
-/* premere e trascinare serve a dipingere, non a selezionare testo:
-   la selezione resta dove ha senso copiare (contatti) */
-.site-in{position:relative;z-index:1;user-select:none;-webkit-user-select:none}
-.contact p,.contact a{user-select:text;-webkit-user-select:text}
+.site-in{position:relative;z-index:1}
+/* i testi tornano selezionabili; restano fuori solo i comandi, dove
+   trascinare per selezionare non ha senso */
+nav,.btn,.lang,.pxhint,.scrolldown,.tags,.chips{user-select:none;-webkit-user-select:none}
+
+/* selezione a blocco pieno, senza alone: un rettangolo di pixel */
+::selection{background:var(--cyan);color:var(--deep);text-shadow:none}
+::-moz-selection{background:var(--cyan);color:var(--deep);text-shadow:none}
+.hero h1::selection,.h2::selection,.tile h3::selection,.cta h3::selection{
+  background:var(--pink);color:var(--deep);text-shadow:none}
 
 /* Le celle colorate passano dietro al testo: sul testo piccolo serve un
    alone scuro, altrimenti su una cella accesa scompare. */
@@ -280,9 +286,12 @@ section.panel{padding:clamp(56px,9vw,110px) var(--gut);
 .two{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(28px,5vw,64px);align-items:start;margin-top:44px}
 @media(max-width:900px){.two{grid-template-columns:1fr}}
 ul.ticks{list-style:none;margin:0;padding:0;display:grid;gap:16px}
-ul.ticks li{display:flex;gap:14px;font-size:19px;line-height:1.4;color:rgba(240,230,255,.82)}
-ul.ticks li::before{content:"";flex:0 0 10px;height:10px;background:var(--pink);margin-top:6px}
+ul.ticks li{position:relative;padding-left:26px;font-size:19px;line-height:1.45;color:rgba(240,230,255,.82)}
+ul.ticks li::before{content:"";position:absolute;left:0;top:8px;width:10px;height:10px;background:var(--pink)}
 
+.skills{display:grid;gap:24px;align-content:flex-start}
+.skills h4{margin:0 0 11px;font-family:var(--pixel);font-size:10px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--cyan)}
 .chips{display:flex;flex-wrap:wrap;gap:8px;align-content:flex-start}
 .chips span{font-family:var(--pixel);font-size:12px;padding:10px 12px;
   background:rgba(18,10,31,.72);border:2px solid rgba(240,230,255,.2);color:rgba(240,230,255,.92)}
@@ -370,7 +379,7 @@ section.panel .eyebrow::before{
 
 /* pallina da golf al posto dei quadrati negli elenchi */
 ul.ticks li::before{
-  content:"";flex:0 0 12px;width:12px;height:12px;background:none;margin-top:5px;
+  content:"";position:absolute;left:0;top:8px;width:12px;height:12px;
   background:url("src/ball.svg") no-repeat center/contain
 }
 
@@ -639,7 +648,7 @@ body.d3 .flagpin,body.d3 .golfer,body.d3 .tree{visibility:hidden}
       <div class="hero-in">
         <div class="eyebrow"><span data-i18n="hero.eyebrow">developer &middot; smlrcc.it</span></div>
         <h1 data-i18n="hero.title">Sviluppare con un occhio<br>all'estetica<em>, buca in 1</em><i class="gball"></i></h1>
-        <p data-i18n="hero.lead">Sviluppo full stack: interfacce che si guardano volentieri, 3D nel browser, dettagli animati e layout che tengono su ogni schermo. E l'IA dove fa guadagnare tempo davvero, non dove fa scena.</p>
+        <p data-i18n="hero.lead">Sviluppo full stack. Sopra: interfacce che si guardano volentieri, 3D nel browser, dettagli animati e layout che tengono dal monitor grande al telefono. Sotto: back-end pensato per reggere — API, dati, integrazioni e casi limite, con esperienza in ambienti bancari. E l'IA usata dove fa guadagnare tempo davvero, non dove fa scena.</p>
         <div class="row">
           <a class="btn" href="#lavori" data-i18n="hero.cta1">Guarda i lavori</a>
           <a class="btn ghost ico ico-mail" href="#contatti" data-i18n="hero.cta2">Scrivimi</a>
@@ -675,7 +684,6 @@ body.d3 .flagpin,body.d3 .golfer,body.d3 .tree{visibility:hidden}
       <div class="wrap">
         <div class="eyebrow"><span data-i18n="work.eyebrow">Lavori</span></div>
         <h2 class="h2" data-i18n="work.title">Selezione<br>di progetti<i class="gball"></i></h2>
-        <p class="lead" data-i18n="work.lead">Tre slot pronti da riempire: titolo, due righe di descrizione e i tag della tecnologia usata.</p>
         <div class="cards">
           <div class="tile">
             <div class="glyph"><span data-i18n="work.slot1">Hole 01 &middot; segnaposto</span></div>
@@ -706,17 +714,31 @@ body.d3 .flagpin,body.d3 .golfer,body.d3 .tree{visibility:hidden}
         <h2 class="h2" data-i18n="stack.title">Con cosa<br>lavoro<i class="gball"></i></h2>
         <div class="two">
           <ul class="ticks">
-            <li data-i18n="stack.li1">Esperienza in ambienti bancari.</li>
-            <li data-i18n="stack.li2">Back-end e API, con attenzione ai dati e ai casi limite.</li>
-            <li data-i18n="stack.li3">Front-end: componenti, stato, performance e accessibilità.</li>
-            <li data-i18n="stack.li4">3D e canvas nel browser, dalla scena alla fisica del gioco.</li>
-            <li data-i18n="stack.li5">Un file solo quando basta un file solo.</li>
+            <li data-i18n="stack.li1">Back-end prima di tutto: API, modelli dati e integrazioni. Java, SQL ed ESQL, con esperienza in ambienti bancari, dove i casi limite non sono un dettaglio.</li>
+            <li data-i18n="stack.li2">Front-end curato fin nell'estetica: componenti, stato, performance e accessibilità, perché un'interfaccia si giudica anche a colpo d'occhio.</li>
+            <li data-i18n="stack.li3">3D e canvas nel browser: scene, fisica e animazioni che restano fluide anche su un telefono.</li>
+            <li data-i18n="stack.li4">IA come supporto, non come scorciatoia: impalcature, refactor e test più rapidi, con revisione e responsabilità che restano mie.</li>
+            <li data-i18n="stack.li5">Responsive sul serio, dallo schermo grande al telefono, e un file solo quando basta un file solo.</li>
           </ul>
-          <div class="chips">
-            <span>Java</span><span>SQL</span><span>ESQL</span>
-            <span>JavaScript</span><span>TypeScript</span><span>three.js</span>
-            <span>React</span><span>Node</span><span>Python</span>
-            <span>CSS</span><span>Git</span>
+          <div class="skills">
+            <div>
+              <h4 data-i18n="stack.gBack">Back-end</h4>
+              <div class="chips">
+                <span>Java</span><span>SQL</span><span>ESQL</span><span>Node</span><span>Python</span>
+              </div>
+            </div>
+            <div>
+              <h4 data-i18n="stack.gFront">Front-end</h4>
+              <div class="chips">
+                <span>JavaScript</span><span>TypeScript</span><span>React</span><span>CSS</span><span>three.js</span>
+              </div>
+            </div>
+            <div>
+              <h4 data-i18n="stack.gTools">Strumenti</h4>
+              <div class="chips">
+                <span>Git</span><span>REST</span><span>SQL tuning</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -787,24 +809,24 @@ var I18N = {
     'nav.work':'Lavori', 'nav.stack':'Stack', 'nav.contact':'Contatti',
     'hero.eyebrow':'developer &middot; smlrcc.it',
     'hero.title':"Sviluppare con un occhio<br>all'estetica<em>, buca in 1</em><i class='gball'></i>",
-    'hero.lead':"Sviluppo full stack: interfacce che si guardano volentieri, 3D nel browser, dettagli animati e layout che tengono su ogni schermo. E l'IA dove fa guadagnare tempo davvero, non dove fa scena.",
+    'hero.lead':"Sviluppo full stack. Sopra: interfacce che si guardano volentieri, 3D nel browser, dettagli animati e layout che tengono dal monitor grande al telefono. Sotto: back-end pensato per reggere — API, dati, integrazioni e casi limite, con esperienza in ambienti bancari. E l'IA usata dove fa guadagnare tempo davvero, non dove fa scena.",
     'hero.cta1':'Guarda i lavori', 'hero.cta2':'Scrivimi',
     'hero.hintMouse':'muovi il cursore &middot; premi per lo splash',
     'hero.hintTouch':'tocca lo schermo per lo splash',
     'hero.scroll':'Scorri',
     'work.eyebrow':'Lavori',
     'work.title':'Selezione<br>di progetti<i class="gball"></i>',
-    'work.lead':'Tre slot pronti da riempire: titolo, due righe di descrizione e i tag della tecnologia usata.',
     'work.slot1':'Hole 01 &middot; segnaposto', 'work.slot2':'Hole 02 &middot; segnaposto', 'work.slot3':'Hole 03 &middot; segnaposto',
     'work.cardTitle':'Titolo del progetto',
     'work.cardText':'Due righe su cosa fa, per chi è stato fatto e qual era il problema da risolvere.',
     'stack.eyebrow':'Stack',
     'stack.title':'Con cosa<br>lavoro<i class="gball"></i>',
-    'stack.li1':'Esperienza in ambienti bancari.',
-    'stack.li2':'Back-end e API, con attenzione ai dati e ai casi limite.',
-    'stack.li3':'Front-end: componenti, stato, performance e accessibilità.',
-    'stack.li4':'3D e canvas nel browser, dalla scena alla fisica del gioco.',
-    'stack.li5':'Un file solo quando basta un file solo.',
+    'stack.li1':"Back-end prima di tutto: API, modelli dati e integrazioni. Java, SQL ed ESQL, con esperienza in ambienti bancari, dove i casi limite non sono un dettaglio.",
+    'stack.li2':"Front-end curato fin nell'estetica: componenti, stato, performance e accessibilità, perché un'interfaccia si giudica anche a colpo d'occhio.",
+    'stack.li3':'3D e canvas nel browser: scene, fisica e animazioni che restano fluide anche su un telefono.',
+    'stack.li4':'IA come supporto, non come scorciatoia: impalcature, refactor e test più rapidi, con revisione e responsabilità che restano mie.',
+    'stack.li5':'Responsive sul serio, dallo schermo grande al telefono, e un file solo quando basta un file solo.',
+    'stack.gBack':'Back-end', 'stack.gFront':'Front-end', 'stack.gTools':'Strumenti',
     'contact.eyebrow':'Contatti',
     'contact.title':'Parliamone<i class="gball"></i>',
     'contact.lead':"Per un progetto, una consulenza o due domande: la strada più veloce è l'email.",
@@ -827,24 +849,24 @@ var I18N = {
     'nav.work':'Work', 'nav.stack':'Stack', 'nav.contact':'Contact',
     'hero.eyebrow':'developer &middot; smlrcc.it',
     'hero.title':'Building with an eye<br>for design<em>, hole in one</em><i class="gball"></i>',
-    'hero.lead':'Full-stack development: interfaces worth looking at, 3D in the browser, animated details and layouts that hold on any screen. And AI where it genuinely saves time, not where it just shows off.',
+    'hero.lead':'Full-stack development. On top: interfaces worth looking at, 3D in the browser, animated details and layouts that hold from a large monitor down to a phone. Underneath: a back-end built to hold up — APIs, data, integrations and edge cases, with experience in banking environments. And AI used where it genuinely saves time, not where it just shows off.',
     'hero.cta1':'See the work', 'hero.cta2':'Get in touch',
     'hero.hintMouse':'move the cursor &middot; press for a splash',
     'hero.hintTouch':'tap the screen for a splash',
     'hero.scroll':'Scroll',
     'work.eyebrow':'Work',
     'work.title':'Selected<br>projects<i class="gball"></i>',
-    'work.lead':'Three slots ready to fill: title, two lines of description and the tech tags.',
     'work.slot1':'Hole 01 &middot; placeholder', 'work.slot2':'Hole 02 &middot; placeholder', 'work.slot3':'Hole 03 &middot; placeholder',
     'work.cardTitle':'Project title',
     'work.cardText':'Two lines on what it does, who it was for and the problem it had to solve.',
     'stack.eyebrow':'Stack',
     'stack.title':'What I<br>work with<i class="gball"></i>',
-    'stack.li1':'Experience in banking environments.',
-    'stack.li2':'Back-end and APIs, with an eye on data and edge cases.',
-    'stack.li3':'Front-end: components, state, performance and accessibility.',
-    'stack.li4':'3D and canvas in the browser, from the scene to the game physics.',
-    'stack.li5':'A single file when a single file is enough.',
+    'stack.li1':'Back-end first: APIs, data models and integrations. Java, SQL and ESQL, with experience in banking environments, where edge cases are not a detail.',
+    'stack.li2':'Front-end down to the aesthetics: components, state, performance and accessibility, because an interface is judged at a glance too.',
+    'stack.li3':'3D and canvas in the browser: scenes, physics and animation that stay smooth even on a phone.',
+    'stack.li4':'AI as support, not as a shortcut: faster scaffolding, refactors and tests, with the review and the responsibility still mine.',
+    'stack.li5':'Genuinely responsive, from a large screen down to a phone, and a single file when a single file is enough.',
+    'stack.gBack':'Back-end', 'stack.gFront':'Front-end', 'stack.gTools':'Tools',
     'contact.eyebrow':'Contact',
     'contact.title':"Let's talk<i class=\"gball\"></i>",
     'contact.lead':'For a project, some advice or a couple of questions: email is the fastest way.',
