@@ -397,7 +397,6 @@ section.panel::before{
    diverso dal putting green che chiude la pagina. */
 .teegreen{
   position:absolute;left:0;right:0;bottom:0;height:118px;pointer-events:none;overflow:hidden;
-  border-top:3px solid var(--mint);
   background:
     repeating-linear-gradient(0deg,rgba(10,4,20,.10) 0 7px,transparent 7px 14px),
     linear-gradient(#3ad8c0 0 34px,#2ec2ae 34px 76px,#26a89b 76px 118px)
@@ -430,7 +429,6 @@ body.d3 .teegreen,body.d3 .greenstrip{background:none}
    verticali, buca con bandiera e i due golfisti */
 .greenstrip{
   position:relative;height:150px;pointer-events:none;overflow:hidden;
-  border-top:3px solid var(--cyan);
   background:
     repeating-linear-gradient(90deg,rgba(10,4,20,.09) 0 11px,transparent 11px 22px),
     linear-gradient(#33cdb8 0 44px,#28b6a4 44px 96px,#1f9e93 96px 150px)
@@ -496,18 +494,21 @@ body.d3 .flagpin,body.d3 .golfer{visibility:hidden}
 .cloud2{top:58%;right:24%;opacity:.6;animation:drift 13s steps(4,end) infinite alternate-reverse}
 .cloud3{top:33%;right:31%;opacity:.45;animation:drift 17s steps(4,end) infinite alternate}
 .bird{opacity:.8}
-.b1{top:26%;right:19%;animation:fly1 24s linear infinite}
-.b2{top:22%;right:15%;animation:fly2 31s linear infinite}
+.b1{top:39%;right:9%;animation:fly1 26s linear infinite alternate}
+.b2{top:53%;right:27%;animation:fly2 34s linear infinite alternate;animation-delay:-11s}
 /* il battito d'ali sta dentro src/bird-*.svg */
 @media(max-width:900px){
   .sun{top:8%;right:4%;transform:scale(.72);transform-origin:top right}
   .cloud1{top:38%;right:3%}.cloud2{top:50%;right:20%}.cloud3{display:none}
+  /* da stretto il testo occupa tutta la larghezza: gli uccelli scendono sotto */
+  .b1{top:63%;right:7%}.b2{top:73%;right:26%}
 }
 
 /* golf kart appoggiato sul green, a destra */
 @keyframes drift{from{transform:translateX(0)}to{transform:translateX(-22px)}}
-@keyframes fly1{from{transform:translateX(0)}to{transform:translateX(-62vw)}}
-@keyframes fly2{from{transform:translateX(4vw)}to{transform:translateX(-54vw)}}
+/* corsa contenuta nella fascia destra: più a sinistra finirebbero sul testo */
+@keyframes fly1{from{transform:translateX(0)}to{transform:translateX(-26vw)}}
+@keyframes fly2{from{transform:translateX(0)}to{transform:translateX(-19vw)}}
 /* il kart resta fermo: reagisce solo al clic */
 @media(max-width:560px){.cloud2{display:none}}
 
@@ -1954,9 +1955,9 @@ var SITE_DECOS = [
   ['.sun',       mkSun,     84], ['.cloud1',     mkCloud,  40],
   ['.cloud2',    mkCloud,   28], ['.cloud3',     mkCloud,  24],
   ['.b1',        mkBird,    11], ['.b2',         mkBird,    9],
-  ['.kart',      mkKart,     0], ['.teeflag',    mkTeePin,  0],
-  ['.teeball',   mkBall,     0], ['.flagpin',    mkHolePin, 0],
-  ['.golfer.g1', mkGolferA,  0], ['.golfer.g2',  mkGolferB, 0],
+  ['.kart',      mkKart,     0, 1], ['.teeflag',    mkTeePin,  0, 1],
+  ['.teeball',   mkBall,     0, 1], ['.flagpin',    mkHolePin, 0, 1],
+  ['.golfer.g1', mkGolferA,  0, 1], ['.golfer.g2',  mkGolferB, 0, 1],
   ['#stack .rollball',   mkRollBall, 0],
   ['#contatti .rollball', mkRollBall, 0]
 ];
@@ -1999,6 +2000,19 @@ function buildSite(){
           obj.children[c].position.sub(_ct);
         }
         obj.userData.box = _sz.clone();
+        /* Ombra di contatto: l'ombra proiettata su un piano frontale legge
+           come ombra sul muro, non come appoggio. Questa ellisse schiacciata
+           sotto ai piedi è ciò che pianta il modello sul prato. */
+        if (SITE_DECOS[i][3]){
+          var bl = new THREE.Mesh(
+            new THREE.CircleGeometry(_sz.x * 0.5, 18),
+            new THREE.MeshBasicMaterial({ color:0x0c3a37, transparent:true, opacity:0.5 }));
+          bl.scale.y = 0.26;
+          bl.position.set(0, -_sz.y * 0.5 + _sz.y * 0.03, -10);
+          bl.userData.flat = true;
+          obj.add(bl);
+          obj.userData.ground = true;
+        }
       }
       obj.userData.h = SITE_DECOS[i][2] || (_sz.y || 1);
       obj.userData.el = el;
@@ -2042,8 +2056,10 @@ function updateSite(dt){
     /* fuori schermo: non vale la pena disegnarlo */
     if (_r.bottom < -80 || _r.top > H + 80 || _r.width === 0){ o.visible = false; continue; }
     o.visible = true;
-    /* z: appena davanti al prato. Più stacco = ombra più lontana dai piedi */
-    o.position.set(_r.left + _r.width / 2, -(_r.top + _r.height / 2), -15);
+    /* z: appena davanti al prato. Più stacco = ombra più lontana dai piedi.
+       Chi poggia sull'erba sale un filo, così non sembra affondato. */
+    o.position.set(_r.left + _r.width / 2,
+                   -(_r.top + _r.height / 2) + (o.userData.ground ? 10 : 0), -15);
     if (o.userData.fit){
       o.scale.set(_r.width, _r.height, 1);
       o.position.z = -40;             // dietro ai modelli, che stanno a -15
@@ -2058,6 +2074,11 @@ function updateSite(dt){
       var w = Math.sin(state.clock * 8 + o.position.x * 0.01) > 0 ? 0.55 : -0.45;
       o.userData.wings[0].rotation.z = -w;
       o.userData.wings[1].rotation.z =  w;
+      /* tornando indietro si voltano, invece di volare all'indietro */
+      var dx = _r.left - (o.userData.px == null ? _r.left : o.userData.px);
+      o.userData.px = _r.left;
+      if (Math.abs(dx) > 0.02) o.userData.dir = dx > 0 ? 1 : -1;
+      if (o.userData.dir === 1) o.rotation.y = o.userData.ry + Math.PI;
     }
     if (o.userData.roll) o.rotation.x = -_r.left / (_r.height * 0.5);
 
